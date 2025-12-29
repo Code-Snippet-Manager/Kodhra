@@ -112,7 +112,7 @@
                                         </span>
                                         <input type="text" id="title1" placeholder="Snippet title…"
                                             class="snippet-title" style="display: inline-block !important;"
-                                            value="<%= card.title %>" />
+                                            value="<%= card.title || '' %>" />
                                     </label>
                                     <div class="snippet-actions">
                                         <button onclick="submitData()"
@@ -222,7 +222,8 @@
                                             </div>
                                     </div>
 
-                                    <textarea id="code" style="width: 100% !important;"><%= card.content%></textarea>
+                                    <textarea id="code"
+                                        style="width: 100% !important;"><%= card.content || ''%></textarea>
                                 </section>
 
                                 <!-- 3. METADATA (SECONDARY) -->
@@ -242,7 +243,7 @@
                                                 Folder
                                             </span>
                                             <input type="text" id="folderName1" placeholder="Optional"
-                                                value="<%= card.folderName%>" />
+                                                value="<%= card.folderName || ''%>" />
                                         </label>
                                     </div>
 
@@ -261,7 +262,7 @@
                                                 Tags
                                             </span>
                                             <input type="text" id="tags" placeholder="comma,separated,tags"
-                                                value="<%= card.tags%>" />
+                                                value="<%= card.tags || ''%>" />
                                         </label>
                                     </div>
                                     <div class="meta-field">
@@ -302,7 +303,7 @@
                                                 <path d="M16 2v20" />
                                             </svg> Description</span>
                                         <textarea id="des" placeholder="Optional notes…"
-                                            rows="5"><%= card.description%></textarea>
+                                            rows="5"><%= card.description || ''%></textarea>
                                     </label>
 
 
@@ -344,7 +345,7 @@
                                                                 d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                                                         </svg>Enter a title</span>
                                                     <input type="text" name="readme_title" id="readme_title1"
-                                                        placeholder="Title" value="<%= card.readmefile.title%>">
+                                                        placeholder="Title" value="<%= card?.readmefile?.title || ''%>">
                                                 </label>
                                                 <label for="readme_desciption" id="readme_desciption" role="text">
                                                     <span
@@ -365,10 +366,10 @@
                                                         </svg>Enter a description</span>
                                                     <textarea type="text" name="readme_desciption"
                                                         id="readme_desciption1"
-                                                        placeholder="Description"><%= card.readmefile.description%></textarea>
+                                                        placeholder="Description"><%= card?.readmefile?.description || ''%></textarea>
                                                 </label>
                                             </div>
-                                            <textarea id="asd"><%= card.readmefile.content%></textarea>
+                                            <textarea id="asd"><%= card?.readmefile?.content || ''%></textarea>
                                         </div>
                                     </div>
                                     <!--End of Add Readme.md File Container  -->
@@ -441,9 +442,7 @@
                 await getEditorSettings();
             });
 
-            /* ─────────────────────────────
-               CODEMIRROR INIT
-            ───────────────────────────── */
+           
             function initCodeMirror() {
                 const modeMap = {
                     JavaScript: "javascript",
@@ -499,18 +498,13 @@
                     }
                 );
 
-                /* Proper height */
                 editor.setSize("100%", "500px");
 
-                /* Language change */
                 languageSelect?.addEventListener("change", function () {
                     editor.setOption("mode", modeMap[this.value] || "javascript");
                 });
             }
 
-            /* ─────────────────────────────
-               SUBMIT DATA (GLOBAL)
-            ───────────────────────────── */
             async function submitData() {
                 try {
                     const payload = {
@@ -571,9 +565,7 @@
                 }
             }
 
-            /* ─────────────────────────────
-               SETTINGS LOAD
-            ───────────────────────────── */
+        
             async function getEditorSettings() {
                 try {
                     const res = await fetch("/settings/list", {
@@ -596,9 +588,7 @@
                 }
             }
 
-            /* ─────────────────────────────
-               FULLSCREEN HANDLING
-            ───────────────────────────── */
+         
             function requestFull() {
                 const wrapper = document.querySelector(".snippet-editor");
                 if (!wrapper) return;
@@ -627,9 +617,7 @@
         <script src="\scripts\saveDraft.js"></script>
         <!-- <script src="\scripts\context_menu.js"></script> -->
 
-        <script>
-
-        </script>
+       
 
 </body>
 

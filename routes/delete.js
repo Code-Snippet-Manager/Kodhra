@@ -9,6 +9,7 @@ const createActivity = require("./activity.module.js");
 const User = require("../models/User.js");
 const { default: mongoose } = require("mongoose");
 const Notebook = require("../models/Notebook.js");
+const draftDB = require("../models/drafts");
 deleteRouter.delete("/folder/:id", async (req, res) => {
   const { id } = req.params;
   const token = req.cookies.token;
@@ -39,6 +40,13 @@ deleteRouter.delete("/card/:id", async (req, res) => {
     { $set: { isDeleted: true } },
     { new: true }
   );
+  if (!folder) {
+    const deleteDraft = await draftDB.findOneAndDelete({
+      author: userId,
+      _id: id,
+    });
+    return res.json({ data: deleteDraft });
+  }
   await User.findOneAndUpdate(
     { _id: folder.author },
     { $pull: { favoriteCards: folder._id, pinnedCards: folder._id } }

@@ -70,6 +70,8 @@ const downloadRouter = require("./routes/download");
 const followuser = require("./routes/getuserstofollow");
 const folder = require("./models/folder");
 const Notebook = require("./models/Notebook");
+const draftRouter = require("./routes/drafts");
+const DraftDB = require("./models/drafts");
 const io = socket.init(server);
 io.on("connection", (socket) => {
   socket.on("register", (userId) => {
@@ -124,7 +126,7 @@ app.use("/token", authMiddleware, accesskeyRouter);
 app.use("/notebook", authMiddleware, notebookRouter);
 app.use("/folders", authMiddleware, downloadRouter);
 app.use("/f", authMiddleware, followuser);
-
+app.use("/drafts", authMiddleware, draftRouter);
 app.get("/landing", (req, res) => {
   res.render("landingPage");
 });
@@ -162,6 +164,7 @@ app.get("/", authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
+
 app.post("/card", async (req, res) => {
   const {
     title,
@@ -172,64 +175,92 @@ app.post("/card", async (req, res) => {
     folderName,
     visibility,
     readmefile,
+    draftId = null,
   } = req.body;
+
+  const session = await mongoose.startSession();
+
   try {
     const token = req.cookies.token;
     const decode = jwt.verify(token, process.env.SECRET);
     const { _id } = decode.checkUser;
-    if (!_id) return res.status(401).json({ error: "Unauthorized" });
-    tags.for;
-    const createCard = await Card.create({
-      title,
-      description,
-      content,
-      tags,
-      category,
-      visibility,
-      readmefile,
-      author: new mongoose.Types.ObjectId(_id),
-    });
+    if (!_id) {
+      session.endSession();
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    session.startTransaction();
+
+    const createdCards = await Card.create(
+      [
+        {
+          title,
+          description,
+          content,
+          tags,
+          category,
+          visibility,
+          readmefile,
+          author: new mongoose.Types.ObjectId(_id),
+        },
+      ],
+      { session }
+    );
+
+    const card = createdCards[0];
+
+    if (draftId) {
+      const deletedDraft = await DraftDB.findOneAndDelete(
+        { _id: draftId, author: _id },
+        { session }
+      );
+      if (!deletedDraft) {
+        await session.abortTransaction();
+        session.endSession();
+        return res.status(404).json({ error: "Draft not found" });
+      }
+    }
+
+    await Folder.updateOne(
+      { author: _id, folderName },
+      { $addToSet: { cards: card._id } },
+      { upsert: true, session }
+    );
+
     await createActivity({
       title: "Card Created",
       author: _id,
       activity: "created",
       entityType: "snippet",
-      entityId: createCard._id,
+      entityId: card._id,
       status: "success",
     });
-    try {
-      const findFolder = await Folder.findOne({
-        author: _id,
-        folderName: folderName,
-      });
-      if (!findFolder) {
-        const newFolder = await Folder.create({
-          author: _id,
-          folderName,
-          cards: [createCard._id],
-        });
-      } else {
-        findFolder.cards.push(createCard._id);
-        await findFolder.save();
-      }
-    } catch (error) {
-      res.json({ error });
-    }
-    res.json({ createCard });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.json({ createCard: card });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: `Server error ${err.message}` });
+    await session.abortTransaction();
+    session.endSession();
+    return res.status(500).json({ error: `Server error ${err.message}` });
   }
 });
+
 app.get("/draft", authMiddleware, async (req, res) => {
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
+  const { _id } = decode.checkUser;
+  const findDrafts = await DraftDB.find({
+    author: _id,
+  }).populate("author");
   res.render("draft", {
     image: decode.checkUser?.userImage || decode.user?.avatar,
     author: decode.checkUser.userName,
     userId: decode.checkUser._id,
     app_url: process.env.APP_URL,
     appVersion,
+    card: findDrafts,
   });
 });
 

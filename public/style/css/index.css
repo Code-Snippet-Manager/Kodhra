@@ -11,10 +11,11 @@ body[data-theme=dark] {
   color: var(--color);
   --shadow: rgba(0, 0, 0, 0.15);
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --accent: #d8d8d815;
 }
 
 :root {
-  --accent: #24242494;
+  --accent: #2424241f;
   --accent2: rgba(44, 44, 228, 0.788);
 }
 
@@ -98,7 +99,7 @@ input {
   background: var(--secondary-bg-color);
 }
 * body.active {
-  pointer-events: none;
+  pointer-events: none !important;
 }
 * body button {
   cursor: pointer;
@@ -1516,11 +1517,72 @@ table tbody tr td {
 
 li[data-action=delete] {
   color: red;
-  --accent:rgba(255, 0, 43, 0.153);
+  --accent: rgba(255, 0, 43, 0.153);
 }
 
 button {
   border: none !important;
+}
+
+*[data-cardstatus=private] {
+  --accent: rgba(255, 0, 43, 0.153);
+}
+
+*[data-cardstatus=published] {
+  --accent: rgba(0, 128, 0, 0.153);
+}
+
+*[data-cardstatus=archived] {
+  --accent: rgba(0, 0, 0, 0.153);
+}
+
+*[data-cardstatus=deleted] {
+  --accent: rgba(255, 0, 0, 0.153);
+}
+
+*[data-cardstatus=draft] {
+  --accent: rgba(0, 0, 0, 0.153);
+}
+
+.snippet-status {
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+.snippet-status:hover {
+  background: none !important;
+  border: 1px solid var(--accent);
+}
+
+.cardStatus {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  min-width: 200px;
+  border-radius: 10px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  background: var(--bg-color);
+  border: 1px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cardStatus select {
+  width: 100%;
+  border: var(--accent);
+  background: var(--accent);
+  padding: 10px;
+  border-radius: 5px;
+}
+.cardStatus select option {
+  background: var(--bg-color);
+  color: var(--color);
+}
+
+.cardStatus {
+  pointer-events: all !important;
 }
 
 /*# sourceMappingURL=index.css.map */

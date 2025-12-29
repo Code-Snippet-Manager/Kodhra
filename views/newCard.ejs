@@ -5,10 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create New Code Snippet | Save & Organize Developer Code – Kodhra</title>
-  
+
   <meta name="description"
     content="Create and save new code snippets in Kodhra. Store reusable programming logic, organize snippets with folders and tags, and build a personal code library for faster development.">
-  
+
   <meta name="keywords" content="
   create code snippet,
   add new snippet,
@@ -19,18 +19,18 @@
   developer productivity tools,
   kodhra create snippet
   ">
-  
+
   <meta name="author" content="Ajoy Das">
   <meta name="language" content="English">
   <meta name="distribution" content="global">
   <meta name="rating" content="general">
   <meta name="revisit-after" content="1 day">
-  
+
   <meta name="robots" content="noindex, nofollow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow">
-  
+
   <link rel="canonical" href="https://kodhra.codewithajoydas.live/card/create">
-  
+
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Kodhra">
@@ -42,14 +42,14 @@
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta property="og:image:alt" content="Create Code Snippet in Kodhra">
-  
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Create New Code Snippet – Kodhra">
   <meta name="twitter:description"
     content="Save and organize reusable code snippets using Kodhra’s clean, developer-first editor.">
   <meta name="twitter:image" content="https://kodhra.codewithajoydas.live/icons/icon-512-maskable.png">
-  
+
   <!-- App / UI -->
   <meta name="application-name" content="Kodhra">
   <meta name="theme-color" content="#0f172a">
@@ -124,12 +124,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/solarized.min.css" />
 
-<style>
-  .CodeMirror {
-  min-height: 100px;
-  width: 100%;
-}
-</style>
+  <style>
+    .CodeMirror {
+      min-height: 100px;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body data-theme="light">
@@ -406,6 +406,14 @@
 
         </div>
     </div>
+    <script src="\scripts\shortcut.js"></script>
+    <script src="/scripts/home.js"></script>
+    <script src="\scripts\index.js"></script>
+    <script src="\scripts\Notification.js"></script>
+    <script src="\scripts\ad_search.js"></script>
+    <script src="\scripts\header.js"></script>
+    <script src="\scripts\searchFunction.js"></script>
+    <!-- <script src="\scripts\context_menu.js"></script> -->
 
     <script>
       const easyMDE = new EasyMDE({
@@ -418,76 +426,66 @@
         ]
       });
     </script>
-
+    <script src="\scripts\saveDraft.js"></script>
     <script>
       let editor;
+      const modeMap = {
+        JavaScript: "javascript",
+        C: "text/x-csrc",
+        "C++": "text/x-c++src",
+        "C#": "text/x-csharp",
+        Java: "text/x-java",
+        TypeScript: "text/typescript",
+        Python: "python",
+        Ruby: "ruby",
+        PHP: "php",
+        Go: "go",
+        Rust: "rust",
+        Swift: "swift",
+        Kotlin: "text/x-kotlin",
+        "Objective-C": "text/x-objectivec",
+        Scala: "text/x-scala",
+        Perl: "perl",
+        R: "r",
+        Dart: "dart",
+        Haskell: "haskell",
+        Lua: "lua",
+        Elixir: "elixir",
+        Clojure: "clojure",
+        Shell: "shell",
+        PowerShell: "powershell",
+        SQL: "sql",
+        GraphQL: "graphql",
+        MATLAB: "octave",
+        Assembly: "gas",
+        Fortran: "fortran",
+        COBOL: "cobol",
+        Erlang: "erlang",
+        "VB.NET": "vb",
+        HTML: "htmlmixed",
+        CSS: "css"
+      };
+
+
+
       window.onload = async () => {
-        const params = new URLSearchParams(window.location.search);
-        const title = params.get("title") || "";
-        const description = params.get("description") || "";
-        const category = params.get("category") || "";
-        const content = params.get("content") || "";
-        const tags = params.get("tags") || "";
-        const folderName = params.get("folderName") || "";
-
-        const modeMap = {
-          JavaScript: "javascript",
-          C: "text/x-csrc",
-          "C++": "text/x-c++src",
-          "C#": "text/x-csharp",
-          Java: "text/x-java",
-          TypeScript: "text/typescript",
-          Python: "python",
-          Ruby: "ruby",
-          PHP: "php",
-          Go: "go",
-          Rust: "rust",
-          Swift: "swift",
-          Kotlin: "text/x-kotlin",
-          "Objective-C": "text/x-objectivec",
-          Scala: "text/x-scala",
-          Perl: "perl",
-          R: "r",
-          Dart: "dart",
-          Haskell: "haskell",
-          Lua: "lua",
-          Elixir: "elixir",
-          Clojure: "clojure",
-          Shell: "shell",
-          PowerShell: "powershell",
-          SQL: "sql",
-          GraphQL: "graphql",
-          MATLAB: "octave",
-          Assembly: "gas",
-          Fortran: "fortran",
-          COBOL: "cobol",
-          Erlang: "erlang",
-          "VB.NET": "vb",
-          HTML: "htmlmixed",
-          CSS: "css",
-        };
-
         const lan = document.getElementById("category");
-
         const themeRadio = document.querySelector("input[name='theme']:checked");
-        const currentTheme =
-          themeRadio && themeRadio.value === "light" ? "eclipse" : "ayu-dark";
+        const currentTheme = themeRadio && themeRadio.value === "light" ? "eclipse" : "ayu-dark";
 
         editor = CodeMirror.fromTextArea(document.getElementById("code"), {
           lineNumbers: true,
           mode: modeMap[lan?.value] || "javascript",
           lineWrapping: true,
           theme: currentTheme,
-          
           extraKeys: {
             "Ctrl-Space": "autocomplete",
             "Ctrl-/": "toggleComment",
-            "Tab": function (cm) {
-              cm.replaceSelection("  ");
-            }
+            "Tab": cm => cm.replaceSelection("  ")
           }
         });
-        editor.setSize("100%", "100%")
+
+        editor.setSize("100%", "100%");
 
         const titleEl = document.getElementById("title1");
         const desEl = document.getElementById("des");
@@ -497,28 +495,14 @@
         const visibility = document.getElementById("visibility");
         const readme_title = document.getElementById("readme_title1");
         const readme_desciption = document.getElementById("readme_desciption1");
-        
-
-        if (titleEl) titleEl.value = title;
-        if (desEl) desEl.value = description;
-
-        if (catEl && category) {
-          catEl.value = category;
-        }
-
-        if (tagEl) tagEl.value = tags;
-        if (folderEl) folderEl.value = folderName;
-
-        editor.setValue(content);
 
         if (lan) {
           lan.addEventListener("change", function () {
-            const newMode = modeMap[this.value] || "javascript";
-            editor.setOption("mode", newMode);
+            editor.setOption("mode", modeMap[this.value] || "javascript");
           });
         }
 
-        document.querySelectorAll("input[name='theme']").forEach((inp) => {
+        document.querySelectorAll("input[name='theme']").forEach(inp => {
           inp.addEventListener("change", () => {
             const newTheme = inp.value === "light" ? "eclipse" : "ayu-dark";
             editor.setOption("theme", newTheme);
@@ -526,107 +510,151 @@
           });
         });
 
-        window.submitData = async function () {
-          const title = titleEl?.value || "";
-          const description = desEl?.value || "";
-          const category = catEl?.value || "";
-          const content = editor.getValue() || "";
-          const folderName = folderEl?.value || "";
-          const visibility = document.getElementById("visibility")?.value || "";
-          const readmefile = {
-            title: readme_title?.value || "",
-            description: readme_desciption?.value || "",
-            content: easyMDE.value() || ""
-          }
-          const tags = (tagEl?.value || "")
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean);
+        const rawHash = window.location.hash.replace("#", "");
+        const hashValue = rawHash.includes("/") ? rawHash.split("/")[1] : rawHash;
+
+        if (!hashValue) {
+          titleEl.value = "";
+          desEl.value = "";
+          catEl.value = "";
+          tagEl.value = "";
+          folderEl.value = "";
+          editor.setValue("");
+        } else {
+          const openIndexDB = indexedDB.open("draftDB", 1);
+          let finalDB = null;
+
+          openIndexDB.onupgradeneeded = e => {
+            finalDB = e.target.result;
+            if (!finalDB.objectStoreNames.contains("drafts")) {
+              finalDB.createObjectStore("drafts", { keyPath: "id", autoIncrement: true });
+            }
+          };
+
+          openIndexDB.onsuccess = e => {
+            finalDB = e.target.result;
+            const tx = finalDB.transaction("drafts", "readonly");
+            const store = tx.objectStore("drafts");
+            const getRequest = store.get(Number(hashValue));
+
+            getRequest.onsuccess = () => {
+              const d = getRequest.result;
+              if (!d) return;
+              titleEl.value = d.title || "";
+              desEl.value = d.description || "";
+              catEl.value = d.category || "";
+              tagEl.value = Array.isArray(d.tags) ? d.tags.join(", ") : (d.tags || "");
+              folderEl.value = d.folder || "";
+              editor.setValue(d.content || "");
+            };
+          };
+        }
+
+        decideWhereToSave(editor);
+        window.submitData = async () => {
+          console.log(currentId22)
+          const payload = {
+            title: titleEl.value || "",
+            description: desEl.value || "",
+            category: catEl.value || "",
+            content: editor.getValue() || "",
+            tags: (tagEl.value || "").split(",").map(t => t.trim()).filter(Boolean),
+            folderName: folderEl.value || "",
+            visibility: visibility.value || "",
+            readmefile: {
+              title: readme_title.value || "",
+              description: readme_desciption.value || "",
+              content: easyMDE.value() || ""
+            },
+            draftId: currentId22
+          };
 
           try {
-            const startTime = performance.now();
+            const start = performance.now();
             const res = await fetch("/card", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               credentials: "include",
-              body: JSON.stringify({ title, description, category, content, tags, folderName, visibility, readmefile }),
+              body: JSON.stringify(payload)
             });
-            const data = await res.json();
-            const duration = ((performance.now() - startTime) / 1000).toFixed(2);
+            const duration = ((performance.now() - start) / 1000).toFixed(2);
+
             if (res.ok) {
+              const location = window.location.hash.replace("#", "").split("/")[1];
+              if (location) {
+                function draft_Delete(id) {
+                  const openDataBase = indexedDB.open("draftDB", 1);
+                  let db;
+                  openDataBase.onupgradeneeded = () => {
+                    db = openDataBase.result;
+                    if (!db.objectStoreNames.contains("drafts")) {
+                      db.createObjectStore("drafts", { keyPath: "id" });
+                    }
+                  };
+                  openDataBase.onerror = () => {
+                    console.log("Database Error");
+                  };
+                  openDataBase.onsuccess = () => {
+                    db = openDataBase.result;
+                    const tx = db.transaction("drafts", "readwrite");
+                    const store = tx.objectStore("drafts");
+                    const request = store.delete(Number(id));
+                    request.onsuccess = () => {
+                      new Toastmaster({
+                        title: "Success",
+                        message: "Draft deleted successfully",
+                        type: "success",
+                        delay: 3000,
+                      }).showNotification();
+                    };
+                  };
+                }
+                draft_Delete(location);
+              }
               new Toastmaster({
                 title: "Success",
                 message: `Snippet created in just ${duration}s`,
                 delay: 3000,
                 type: "success"
               }).showNotification();
+
               titleEl.value = "";
               desEl.value = "";
               catEl.value = "";
               tagEl.value = "";
               folderEl.value = "";
               editor.setValue("");
-              window.location.href = "/card";
+              // window.location.href = "/card";
             } else {
               new Toastmaster({
                 title: "Error",
-                message: `Snippet Not Created!`,
+                message: "Snippet Not Created!",
                 delay: 3000,
                 type: "error"
-              }).showNotification()
+              }).showNotification();
             }
-          } catch (err) {
-            console.error("Error submitting data:", err);
-            if (loader) {
-              new Toastmaster({
-                title: "Error",
-                message: `Snippet Not Created!`,
-                delay: 3000,
-                type: "error"
-              }).showNotification()
-            }
+          } catch {
+            new Toastmaster({
+              title: "Error",
+              message: "Snippet Not Created!",
+              delay: 3000,
+              type: "error"
+            }).showNotification();
           }
         };
-        await getEditorSettings();
-      };
 
-
-
-      async function getEditorSettings() {
-        const res = await fetch("/settings/list", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "content-Type": "application/json"
-          }
-        })
+        const res = await fetch("/settings/list", { credentials: "include" });
         if (res.ok) {
-          const data = await res.json();
-          const tabSizee = data.tabSize;
-          const wordWrapp = data.wordWrap == "off" ? false : true;
-          const lineNumber = data.lineNumbers == "on" ? true : false;
-          const themes = data.syntaxStyle;
-          editor.setOption("tabSize", tabSizee);
-          editor.setOption("lineWrapping", wordWrapp);
-          editor.setOption("lineNumbers", lineNumber);
-          editor.setOption("theme", themes);
+          const s = await res.json();
+          editor.setOption("tabSize", s.tabSize);
+          editor.setOption("lineWrapping", s.wordWrap !== "off");
+          editor.setOption("lineNumbers", s.lineNumbers === "on");
+          editor.setOption("theme", s.syntaxStyle);
         }
-      }
-    </script>
-
-
-
-    <script>
-      // if ("serviceWorker" in navigator) {
-      //     navigator.serviceWorker
-      //       .register("/service-worker.js")
-      //       .then((e) => console.log(`Service Worker registered ${e.installing}`))
-      //       .catch((err) => console.error("SW registration failed:", err));
-      //   }
+      };
     </script>
 
     <script>
-      const labelOfCode = document.querySelector("label[for='code']");
       function requestFull() {
         if (document.fullscreenElement) {
           document.exitFullscreen();
@@ -635,30 +663,16 @@
           document.querySelector(".snippet-editor").requestFullscreen();
         }
       }
+
       window.addEventListener("fullscreenchange", () => {
-        if (document.fullscreenElement) {
-          document.querySelector(".CodeMirror").classList.add("active");
-        } else {
-          document.querySelector(".CodeMirror").classList.remove("active")
-        }
+        const cm = document.querySelector(".CodeMirror");
+        if (!cm) return;
+        document.fullscreenElement ? cm.classList.add("active") : cm.classList.remove("active");
       });
     </script>
 
 
 
-    <script src="\scripts\shortcut.js"></script>
-    <script src="/scripts/home.js"></script>
-    <script src="\scripts\index.js"></script>
-    <script src="\scripts\Notification.js"></script>
-    <script src="\scripts\ad_search.js"></script>
-    <script src="\scripts\header.js"></script>
-    <script src="\scripts\searchFunction.js"></script>
-    <script src="\scripts\saveDraft.js"></script>
-    <!-- <script src="\scripts\context_menu.js"></script> -->
-
-    <script>
-
-    </script>
 
 </body>
 
