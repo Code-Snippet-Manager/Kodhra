@@ -6,7 +6,7 @@ These protect user trust and prevent data loss.
 
 ### 1. Snippet Lifecycle & Safety
 
-* [ ] Add snippet status (`draft / published / private / archived`)
+* [x] Add snippet status (`draft / published / private / archived`)
 * [ ] Separate visibility from draft logic
 * [ ] Add read-only (view mode) toggle
 * [ ] Add “last edited at / by” metadata

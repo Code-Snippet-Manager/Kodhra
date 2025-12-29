@@ -10,6 +10,7 @@ const User = require("../models/User");
 const createActivity = require("./activity.module");
 const { getIO } = require("./socket");
 const Settings = require("../models/settings");
+const draftDB = require("../models/drafts");
 cardRouter.get("/", async (req, res) => {
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
@@ -396,14 +397,42 @@ cardRouter.post("/download", async (req, res) => {
 
 cardRouter.get("/view/:id", async (req, res) => {
   const { id } = req.params;
-  const token = req.cookies.token;
-  const decode = jwt.verify(token, process.env.SECRET);
-  const { _id, userImage, userName } = decode.checkUser;
-  const card = await cardSchema
+  let userId = null;
+  let userImage = "";
+  let userName = "";
+  try {
+    const token = req.cookies?.token;
+    if (token) {
+      const decode = jwt.verify(token, process.env.SECRET);
+      userId = decode?.checkUser?._id || null;
+      userImage = decode?.checkUser?.userImage || "";
+      userName = decode?.checkUser?.userName || "";
+    }
+  } catch (err) {}
+  let card = null;
+  card = await cardSchema
     .findOne({ _id: id, isDeleted: false })
     .populate("author", "userName userImage");
-  console.log(card);
-  res.render("editCard", { id, card, image: userImage, userName, userId: _id });
+  if (!card) {
+    card = await draftDB
+      .findOne({ _id: id })
+      .populate("author", "userName userImage");
+  }
+  if (!card) {
+    return res.status(404).render("404", {
+      message: "Card not found",
+      userId,
+      userName,
+      image: userImage,
+    });
+  }
+  res.render("editCard", {
+    id,
+    card,
+    image: userImage || "",
+    userName: userName || "",
+    userId,
+  });
 });
 
 cardRouter.post("/:id", async (req, res) => {
@@ -413,6 +442,7 @@ cardRouter.post("/:id", async (req, res) => {
     content,
     tags,
     category,
+    status,
     folderName,
     visibility,
     readmefile,
@@ -422,7 +452,6 @@ cardRouter.post("/:id", async (req, res) => {
     const decode = jwt.verify(token, process.env.SECRET);
     const { _id } = decode.checkUser;
     if (!_id) return res.status(401).json({ error: "Unauthorized" });
-    tags.for;
     const createCard = await Card.findByIdAndUpdate(
       req.params.id,
       {
@@ -433,6 +462,7 @@ cardRouter.post("/:id", async (req, res) => {
         category,
         visibility,
         readmefile,
+        status,
         author: new mongoose.Types.ObjectId(_id),
       },
       { new: true }
@@ -442,9 +472,38 @@ cardRouter.post("/:id", async (req, res) => {
       author: _id,
       activity: "created",
       entityType: "snippet",
-      entityId: createCard._id,
+      entityId: req.params.id,
       status: "success",
     });
+    if (!createCard) {
+      try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        const deleteDarft = await draftDB.findOneAndDelete({
+          _id: req.params.id,
+        }, { session });
+
+        const createCard = await Card.create([{
+          title,
+          description,
+          content,
+          tags,
+          category,
+          visibility,
+          readmefile,
+          status,
+          author: new mongoose.Types.ObjectId(_id),
+        }], { session });
+
+        await session.commitTransaction();
+        if (!deleteDarft) {
+          return res.status(404).json({ error: "Card not found" });
+        }
+      } catch (error) {
+        await session.abortTransaction();
+      }
+    }
+
     try {
       const findFolder = await Folder.findOne({
         author: _id,
@@ -491,7 +550,16 @@ cardRouter.get("/:id", async (req, res) => {
     .find({ _id: id, isDeleted: false })
     .populate("author", "userName userImage");
 
-  if (!cards.length) {
+  if (cards.length === 0) {
+    const drafts = await draftDB
+      .find({ _id: id })
+      .populate("author", "userName userImage");
+    if (drafts.length > 0) {
+      return res.render("error", {
+        error:
+          "Card is Not Published Yet it's Draft, Wait until it is published.",
+      });
+    }
     return res.status(404).send("Card not found");
   }
 
@@ -510,7 +578,5 @@ cardRouter.get("/:id", async (req, res) => {
     folders,
   });
 });
-
-
 
 module.exports = cardRouter;

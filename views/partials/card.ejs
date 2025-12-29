@@ -9,7 +9,7 @@
         onerror="this.src='https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg'" />
       <div class="title">
         <p>
-          <%= e.title%>
+          <%= e.title || "Untitled" %>
             <span style="
               font-size: 13px !important;
               display: block;
@@ -18,7 +18,7 @@
               overflow: hidden;
               white-space: nowrap;
             ">
-              <%= e.description %>
+              <%= e.description || "No Description" %>
             </span>
         </p>
         <div>
@@ -27,7 +27,7 @@
                 <%= e.author.userName%>
               </a>
             </strong></span>, <span class="lan">
-            <%= e.category%>
+            <%= e.category %>
           </span>,
           <span class="time" style="font-size: x-small; color: gray;">
             <%= new Date(e.createdAt).toLocaleString() %>
@@ -53,6 +53,13 @@
           </svg>
         </div>
         <% } %>
+        <span class="snippet-status"
+          style="cursor:pointer;font-size: x-small; font-weight: 600; text-transform: capitalize; padding: 2px 5px; background: var(--accent);border-radius: 5px;"
+          data-cardstatus="<%= e.status || 'draft' %>" data-tooltip="Snippet's Status" <% if (e.status !== 'draft') { %>
+          onclick="changeSnippetStatus(event, '<%= e._id %>')"
+            <% } %>>
+              <%= e.status || 'draft' %>
+        </span>
           <div class="menu_top d-n" data-menu-id="<%= e._id %>" data-id="<%= e._id %>" data-tooltip="Open Menu"
             data-menus="delete, edit, move, share" onclick="openContextMenu(event)" data-userId="<%= userId %>"
             data-cardauthor="<%= e.author._id %>" data-cardName="<%= e.title %>" data-mtype="card"
@@ -69,18 +76,19 @@
   </div>
 
   <div class="code" title="<%= e.content%>">
-    <code style="font-size: small !important;"> <%= e.content %> </code>
+    <code style="font-size: small !important;"> <%= e.content || "No Content" %> </code>
   </div>
 
-  <% if( e.tags && e.tags.length> 0){ %>
+  <% if (Array.isArray(e.tags) && e.tags.length> 0) { %>
     <div class="tags d-n">
       <% e.tags.forEach(tag=> { %>
-        <a class="span" href="search?query=<%= tag %>">
+        <a class="span" href="/search?query=<%= encodeURIComponent(tag) %>">
           <%= tag %>
         </a>
         <% }) %>
     </div>
     <% } %>
+
 
       <div class="options d-n">
         <div class="open" tabindex="0" style="
@@ -141,4 +149,3 @@
         </div>
       </div>
 </div>
-

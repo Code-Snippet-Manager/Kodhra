@@ -71,7 +71,7 @@ const cardSchema = new mongoose.Schema(
     status: {
       enum: ["draft", "published", "private", "archived"],
       type: String,
-      default: "draft",
+      default: "published",
     },
   },
   {

@@ -1,3 +1,5 @@
-<% for (let e of card) { %>
-    <%- include("./card", { e, userId, author, image }) %>
-        <% } %>
+<% const _showStatus=typeof showStatus !=="undefined" ? showStatus : true; %>
+
+    <% for (let e of card) { %>
+        <%- include("./card", { e, userId, author, image, showStatus: _showStatus }) %>
+            <% } %>

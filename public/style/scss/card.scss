@@ -1,23 +1,4 @@
-body[data-theme="dark"] {
-  --bg-color: rgb(20, 17, 17);
-  --secondary-bg-color: #131212;
-  --color: #fff;
-  background: var(--bg-color);
-  color: var(--color);
-  --accent: #242424;
-  --shadow: rgb(2, 2, 2);
-}
 
-body[data-theme="light"] {
-  --bg-color: #ffffff;
-  --secondary-bg-color: #f1f1f1;
-  --color: #000000;
-  --accent: #24242417;
-  background: var(--bg-color);
-  color: var(--color);
-  --shadow: rgba(0, 0, 0, 0.116);
-}
-$accent: #2e2e2e21;
 #cards,
 #cards1 {
   display: grid;

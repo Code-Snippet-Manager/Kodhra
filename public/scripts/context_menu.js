@@ -143,7 +143,7 @@ window.addEventListener("click", () => {
 
 function openMenu(card, x, y) {
   const menus = card.dataset.menus?.split(",").map((i) => i.trim()) || [];
-
+  const location = window.location.href.split("/").pop();
   contextMenuList.innerHTML = "";
 
   const cardAuthor = card.dataset.cardauthor;
@@ -159,6 +159,11 @@ function openMenu(card, x, y) {
         menuName === "move" ||
         menuName === "rename"
       ) {
+        return;
+      }
+    }
+    if (location === "draft") {
+      if (menuName === "move" || menuName === "share") {
         return;
       }
     }
@@ -247,7 +252,6 @@ function shareOther(title, text, url) {
     alert("Link copied. Share manually.");
   }
 }
-
 
 const whatsappSVG = () => `
 <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
@@ -394,16 +398,16 @@ async function shareFolder(id) {
   }
 }
 
-
 window.addEventListener("click", (e) => {
   const share_modal = document.getElementById("share-modal");
-  if(e.target.closest("#share-modal")) return;
-  if(share_modal) share_modal.remove();
-})
+  if (e.target.closest("#share-modal")) return;
+  if (share_modal) share_modal.remove();
+});
 
 function openContextMenu(event, clientX = null, clientY = null) {
   event.stopPropagation();
 
+  const location = window.location.href.split("/").pop();
   const card = event.target.closest("[data-contextMenu='true']");
   if (!card) return;
 
@@ -421,7 +425,11 @@ function openContextMenu(event, clientX = null, clientY = null) {
         return;
       }
     }
-
+    if (location === "draft") {
+      if (menuName === "move" || menuName === "share") {
+        return;
+      }
+    }
     if (menuName === "block" && targetId === userId) {
       return;
     }
@@ -794,3 +802,103 @@ async function getTheme() {
 }
 
 getTheme();
+
+function changeSnippetStatus(e, id) {
+  e.stopPropagation();
+
+  document.body.classList.add("active");
+  document.querySelector(".cardStatus")?.remove();
+
+  const html = `
+    <div class="cardStatus">
+      <span style="font-weight:bolder;display:flex;gap:10px;">
+         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dashed-icon lucide-circle-dashed"><path d="M10.1 2.182a10 10 0 0 1 3.8 0"/><path d="M13.9 21.818a10 10 0 0 1-3.8 0"/><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7"/><path d="M2.182 13.9a10 10 0 0 1 0-3.8"/><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69"/><path d="M21.818 10.1a10 10 0 0 1 0 3.8"/><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69"/><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7"/></svg> Change card status
+      </span>
+      <hr>
+      <select id="status">
+        <option value="public">public</option>
+        <option value="private">private</option>
+        <option value="archived">archived</option>
+        <option value="draft">Draft</option>
+      </select>
+      <button id="changeStatus">Change</button>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", html);
+
+  const modal = document.querySelector(".cardStatus");
+  const status = modal.querySelector("#status");
+  const changeStatus = modal.querySelector("#changeStatus");
+
+  modal.addEventListener("click", (e) => e.stopPropagation());
+
+  changeStatus.addEventListener("click", async () => {
+    const res = await fetch(`/card/${id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: status.value }),
+    });
+
+    if (res.ok) {
+      new Toastmaster({
+        title: "Success",
+        message: "Status changed successfully",
+        type: "success",
+        delay: 3000,
+      }).showNotification();
+
+      modal.remove();
+      document.body.classList.remove("active");
+      window.location.reload();
+    } else {
+      new Toastmaster({
+        title: "Error",
+        message: "Failed to change status",
+        type: "error",
+        delay: 3000,
+      }).showNotification();
+    }
+  });
+}
+
+window.addEventListener("click", (e) => {
+  const modal = document.querySelector(".cardStatus");
+  if (!modal) return;
+  if (modal.contains(e.target)) return;
+
+  modal.remove();
+  document.body.classList.remove("active");
+});
+
+
+
+// Delete Draft Snippet
+function draft_Delete(id) {
+  const openDataBase = indexedDB.open("draftDB", 1);
+  let db;
+  openDataBase.onupgradeneeded = () => {
+    db = openDataBase.result;
+    if (!db.objectStoreNames.contains("drafts")) {
+      db.createObjectStore("drafts", { keyPath: "id" });
+    }
+  };
+  openDataBase.onerror = () => {
+    console.log("Database Error");
+  };
+  openDataBase.onsuccess = () => {
+    db = openDataBase.result;
+    const tx = db.transaction("drafts", "readwrite");
+    const store = tx.objectStore("drafts");
+    const request = store.delete(Number(id));
+    request.onsuccess = () => {
+      new Toastmaster({
+        title: "Success",
+        message: "Draft deleted successfully",
+        type: "success",
+        delay: 3000,
+      }).showNotification();
+    };
+  };
+}
