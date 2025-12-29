@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 dotenv.config();
 gitroute.get("/", (req, res) => {
-  const redirect_uri = "http://localhost:3000/auth/github/callback";
+  const redirect_uri = "https://kodhra.codewithajoydas.live/auth/github/callback";
   res.redirect(
     `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user:email`
   );
