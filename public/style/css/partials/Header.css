@@ -125,11 +125,13 @@ header nav .profile img {
   object-fit: cover;
 }
 header nav .profile .profile-bar {
-  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.14);
   transition: all 0.2s ease;
+  overflow: hidden;
+  height: fit-content;
+  display: none;
   position: absolute;
-  width: 300px;
-  height: auto;
+  width: 250px;
   padding: 10px;
   border-radius: 10px;
   background: var(--bg-color);
@@ -139,7 +141,8 @@ header nav .profile .profile-bar {
   right: 10px;
 }
 header nav .profile .profile-bar.active {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  display: block;
+  box-shadow: 0px 0px 0px none;
 }
 header nav .profile .profile-bar hr {
   outline: none;
@@ -255,7 +258,7 @@ header nav .searchResult .search svg {
   height: 23px !important;
 }
 header nav .searchResult .results {
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 110%;
   left: 0;

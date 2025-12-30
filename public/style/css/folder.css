@@ -7,7 +7,7 @@ main .foldersDiv {
   justify-content: start;
 }
 main .foldersDiv .folder {
-  box-shadow: var(--box-shadow);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.13);
   background: var(--bg-color);
   border: 2px solid transparent;
   border-radius: 10px;

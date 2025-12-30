@@ -452,6 +452,7 @@ cardRouter.post("/:id", async (req, res) => {
     const decode = jwt.verify(token, process.env.SECRET);
     const { _id } = decode.checkUser;
     if (!_id) return res.status(401).json({ error: "Unauthorized" });
+    
     const createCard = await Card.findByIdAndUpdate(
       req.params.id,
       {

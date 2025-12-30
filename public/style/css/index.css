@@ -537,9 +537,9 @@ input {
   border-radius: 10px !important;
   backdrop-filter: blur(10px) !important;
   pointer-events: all !important;
-  box-shadow: var(--box-shadow) !important;
   transition: height 0.25s ease !important;
   margin: 10px !important;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.14);
   height: 0;
   overflow: hidden;
   display: block !important;
@@ -561,7 +561,6 @@ input {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-top: 0.5px solid var(--accent);
   transition: all 0.2s ease;
 }
 #context_menu ul li svg {
@@ -1583,6 +1582,10 @@ button {
 
 .cardStatus {
   pointer-events: all !important;
+}
+
+#folders .folder {
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.14) !important;
 }
 
 /*# sourceMappingURL=index.css.map */

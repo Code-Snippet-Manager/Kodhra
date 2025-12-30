@@ -111,10 +111,14 @@ header {
         object-fit: cover;
       }
       .profile-bar {
-        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.14);
         transition: all 0.2s ease;
+        overflow: hidden;
+        height: fit-content;
+        display: none;
         &.active {
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+          display: block;
+          box-shadow: 0px 0px 0px none;
         }
         hr {
           outline: none;
@@ -123,8 +127,7 @@ header {
           background: var(--accent);
         }
         position: absolute;
-        width: 300px;
-        height: auto;
+        width: 250px;
         padding: 10px;
         border-radius: 10px;
         background: var(--bg-color);
@@ -248,13 +251,13 @@ header {
         }
       }
       .results {
-        box-shadow: var(--box-shadow);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         position: absolute;
         top: 110%;
         left: 0;
         width: inherit;
         z-index: 100000;
-        background:var(--bg-color);
+        background: var(--bg-color);
         backdrop-filter: blur(10px);
         padding: 10px;
         display: none;
@@ -323,6 +326,3 @@ header {
     transform: rotate(360deg);
   }
 }
-
-
-
