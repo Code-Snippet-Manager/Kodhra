@@ -166,7 +166,7 @@
                         <img src="/assets/document-3d-icon.webp" alt="">
                       </div>
                       <div>
-                        <span id="totalTag" class="draft">0</span>
+                        <span id="totalTag" class="draft"><%=draftCount || 0 %></span>
                         <span style="white-space: nowrap;">Total Drafts</span>
                       </div>
                     </div>
@@ -440,7 +440,7 @@
       </div>
 
 
-      
+
 
 
       <script>
@@ -766,7 +766,7 @@
       <script src="\scripts\searchFunction.js"></script>
       <script src="\scripts\collapse.js"></script>
       <script src="\scripts\saveDraft.js"></script>
-      <script src="\scripts\getAllDraft.js"></script>
+      <!-- <script src="\scripts\getAllDraft.js"></script> -->
 
 
       <script>
@@ -821,7 +821,10 @@
         })
       </script>
 
+      <script>
+       
 
+      </script>
       <script src="/scripts/Tooltips.js"></script>
       <script src="/scripts/drafts.js"></script>
 </body>

@@ -81,11 +81,8 @@ This project is **not provided as an open-source boilerplate**.
 ## Ownership
 
 All design decisions, architecture, and implementation are original and part of an ongoing private product.
+<h3><b>Kodhra</b> is actively developed and maintained by <strong>Codewithajoydas</strong></h3>
 
-<<<<<<< HEAD
-**Kodhra** is actively developed and maintained by
-**Codewithajoydas**
-=======
 ---
 
 ## API Endpoints
