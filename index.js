@@ -72,6 +72,9 @@ const folder = require("./models/folder");
 const Notebook = require("./models/Notebook");
 const draftRouter = require("./routes/drafts");
 const DraftDB = require("./models/drafts");
+const Version = require("./models/versioning");
+const versioningRouter = require("./routes/versionRestore");
+app.get("/favicon.ico", (req, res) => res.status(204));
 const io = socket.init(server);
 io.on("connection", (socket) => {
   socket.on("register", (userId) => {
@@ -127,6 +130,7 @@ app.use("/notebook", authMiddleware, notebookRouter);
 app.use("/folders", authMiddleware, downloadRouter);
 app.use("/f", authMiddleware, followuser);
 app.use("/drafts", authMiddleware, draftRouter);
+app.use("/version", authMiddleware, versioningRouter);
 app.get("/landing", (req, res) => {
   res.render("landingPage");
 });
@@ -208,6 +212,17 @@ app.post("/card", async (req, res) => {
     );
 
     const card = createdCards[0];
+    const version = await Version.create(
+      [
+        {
+          version: "1.0",
+          content: card.content,
+          author: new mongoose.Types.ObjectId(_id),
+          cardId: card._id,
+        },
+      ],
+      { session }
+    );
 
     if (draftId) {
       const deletedDraft = await DraftDB.findOneAndDelete(
@@ -620,6 +635,13 @@ app.get("/folder/user/:user", async (req, res) => {
   const strg = BSON.calculateObjectSize(folders);
   res.render("folder", { folders, image, userId });
 });
+
+app.get("/version/card/:id", async (req, res) => {
+  const id = req.params.id;
+  const version = await Version.findOne({ _id: id }).populate("cardId");
+  res.json(version);
+});
+
 
 app.get("/location", async (req, res) => {
   const ip =

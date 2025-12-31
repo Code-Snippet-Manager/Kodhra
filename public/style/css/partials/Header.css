@@ -170,6 +170,9 @@ header nav .profile .profile-bar .menus {
   list-style: none;
   margin-block: 10px;
 }
+header nav .profile .profile-bar .menus li {
+  margin-inline: 0 !important;
+}
 header nav .profile .profile-bar .menus li a {
   padding: 10px 10px;
   width: 100%;
