@@ -1,16 +1,30 @@
-<div class="card" id="card-<%= e._id%>" ondblclick="window.open('/card/<%= e._id %>', '_blank')" data-id="<%= e._id %>"
-  tabindex="0" data-menus="delete, edit, move, share" data-userId="<%= userId %>" data-contextMenu="true"
-  data-cardName="<%= e.title %>" data-mtype="card" data-cardauthor="<%= e.author._id %>"
-  data-cardcontent="<%=e.title%>, <%= e.description%>, <%= e.content %>">
-  <div class="header-info">
-    <input type="checkbox" class="select-card" hidden id="card_<%= e._id%>" />
-    <label for="card_<%= e._id%>" style="display: flex; align-items: center; gap: 10px">
-      <img src="<%= e.author.userImage %>" alt="" width="40" height="40" style="border-radius: 50%" class="profileImage"
-        onerror="this.src='https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg'" />
-      <div class="title">
-        <p>
-          <%= e.title || "Untitled" %>
-            <span style="
+<% function timeAgo(date) { const now=new Date(); const past=new Date(date); const seconds=Math.floor((now - past) /
+  1000); if (seconds < 60) return "just now" ; const intervals=[ { label: "year" , seconds: 31536000 }, { label: "month"
+  , seconds: 2592000 }, { label: "day" , seconds: 86400 }, { label: "hour" , seconds: 3600 }, { label: "minute" ,
+  seconds: 60 } ]; for (const interval of intervals) { const count=Math.floor(seconds / interval.seconds); if (count>=
+  1) {
+  return count + " " + interval.label + (count > 1 ? "s" : "") + " ago";
+  }
+  }
+
+  return "just now";
+  }
+  %>
+
+
+  <div class="card" id="card-<%= e._id%>" ondblclick="window.open('/card/<%= e._id %>', '_blank')"
+    data-id="<%= e._id %>" tabindex="0" data-menus="delete, edit, move, share" data-userId="<%= userId %>"
+    data-contextMenu="true" data-cardName="<%= e.title %>" data-mtype="card" data-cardauthor="<%= e.author._id %>"
+    data-cardcontent="<%=e.title%>, <%= e.description%>, <%= e.content %>">
+    <div class="header-info">
+      <input type="checkbox" class="select-card" hidden id="card_<%= e._id%>" />
+      <label for="card_<%= e._id%>" style="display: flex; align-items: center; gap: 10px">
+        <img src="<%= e.author.userImage %>" alt="" width="40" height="40" style="border-radius: 50%" class="profileImage"
+          onerror="this.src='https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg'" />
+        <div class="title">
+          <p>
+            <%= e.title || "Untitled" %>
+              <span style="
               font-size: 13px !important;
               display: block;
               width: 300px;
@@ -18,134 +32,134 @@
               overflow: hidden;
               white-space: nowrap;
             ">
-              <%= e.description || "No Description" %>
+                <%= e.description || "No Description" %>
+                  </span>
+                  </p>
+                  <div>
+                    <span class="author"><strong>
+                        <a href="/profile/<%= e.author.userName%>" style="display: inline">
+                          <%= e.author.userName%>
+                        </a>
+                      </strong></span>, <span class="lan">
+                      <%= e.category %>
+                    </span>,
+            <span class="time">
+              <%= timeAgo(e.createdAt) %>
             </span>
-        </p>
-        <div>
-          <span class="author"><strong>
-              <a href="/profile/<%= e.author.userName%>" style="display: inline">
-                <%= e.author.userName%>
-              </a>
-            </strong></span>, <span class="lan">
-            <%= e.category %>
-          </span>,
-          <span class="time" style="font-size: x-small; color: gray;">
-            <%= new Date(e.createdAt).toLocaleString() %>
-          </span>
-        </div>
-      </div>
-    </label>
+            </div>
+            </div>
+            </label>
 
-    <div style="
+      <div style="
         width: 100px;
         display: flex;
         justify-content: end;
         align-items: center;
         gap: 10px;
       ">
-      <% if(e.isDeleted){%>
-        <div class="restore" style="--accent: #60df3abd" data-tooltip="Restore">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-rotate-ccw-icon lucide-rotate-ccw">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>
-        </div>
-        <% } %>
-        <span class="snippet-status"
-          style="cursor:pointer;font-size: x-small; font-weight: 600; text-transform: capitalize; padding: 2px 5px; background: var(--accent);border-radius: 5px;"
-          data-cardstatus="<%= e.status || 'draft' %>" data-tooltip="Snippet's Status" <% if (e.status !== 'draft') { %>
-          onclick="changeSnippetStatus(event, '<%= e._id %>')"
-            <% } %>>
-              <%= e.status || 'draft' %>
-        </span>
-          <div class="menu_top d-n" data-menu-id="<%= e._id %>" data-id="<%= e._id %>" data-tooltip="Open Menu"
-            data-menus="delete, edit, move, share" onclick="openContextMenu(event)" data-userId="<%= userId %>"
-            data-cardauthor="<%= e.author._id %>" data-cardName="<%= e.title %>" data-mtype="card"
-            data-contextMenu="true" tabindex="0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical">
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="12" cy="5" r="1" />
-              <circle cx="12" cy="19" r="1" />
+        <% if(e.isDeleted){%>
+          <div class="restore" style="--accent: #60df3abd" data-tooltip="Restore">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="   -rotate-ccw-icon  -rotate-ccw">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
             </svg>
           </div>
+          <% } %>
+            <span class="snippet-status"
+              style="cursor:pointer;font-size: x-small; font-weight: 600; text-transform: capitalize; padding: 2px 5px; background: var(--accent);border-radius: 5px;"
+              data-cardstatus="<%= e.status || 'draft' %>" data-tooltip="Snippet's Status" <% if (e.status !=='draft' )
+              { %>
+              onclick="changeSnippetStatus(event, '<%= e._id %>')"
+                <% } %>>
+                  <%= e.status || 'draft' %>
+            </span>
+            <div class="menu_top d-n" data-menu-id="<%= e._id %>" data-id="<%= e._id %>" data-tooltip="Open Menu"
+              data-menus="delete, edit, move, share" onclick="openContextMenu(event)" data-userId="<%= userId %>"
+              data-cardauthor="<%= e.author._id %>" data-cardName="<%= e.title %>" data-mtype="card"
+              data-contextMenu="true" tabindex="0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="   -ellipsis-vertical-icon  -ellipsis-vertical">
+                <circle cx="12" cy="12" r="1" />
+                <circle cx="12" cy="5" r="1" />
+                <circle cx="12" cy="19" r="1" />
+              </svg>
+            </div>
+      </div>
     </div>
-  </div>
 
-  <div class="code" title="<%= e.content%>">
-    <code style="font-size: small !important;"> <%= e.content || "No Content" %> </code>
-  </div>
-
-  <% if (Array.isArray(e.tags) && e.tags.length> 0) { %>
-    <div class="tags d-n">
-      <% e.tags.forEach(tag=> { %>
-        <a class="span" href="/search?query=<%= encodeURIComponent(tag) %>">
-          <%= tag %>
-        </a>
-        <% }) %>
+    <div class="code" title="<%= e.content%>">
+      <code style="font-size: small !important;"> <%= e.content || "No Content" %> </code>
     </div>
-    <% } %>
+
+    <% if (Array.isArray(e.tags) && e.tags.length> 0) { %>
+      <div class="tags d-n">
+        <% e.tags.forEach(tag=> { %>
+          <a class="span" href="/search?query=<%= encodeURIComponent(tag) %>">
+            <%= tag %>
+          </a>
+          <% }) %>
+      </div>
+      <% } %>
 
 
-      <div class="options d-n">
-        <div class="open" tabindex="0" style="
+        <div class="options d-n">
+          <div class="open" tabindex="0" style="
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 10px;
         cursor: pointer;
       " data-code="<%= e.content%>">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-clipboard-copy-icon lucide-clipboard-copy">
-            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-            <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
-            <path d="M16 4h2a2 2 0 0 1 2 2v4" />
-            <path d="M21 14H11" />
-            <path d="m15 10-4 4 4 4" />
-          </svg>
-          <span>Copy Code</span>
-        </div>
-        <div class="sub_menu">
-          <div class="gist_upload" onclick="copy_cdn_link(event)" data-tooltip="Copy CDN Link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="lucide lucide-link-icon lucide-link">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="   -clipboard-copy-icon  -clipboard-copy">
+              <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+              <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+              <path d="M16 4h2a2 2 0 0 1 2 2v4" />
+              <path d="M21 14H11" />
+              <path d="m15 10-4 4 4 4" />
             </svg>
+            <span>Copy Code</span>
           </div>
-          <div class="pin" onclick="pinIt(this,'<%= e._id %>')" data-tooltip="Pin" data-id="<%= e._id%>" tabindex="0">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-              class="<%= e.isPinned ? 'active' : '' %>" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin-icon lucide-pin">
-              <path d="M12 17v5" />
-              <path
-                d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
-            </svg>
-          </div>
-          <div style="
+          <div class="sub_menu">
+            <div class="gist_upload" onclick="copy_cdn_link(event)" data-tooltip="Copy CDN Link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="   -link-icon  -link">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+            </div>
+            <div class="pin" onclick="pinIt(this,'<%= e._id %>')" data-tooltip="Pin" data-id="<%= e._id%>" tabindex="0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                class="<%= e.isPinned ? 'active' : '' %>" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class=" -pin-icon -pin">
+                <path d="M12 17v5" />
+                <path
+                  d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
+                </svg>
+                </div>
+                <div style="
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 4px;">
-            <span style="font-size: small" class="like-count" id="like-count-<%= e._id%>">
-              <%= e.likes?.length || 0 %>
-            </span>
+              <span style="font-size: small" class="like-count" id="like-count-<%= e._id%>">
+                <%= e.likes?.length || 0 %>
+              </span>
 
-            <div class="fav" data-tooltip="Favorite" onclick="favIt(this, '<%= e._id %>')" data-id="<%= e._id%>"
-              tabindex="0">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                class="<%= e.isFavorite ? 'active' : '' %>" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
-                <path
-                  d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-</div>
+              <div class="fav" data-tooltip="Favorite" onclick="favIt(this, '<%= e._id %>')" data-id="<%= e._id%>" tabindex="0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  class="<%= e.isFavorite ? 'active' : '' %>" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class=" -star-icon -star">
+                  <path
+                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+                  </svg>
+                  </div>
+                  </div>
+                  </div>
+                  </div>
+                  </div>

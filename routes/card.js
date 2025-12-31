@@ -11,6 +11,7 @@ const createActivity = require("./activity.module");
 const { getIO } = require("./socket");
 const Settings = require("../models/settings");
 const draftDB = require("../models/drafts");
+const Version = require("../models/versioning");
 cardRouter.get("/", async (req, res) => {
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
@@ -436,6 +437,10 @@ cardRouter.get("/view/:id", async (req, res) => {
 });
 
 cardRouter.post("/:id", async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).end();
+  }
+
   const {
     title,
     description,
@@ -447,13 +452,21 @@ cardRouter.post("/:id", async (req, res) => {
     visibility,
     readmefile,
   } = req.body;
+
+  const session = await mongoose.startSession();
+
   try {
     const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const decode = jwt.verify(token, process.env.SECRET);
-    const { _id } = decode.checkUser;
-    if (!_id) return res.status(401).json({ error: "Unauthorized" });
-    
-    const createCard = await Card.findByIdAndUpdate(
+    const userId = decode.checkUser._id;
+
+    session.startTransaction();
+
+    const updatedCard = await Card.findByIdAndUpdate(
       req.params.id,
       {
         title,
@@ -461,78 +474,89 @@ cardRouter.post("/:id", async (req, res) => {
         content,
         tags,
         category,
+        status,
         visibility,
         readmefile,
-        status,
-        author: new mongoose.Types.ObjectId(_id),
       },
-      { new: true }
+      { new: true, session }
     );
+
+    if (!updatedCard) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(404).json({ error: "Card not found" });
+    }
+
+    // ----- VERSIONING -----
+    const lastVersion = await Version.findOne({
+      cardId: updatedCard._id,
+    })
+      .sort({ version: -1 })
+      .session(session);
+
+    if (!lastVersion) {
+      // First version
+      await Version.create(
+        [
+          {
+            version: 1,
+            content,
+            author: new mongoose.Types.ObjectId(userId),
+            cardId: updatedCard._id,
+          },
+        ],
+        { session }
+      );
+    } else if (lastVersion.content !== content) {
+      // Content changed
+      await Version.create(
+        [
+          {
+            version: lastVersion.version + 1,
+            content,
+            author: new mongoose.Types.ObjectId(userId),
+            cardId: updatedCard._id,
+          },
+        ],
+        { session }
+      );
+    }
+
+    if (folderName) {
+      await Folder.updateOne(
+        { author: userId, folderName },
+        { $addToSet: { cards: updatedCard._id } },
+        { upsert: true, session }
+      );
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
     await createActivity({
       title: "Card Updated",
-      author: _id,
-      activity: "created",
+      author: userId,
+      activity: "updated",
       entityType: "snippet",
-      entityId: req.params.id,
+      entityId: updatedCard._id,
       status: "success",
     });
-    if (!createCard) {
-      try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        const deleteDarft = await draftDB.findOneAndDelete({
-          _id: req.params.id,
-        }, { session });
 
-        const createCard = await Card.create([{
-          title,
-          description,
-          content,
-          tags,
-          category,
-          visibility,
-          readmefile,
-          status,
-          author: new mongoose.Types.ObjectId(_id),
-        }], { session });
-
-        await session.commitTransaction();
-        if (!deleteDarft) {
-          return res.status(404).json({ error: "Card not found" });
-        }
-      } catch (error) {
-        await session.abortTransaction();
-      }
-    }
-
-    try {
-      const findFolder = await Folder.findOne({
-        author: _id,
-        folderName: folderName,
-      });
-      if (!findFolder) {
-        const newFolder = await Folder.create({
-          author: _id,
-          folderName,
-          cards: [createCard._id],
-        });
-      } else {
-        findFolder.cards.push(createCard._id);
-        await findFolder.save();
-      }
-    } catch (error) {
-      return res.json({ error });
-    }
-    res.json({ createCard });
+    return res.json({ updatedCard });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
     console.error(err);
-    res.status(500).json({ error: `Server error ${err.message}` });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-cardRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
 
+cardRouter.get("/:did", async (req, res) => {
+  const id = req.params.did;
+  if (!mongoose.Types.ObjectId.isValid(req.params.did)) {
+    return res.status(404).end();
+  }
   const token = req.cookies.token;
   if (!token) {
     return res.redirect(`/public/${id}`);
@@ -570,6 +594,12 @@ cardRouter.get("/:id", async (req, res) => {
     author: _id,
     isDeleted: false,
   });
+  const findVersions = await Version.find({
+    cardId: id,
+  })
+    .populate("cardId")
+    .populate("author")
+    .sort({ createdAt: -1 });
 
   res.render("viewcard", {
     card: cardss[0],
@@ -577,6 +607,8 @@ cardRouter.get("/:id", async (req, res) => {
     author: userName,
     userId: _id,
     folders,
+    versions: findVersions,
+    currentVersion: findVersions[0]?.version ?? 0,
   });
 });
 
