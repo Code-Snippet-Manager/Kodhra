@@ -15,7 +15,7 @@ These protect user trust and prevent data loss.
 ### 2. Snippet Versioning (Minimal but Solid)
 
 * [x] Store version history on each save
-* [ ] Allow rollback to previous version
+* [x] Allow rollback to previous version
 
 
 ---
