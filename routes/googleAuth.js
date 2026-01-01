@@ -50,7 +50,7 @@ googleAuthrouter.get("/callback", async (req, res) => {
     console.log(userInfo);
     const userImg = await cloudinary.uploader.upload(picture);
     const user = await User.findOne({ email });
-    const userName = user.email.split("@")[0];
+    const userName = user?.email?.split("@")[0];
     if (!user) {
       let newUser = await User.create({
         userName,
