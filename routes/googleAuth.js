@@ -65,8 +65,6 @@ googleAuthrouter.get("/callback", async (req, res) => {
       return;
     } else {
       await User.updateOne({
-        userName,
-        goodName: name,
         providerId: sub,
         userImage: userImg.secure_url,
         provider: "google",
