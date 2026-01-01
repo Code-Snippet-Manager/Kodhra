@@ -53,7 +53,7 @@ googleAuthrouter.get("/callback", async (req, res) => {
     const userName = user?.email?.split("@")[0];
     if (!user) {
       let newUser = await User.create({
-        userName,
+        userName: email?.split("@")[0],
         goodName: name,
         email,
         providerId: sub,
