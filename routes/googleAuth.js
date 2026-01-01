@@ -75,7 +75,7 @@ googleAuthrouter.get("/callback", async (req, res) => {
       res.cookie("token", token).redirect("/");
     }
   } catch (error) {
-    res.json({ error: "Something went wrong" });
+    res.json({ error });
   }
 });
 
