@@ -166,7 +166,9 @@
                         <img src="/assets/document-3d-icon.webp" alt="">
                       </div>
                       <div>
-                        <span id="totalTag" class="draft"><%=draftCount || 0 %></span>
+                        <span id="totalTag" class="draft">
+                          <%=draftCount || 0 %>
+                        </span>
                         <span style="white-space: nowrap;">Total Drafts</span>
                       </div>
                     </div>
@@ -411,6 +413,7 @@
                               <p>Drag and drop snippets to upload them</p>
                             </span>
                           </div>
+                          <%- include("partials/footer.ejs")%>
             </main>
         </div>
     </div>
@@ -822,7 +825,7 @@
       </script>
 
       <script>
-       
+
 
       </script>
       <script src="/scripts/Tooltips.js"></script>
