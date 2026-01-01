@@ -23,13 +23,14 @@ googleAuthrouter.get("/", (req, res) => {
 });
 
 googleAuthrouter.get("/callback", async (req, res) => {
-  const code = req.query.code;
+  let code = req.query.code;
   if (!code) return res.redirect("/login");
-
   try {
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
       body: new URLSearchParams({
         code,
         client_id: process.env.GOOGLE_CLIENT_ID,
@@ -41,44 +42,41 @@ googleAuthrouter.get("/callback", async (req, res) => {
     });
 
     const data = await response.json();
-    if (!data.id_token) return res.redirect("/login");
-
-    const payload = JSON.parse(
-      Buffer.from(data.id_token.split(".")[1], "base64").toString()
-    );
-
-    const { sub, email, name, picture } = payload;
-    const userName = email.split("@")[0];
-
-    let user = await User.findOne({ email });
-
+    console.log(data);
+    const base64Url = data.id_token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const userInfo = JSON.parse(Buffer.from(base64, "base64").toString("utf8"));
+    const { sub, email, name, picture } = userInfo;
+    console.log(userInfo);
+    const userImg = await cloudinary.uploader.upload(picture);
+    const user = await User.findOne({ email });
+    const userName = user.email.split("@")[0];
     if (!user) {
-      user = await User.create({
+      let newUser = await User.create({
         userName,
         goodName: name,
         email,
         providerId: sub,
-        userImage: picture,
+        userImage: userImg.secure_url,
         provider: "google",
       });
+      let token = jwt.sign({ checkUser: newUser }, process.env.SECRET);
+      res.cookie("token", token).redirect("/");
+      return;
+    } else {
+      await User.updateOne({
+        userName,
+        goodName: name,
+        providerId: sub,
+        userImage: userImg.secure_url,
+        provider: "google",
+      });
+      let token = jwt.sign({ checkUser: user }, process.env.SECRET);
+      res.cookie("token", token).redirect("/");
     }
-
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-    });
-
-    res.redirect("/");
-  } catch (err) {
-    console.error(err);
-    res.redirect("/login");
+  } catch (error) {
+    res.json({ error });
   }
 });
-
 
 module.exports = googleAuthrouter;
