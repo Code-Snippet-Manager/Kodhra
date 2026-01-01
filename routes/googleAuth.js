@@ -64,11 +64,15 @@ googleAuthrouter.get("/callback", async (req, res) => {
       res.cookie("token", token).redirect("/");
       return;
     } else {
-      await User.updateOne({
-        providerId: sub,
-        userImage: userImg.secure_url,
-        provider: "google",
-      });
+      const user = await User.findOneAndUpdate(
+        { email },
+        {
+          providerId: sub,
+          userImage: picture,
+          provider: "google",
+        },
+        { new: true }
+      );
       let token = jwt.sign({ checkUser: user }, process.env.SECRET);
       res.cookie("token", token).redirect("/");
     }
