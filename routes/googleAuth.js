@@ -18,7 +18,6 @@ googleAuthrouter.get("/", (req, res) => {
     access_type: "offline",
     prompt: "consent",
   });
-  console.log(params);
 
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
 });
@@ -43,6 +42,7 @@ googleAuthrouter.get("/callback", async (req, res) => {
     });
 
     const data = await response.json();
+    console.log(data)
     const base64Url = data.id_token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const userInfo = JSON.parse(Buffer.from(base64, "base64").toString("utf8"));
@@ -64,7 +64,7 @@ googleAuthrouter.get("/callback", async (req, res) => {
       res.cookie("token", token).redirect("/");
       return;
     } else {
-      await user.updateOne({
+      await User.updateOne({
         userName,
         goodName: name,
         providerId: sub,
