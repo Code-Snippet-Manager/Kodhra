@@ -42,7 +42,10 @@ googleAuthrouter.get("/callback", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log(data);
+    if (!data.id_token) {
+      console.error("Google token error:", data);
+      return res.redirect("/login");
+    }
     const base64Url = data.id_token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const userInfo = JSON.parse(Buffer.from(base64, "base64").toString("utf8"));
