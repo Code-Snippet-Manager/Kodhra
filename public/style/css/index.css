@@ -1590,4 +1590,16 @@ button {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.14) !important;
 }
 
+select {
+  width: 100%;
+  border: var(--accent);
+  background: var(--accent);
+  padding: 10px;
+  border-radius: 5px;
+}
+select option {
+  background: var(--bg-color);
+  color: var(--color);
+}
+
 /*# sourceMappingURL=index.css.map */

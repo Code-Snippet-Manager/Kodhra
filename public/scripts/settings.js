@@ -77,7 +77,22 @@ const sessionTimeout = document.getElementById("sessionTimeout");
 const exportFormat = document.getElementById("exportFormat");
 const autoExportSchedule = document.getElementById("autoExportSchedule");
 
-let settings = JSON.parse(localStorage.getItem("settings") || "{}");
+let settings = {};
+async function getsettings() {
+  const res = await fetch("/settings/list", {
+    method: "GET",
+    credentials: "include",
+  });
+  const data = await res.json();
+  for (const key in data) {
+    if (document.getElementById(key)) {
+      document.getElementById(key).value = data[key];
+    } else {
+      console.log("no such key", key);
+    }
+  }
+}
+getsettings();
 
 uiMode.addEventListener("change", () => {
   settings.uiMode = uiMode.value;
@@ -143,8 +158,6 @@ syntaxStyle.addEventListener("change", () => {
   settings.syntaxStyle = syntaxStyle.value;
   localStorage.setItem("settings", JSON.stringify(settings));
 });
-
-
 
 cloudSync.addEventListener("change", () => {
   settings.cloudSync = cloudSync.value;
@@ -292,20 +305,11 @@ autoExportSchedule.addEventListener("change", () => {
   });
 });
 
-let datas = localStorage.getItem("settings")
-  ? JSON.parse(localStorage.getItem("settings"))
-  : {};
-
-for (const key in datas) {
-  document.getElementById(key).value = datas[key];
-}
-
-
-document.querySelector(".reset").addEventListener("click", () => { 
+document.querySelector(".reset").addEventListener("click", () => {
   accentColorv2.value = "#242424";
   accentColorv2.dispatchEvent(new Event("change"));
-})
-document.querySelector(".fontreset").addEventListener("click", () => { 
+});
+document.querySelector(".fontreset").addEventListener("click", () => {
   fontSize.value = 16;
   fontSize.dispatchEvent(new Event("change"));
-})
+});

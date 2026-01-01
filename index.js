@@ -155,9 +155,13 @@ app.get("/", authMiddleware, async (req, res, next) => {
       .limit(10)
       .populate("author", "userName userImage");
     const card = await findFavPinned(cards, decode.checkUser._id);
+    const draftCount = await DraftDB.countDocuments({
+      author: decode.checkUser._id,
+    });
     res.render("index", {
       image: decode.checkUser?.userImage || decode.user?.avatar,
       card,
+      draftCount,
       author: decode.checkUser.userName,
       userId: decode.checkUser._id,
       folders,
@@ -641,7 +645,6 @@ app.get("/version/card/:id", async (req, res) => {
   const version = await Version.findOne({ _id: id }).populate("cardId");
   res.json(version);
 });
-
 
 app.get("/location", async (req, res) => {
   const ip =
