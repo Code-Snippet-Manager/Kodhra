@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const settingsSchema = new mongoose.Schema(
   {
     uiMode: { type: String, default: "Normal Mode" },
-    defaultLanguage: { type: String, default: "" },
+    defaultLanguage: { type: String, default: "JavaScript" },
     showSidebar: { type: String, default: "Yes" },
     autoSaveInterval: { type: String, default: "Off" },
     themev2: { type: String, default: "Dark" },
