@@ -77,7 +77,8 @@ googleAuthrouter.get("/callback", async (req, res) => {
       res.cookie("token", token).redirect("/");
     }
   } catch (error) {
-    res.json({ error });
+    console.error("Google OAuth Error:", error);
+    res.status(500).json({ message: error.message });
   }
 });
 
