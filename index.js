@@ -23,6 +23,8 @@ const session = require("express-session");
 const fpRouter = require("./routes/forgotPass.js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const settingMiddleWare = require("./middleware/settings.middleware");
+
 const RedisStore = require("connect-redis").RedisStore;
 const client = require("./config/redis.config.js");
 const path = require("path");
@@ -99,38 +101,43 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use("/login", router);
 app.use("/signup", signup);
-app.use("/card", authMiddleware, cardRouter);
-app.use("/dlt", authMiddleware, cardRouter);
-app.use("/edit", authMiddleware, cardRouter);
+app.use("/card", authMiddleware, settingMiddleWare, cardRouter);
+app.use("/dlt", authMiddleware, settingMiddleWare, cardRouter);
+app.use("/edit", authMiddleware, settingMiddleWare, cardRouter);
 app.use("/forgotPass", fpRouter);
 app.use("/auth/github/", gitroute);
 app.use("/emailverification", vRouter);
-app.use("/folder", authMiddleware, folderRouter);
-app.use("/search", authMiddleware, searchRouter);
-app.use("/tags", authMiddleware, tagsRouter);
-app.use("/pin", authMiddleware, pinRouter);
-app.use("/fav", authMiddleware, favRouter);
-app.use("/import-export", authMiddleware, ioRouter);
-app.use("/settings", authMiddleware, sRouter);
-app.use("/moveit", authMiddleware, moveRouter);
-app.use("/delete", authMiddleware, deleteRouter);
-app.use("/images", authMiddleware, imageRouter);
-app.use("/notifications", authMiddleware, notificationRouter);
-app.use("/profile", authMiddleware, profileRouter);
+app.use("/folder", authMiddleware, settingMiddleWare, folderRouter);
+app.use("/search", authMiddleware, settingMiddleWare, searchRouter);
+app.use("/tags", authMiddleware, settingMiddleWare, tagsRouter);
+app.use("/pin", authMiddleware, settingMiddleWare, pinRouter);
+app.use("/fav", authMiddleware, settingMiddleWare, favRouter);
+app.use("/import-export", authMiddleware, settingMiddleWare, ioRouter);
+app.use("/settings", authMiddleware, settingMiddleWare, sRouter);
+app.use("/moveit", authMiddleware, settingMiddleWare, moveRouter);
+app.use("/delete", authMiddleware, settingMiddleWare, deleteRouter);
+app.use("/images", authMiddleware, settingMiddleWare, imageRouter);
+app.use(
+  "/notifications",
+  authMiddleware,
+  settingMiddleWare,
+  notificationRouter
+);
+app.use("/profile", authMiddleware, settingMiddleWare, profileRouter);
 app.use("/auth/google", googleAuthrouter);
-app.use("/payment", authMiddleware, paymentRouter);
-app.use("/share", authMiddleware, shareRouter);
-app.use("/language", authMiddleware, languageRouter);
-app.use("/explore", authMiddleware, expoloreRouter);
-app.use("/activity", authMiddleware, activityRouter);
-app.use("/recyclebin", authMiddleware, recyclebinRouter);
-app.use("/generate_cdn", authMiddleware, cdnRouter);
-app.use("/token", authMiddleware, accesskeyRouter);
-app.use("/notebook", authMiddleware, notebookRouter);
-app.use("/folders", authMiddleware, downloadRouter);
-app.use("/f", authMiddleware, followuser);
-app.use("/drafts", authMiddleware, draftRouter);
-app.use("/version", authMiddleware, versioningRouter);
+app.use("/payment", authMiddleware, settingMiddleWare, paymentRouter);
+app.use("/share", authMiddleware, settingMiddleWare, shareRouter);
+app.use("/language", authMiddleware, settingMiddleWare, languageRouter);
+app.use("/explore", authMiddleware, settingMiddleWare, expoloreRouter);
+app.use("/activity", authMiddleware, settingMiddleWare, activityRouter);
+app.use("/recyclebin", authMiddleware, settingMiddleWare, recyclebinRouter);
+app.use("/generate_cdn", authMiddleware, settingMiddleWare, cdnRouter);
+app.use("/token", authMiddleware, settingMiddleWare, accesskeyRouter);
+app.use("/notebook", authMiddleware, settingMiddleWare, notebookRouter);
+app.use("/folders", authMiddleware, settingMiddleWare, downloadRouter);
+app.use("/f", authMiddleware, settingMiddleWare, followuser);
+app.use("/drafts", authMiddleware, settingMiddleWare, draftRouter);
+app.use("/version", authMiddleware, settingMiddleWare, versioningRouter);
 app.get("/landing", (req, res) => {
   res.render("landingPage");
 });

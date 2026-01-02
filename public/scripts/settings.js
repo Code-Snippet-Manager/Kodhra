@@ -83,12 +83,15 @@ async function getsettings() {
     method: "GET",
     credentials: "include",
   });
+
   const data = await res.json();
+
   for (const key in data) {
     if (document.getElementById(key)) {
       document.getElementById(key).value = data[key];
     } else {
-      console.log("no such key", key);
+      console.log("DOM Not Available:- ", key);
+      continue;
     }
   }
 }
@@ -305,10 +308,10 @@ autoExportSchedule.addEventListener("change", () => {
   });
 });
 
-document.querySelector(".reset").addEventListener("click", () => {
-  accentColorv2.value = "#242424";
-  accentColorv2.dispatchEvent(new Event("change"));
-});
+// document.querySelector(".reset").addEventListener("click", () => {
+//   accentColorv2.value = "#242424";
+//   accentColorv2.dispatchEvent(new Event("change"));
+// });
 document.querySelector(".fontreset").addEventListener("click", () => {
   fontSize.value = 16;
   fontSize.dispatchEvent(new Event("change"));

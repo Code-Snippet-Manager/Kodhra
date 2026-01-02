@@ -12,9 +12,11 @@ sRouter.get("/", async (req, res) => {
   const decode = jwt.verify(token, process.env.SECRET);
   const { userImage, userName, email, _id } = decode.checkUser;
   const userInfo = await User.findById(_id);
+  const findUserSettings = await Settings.findOne({ user: _id });
   res.render("settings", {
     image: userImage,
     userInfo,
+    settings:findUserSettings
   });
 });
 

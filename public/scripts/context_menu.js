@@ -783,10 +783,8 @@ async function getTheme() {
   });
   if (res.ok) {
     const data = await res.json();
-    // for theme
+    console.log(data.themev2)
     const theme = data.themev2;
-    const themeInput = document.querySelector(`input[name='${theme}']`);
-    if (themeInput) themeInput.checked = true;
     if (theme === "dark") {
       document.body.setAttribute("data-theme", "dark");
     } else if (theme === "light") {

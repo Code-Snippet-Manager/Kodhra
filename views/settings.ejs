@@ -54,8 +54,7 @@
                   <li>
                     <a href="#general" data-link="general" class="link"><svg xmlns="http://www.w3.org/2000/svg"
                         width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round"
-                        class="   -app-window-mac-icon  -app-window-mac">
+                        stroke-linecap="round" stroke-linejoin="round" class="   -app-window-mac-icon  -app-window-mac">
                         <rect width="20" height="16" x="2" y="4" rx="2" />
                         <path d="M6 8h.01" />
                         <path d="M10 8h.01" />
@@ -216,11 +215,11 @@
                         <span class="description">Get your access token to use the API from your browser & more.</span>
                       </div>
                       <div>
-                        <input type="text" name="accessToken" id="accessToken"
+                        <input type="text" name="accessToken" id="accessToken" readonly
                           style="margin-bottom: 6px; padding-inline: 2px;" value="<%= userInfo.accesskey %>">
                         <div style="display: flex; width: 60%;gap: 10px;">
                           <button id="getToken" style="flex: 1;">Get Token</button>
-                          <button id="copyToken" style="flex: 1;">Copy Token</button>
+                          <button id="copyToken" style="flex: 1;" onclick="window.navigator.clipboard.writeText(document.getElementById('accessToken').value);alert('API_KEY Copied.')">Copy Token</button>
                         </div>
                       </div>
                     </label>
@@ -355,9 +354,9 @@
                       </div>
                       <div
                         style="display: flex;justify-content: space-between;align-items: center;width: 300px;gap: 10px;">
-                        <input type="number" min="10" max="30" value="14" name="fontSize" id="fontSize"
+                        <input type="number" min="10" max="30" name="fontSize" id="fontSize"
                           style="flex: 1;">
-                        <div class="fontreset">
+                        <div class="fontreset" style="cursor: pointer;">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="   -rotate-ccw-icon  -rotate-ccw">
@@ -701,7 +700,10 @@
 
 
 
-
+      // document.querySelector(".fontreset").addEventListener("click", () => {
+      //   document.getElementById("fontSize").value = "16";
+      //   document.getElementById("fontSize").dispatchEvent(new Event("input"));
+      // });
     </script>
 
 </body>

@@ -90,8 +90,11 @@
         if (settings.accentColorv2 === "default") {
             document.documentElement.style.setProperty("--accent2", "rgba(44, 44, 228, 0.788)");
             return;
+        } else if (settings.accentColorv2) {
+            document.documentElement.style.setProperty("--accent2", settings.accentColorv2);
+        } else {
+            document.documentElement.style.setProperty("--accent2", "rgba(44, 44, 228, 0.788)");
         }
-        document.documentElement.style.setProperty("--accent2", settings.accentColorv2);
     }
 
     getAccent();
