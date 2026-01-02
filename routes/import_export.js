@@ -14,7 +14,7 @@ ioRouter.get("/", (req, res) => {
   const userEmail = decode.checkUser.email;
   const userName = decode.checkUser.userName;
   const userImage = decode.checkUser.userImage;
-  const author = decode.checkUser.author;
+  const author = decode.checkUser._id;
 
   res.render("import_export", {
     userEmail,
