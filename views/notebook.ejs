@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create New Notebook | Organize Developer Notes & Code – Kodhra</title>
-    
+
     <meta name="description"
         content="Create a new developer notebook to organize notes, ideas, and related code snippets. Kodhra notebooks help developers document logic, experiments, and reusable knowledge in one place.">
-    
+
     <meta name="keywords" content="
     create notebook,
     developer notebook,
@@ -19,18 +19,18 @@
     developer knowledge base,
     kodhra create notebook
     ">
-    
+
     <meta name="author" content="Ajoy Das">
     <meta name="language" content="English">
     <meta name="distribution" content="global">
     <meta name="rating" content="general">
     <meta name="revisit-after" content="1 day">
-    
+
     <meta name="robots" content="noindex, nofollow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="googlebot" content="index, follow">
-    
+
     <link rel="canonical" href="https://kodhra.codewithajoydas.live/notebook">
-    
+
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Kodhra">
@@ -42,13 +42,13 @@
     <meta property="og:image:width" content="512">
     <meta property="og:image:height" content="512">
     <meta property="og:image:alt" content="Create Developer Notebook in Kodhra">
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Create New Notebook – Kodhra">
     <meta name="twitter:description" content="Organize your developer notes and code ideas using Kodhra notebooks.">
     <meta name="twitter:image" content="https://kodhra.codewithajoydas.live/icons/icon-512-maskable.png">
-    
+
     <!-- App / UI -->
     <meta name="application-name" content="Kodhra">
     <meta name="theme-color" content="#0f172a">
@@ -113,7 +113,6 @@
             background: none !important;
             color: var(--color) !important;
         }
-
     </style>
     <style>
         pre {
@@ -148,7 +147,8 @@
             margin-block: .5rem;
             padding-left: .2rem;
         }
-        img{
+
+        img {
             width: 100%;
             height: auto;
         }
@@ -194,7 +194,7 @@
 
                                 <textarea id="asd">Write your notebook here</textarea>
                             </section>
-                      <%- include("partials/footer.ejs")%>
+                            <%- include("partials/footer.ejs")%>
 
                         </main>
                 </div>
@@ -207,7 +207,7 @@
         <script src="\scripts\isonline.js"></script>
         <script src="\scripts\collapse.js"></script>
         <script src="/scripts/Tooltips.js"></script>
-
+        <script src="/scripts/context_menu.js"></script>
         <script>
             const easyMDE = new EasyMDE({
                 element: document.getElementById("asd"),

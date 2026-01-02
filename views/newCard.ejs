@@ -129,6 +129,21 @@
       min-height: 100px;
       width: 100%;
     }
+
+    /* .editor-toolbar button {
+      background: var(--bg-color) !important;
+      color: var(--color) !important;
+    } */
+
+    .editor-toolbar button:hover {
+      background: var(--color) !important;
+      color: var(--bg-color) !important;
+    }
+
+    .CodeMirror-gutter {
+      margin-bottom: 0 !important;
+      height: 100% !important;
+    }
   </style>
 </head>
 
@@ -393,7 +408,7 @@
                   </svg>
                   Sending Data...</span>
               </div>
-                      <%- include("partials/footer.ejs")%>
+              <%- include("partials/footer.ejs")%>
 
             </main>
 
@@ -414,7 +429,7 @@
     <script src="\scripts\ad_search.js"></script>
     <script src="\scripts\header.js"></script>
     <script src="\scripts\searchFunction.js"></script>
-    <!-- <script src="\scripts\context_menu.js"></script> -->
+    <script src="\scripts\context_menu.js"></script>
 
     <script>
       const easyMDE = new EasyMDE({
@@ -672,6 +687,20 @@
       });
     </script>
 
+    <script>
+      async function getLanguage() {
+        const res = await fetch("/settings/list", { credentials: "include" });
+        if (res.ok) {
+          const s = await res.json();
+          const language = document.getElementById("category");
+          language.value = s.defaultLanguage;
+        } else {
+          const language = document.getElementById("category");
+          language.value = "javaScript";
+        }
+      }
+      getLanguage();
+    </script>
 
 
 
