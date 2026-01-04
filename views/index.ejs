@@ -86,6 +86,9 @@
     window.USER_ID = "<%= userId %>";
   </script>
   <script src="\scripts\util\soundEffects.js"></script>
+  <style>
+  
+  </style>
 </head>
 
 <body>
@@ -106,7 +109,7 @@
               <section class="overview"
                 style="transition: all .5s ease-in; position: relative; display: flex; justify-content: space-evenly;">
                 <div>
-                  <div style="display: flex;justify-content: space-between;align-items: center;">
+                  <div class="somthing" style="display: flex;justify-content: space-between;align-items: center;">
                     <div class="greeting">
                       <img src="\assets\motivation-3d-icon.webp" alt="motivational image">
                       <span>
@@ -133,7 +136,7 @@
                       <span><span id="lastActive" style="font-weight: bolder; font-size: small;"></span></span>
                     </div>
                   </div>
-                  <div class="count" style="gap: 10px;">
+                  <div class="count" style="gap: 10px; display: flex; flex-wrap: wrap;">
                     <div class="totalSnippet" onclick="window.location.assign('/card')">
                       <div class="img">
                         <img src="\assets\code-snippet-3d-icon.webp" alt="" width="60px">
@@ -188,7 +191,8 @@
                   </div>
                 </div>
 
-                <div style="height: 100%; display: flex;flex-direction: column; gap: 10px; justify-content: start;">
+                <div class="right"
+                  style="height: 100%; display: flex;flex-direction: column; gap: 10px; justify-content: start;">
 
                   <div class="recent_activity" style="background: var(--bg-color);  border-radius: 10px; ">
                     <div class="headerTtitle"
@@ -413,10 +417,9 @@
                               <p>Drag and drop snippets to upload them</p>
                             </span>
                           </div>
-                          <%- include("partials/footer.ejs")%>
-            </main>
-        </div>
-    </div>
+                        </main>
+                      </div>
+                    </div>
 
     <%- include("partials/share") %>
       <div id="context_menu" style="
@@ -662,6 +665,12 @@
               try {
                 let answer = confirm("Are you sure you want to upload this file?");
                 if (answer) {
+                  new Toastmaster({
+                    title: "Uploading file",
+                    message: "Please wait while we upload your file.",
+                    type: "info",
+                    delay: 7000
+                  }).showNotification();
                   const res = await fetch("/import-export", {
                     method: "POST",
                     body: formData,

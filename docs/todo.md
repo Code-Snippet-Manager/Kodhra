@@ -22,8 +22,8 @@ These protect user trust and prevent data loss.
 
 ### 3. Search Must Actually Search Code
 
-* [ ] Enable full-text search inside code content
-* [ ] Index title + description + code body
+* [x] Enable full-text search inside code content
+* [x] Index title + description + code body
 * [ ] Highlight matched code lines in results
 
 ---

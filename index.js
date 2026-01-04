@@ -76,6 +76,8 @@ const draftRouter = require("./routes/drafts");
 const DraftDB = require("./models/drafts");
 const Version = require("./models/versioning");
 const versioningRouter = require("./routes/versionRestore");
+const extNotebook = require("./routes/extension/notebook");
+const extSnippet = require("./routes/extension/snippet");
 app.get("/favicon.ico", (req, res) => res.status(204));
 const io = socket.init(server);
 io.on("connection", (socket) => {
@@ -138,6 +140,8 @@ app.use("/folders", authMiddleware, settingMiddleWare, downloadRouter);
 app.use("/f", authMiddleware, settingMiddleWare, followuser);
 app.use("/drafts", authMiddleware, settingMiddleWare, draftRouter);
 app.use("/version", authMiddleware, settingMiddleWare, versioningRouter);
+app.use("/extionsion/", extNotebook);
+app.use("/s/ex/", extSnippet);
 app.get("/landing", (req, res) => {
   res.render("landingPage");
 });

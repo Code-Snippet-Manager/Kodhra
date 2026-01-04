@@ -9,10 +9,10 @@
 
     .footer-container {
         width: 100%;
-        margin: 0 auto;
-        padding: 0 16px;
+        /* margin: 0 auto;
+        padding: 0 16px; */
         display: flex;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         align-items: center;
         flex-wrap: wrap;
     }
@@ -29,35 +29,30 @@
     .footer-links{
         display: flex;
         align-items: center;
-        gap: 10px;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
     }
 </style>
 
 <footer class="site-footer">
     <div class="footer-container">
 
-        <div class="footer-left">
+        
+        <div class="footer-links" style="text-align: center;">
+            <a href="https://docs.codewithajoydas.live/#privacy-intro">Privacy Policy</a>
+            <a href="https://docs.codewithajoydas.live/#terms-intro">Terms & Conditions</a>
+            <a href="https://docs.codewithajoydas.live/#cookie-policy">Cookie Policy</a>
+            <a href="https://docs.codewithajoydas.live/#privacy-rights">Data Protection</a>
+            <a href="https://docs.codewithajoydas.live/#terms-contact">Contact</a>
+        </div>
+
+        <!-- <div class="footer-left" style="text-align: center !important;">
             <p>
                 © <%= new Date().getFullYear() %> <strong>Kodhra</strong>.
                     All rights reserved.
             </p>
         </div>
-
-        <div class="footer-links">
-            <a href="https://docs.codewithajoydas.live/#privacy-intro">Privacy Policy</a>
-            <span>|</span>
-
-            <a href="https://docs.codewithajoydas.live/#terms-intro">Terms & Conditions</a>
-            <span>|</span>
-
-            <a href="https://docs.codewithajoydas.live/#cookie-policy">Cookie Policy</a>
-            <span>|</span>
-
-            <a href="https://docs.codewithajoydas.live/#privacy-rights">Data Protection</a>
-            <span>|</span>
-
-            <a href="https://docs.codewithajoydas.live/#terms-contact">Contact</a>
-        </div>
-
+         -->
     </div>
 </footer>

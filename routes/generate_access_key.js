@@ -18,7 +18,48 @@ accesskeyRouter.post("/accesskey", async (req, res) => {
     const accesskey = crypto.randomBytes(64).toString("hex");
     checkUser.accesskey = await bcrypt.hash(accesskey, 10);
     await checkUser.save();
-    res.json({ accesskey_token: checkUser.accesskey });
+    res.json({ accesskey_token: accesskey });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error, Please try again" });
+  }
+});
+accesskeyRouter.post("/verify", async (req, res) => {
+  const { accesskey } = req.body;
+  if (!accesskey)
+    return res.status(400).json({ error: "Access Key is required" });
+  try {
+    const findUsers = await User.find({ accesskey: { $ne: null } }).select(
+      "_id accesskey email userName userImage"
+    );
+
+    let matchedUser = null;
+
+    for (let user of findUsers) {
+      const isMatch = await bcrypt.compare(accesskey, user.accesskey);
+      if (isMatch) {
+        matchedUser = user;
+        break;
+      }
+    }
+
+    if (!matchedUser) {
+      return res.status(404).json({ error: "Access Key Not Found" });
+    }
+    const token = jwt.sign({ checkUser: matchedUser }, process.env.SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        _id: matchedUser._id,
+        userName: matchedUser.userName,
+        email: matchedUser.email,
+        userImage: matchedUser.userImage,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error, Please try again" });

@@ -23,11 +23,11 @@
           onerror="this.src='https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg'" />
         <div class="title">
           <p>
-            <%= e.title || "Untitled" %>
-              <span style="
+            <span class="card_title"><%= e.title || "Untitled" %></span>
+              <span class="card_description" style="
               font-size: 13px !important;
               display: block;
-              width: 300px;
+             
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
@@ -38,11 +38,11 @@
                   <div>
                     <span class="author"><strong>
                         <a href="/profile/<%= e.author.userName%>" style="display: inline">
-                          <%= e.author.userName%>
+                          <%= e.author.userName%>,
                         </a>
-                      </strong></span>, <span class="lan">
-                      <%= e.category %>
-                    </span>,
+                      </strong></span><span class="lan">
+                      <%= e.category %>,
+                    </span>
             <span class="time">
               <%= timeAgo(e.createdAt) %>
             </span>

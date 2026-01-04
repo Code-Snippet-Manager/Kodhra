@@ -310,7 +310,12 @@
 
         const formData = new FormData();
         formData.append("file", currentFile);
-
+        new Toastmaster({
+          title: "Uploading file",
+          message: "Please wait while we upload your file.",
+          type: "info",
+          delay: 7000
+        }).showNotification();
         const res = await fetch("/import-export", {
           method: "POST",
           body: formData,

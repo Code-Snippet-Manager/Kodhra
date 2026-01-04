@@ -6,10 +6,12 @@ const cardSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      default: "My Snippet",
     },
     description: {
       type: String,
       trim: true,
+      default: "No Description",
     },
     content: {
       type: String,
@@ -23,6 +25,7 @@ const cardSchema = new mongoose.Schema(
     ],
     category: {
       type: String,
+      default: "Text",
       trim: true,
     },
     author: {
@@ -58,10 +61,12 @@ const cardSchema = new mongoose.Schema(
       title: {
         type: String,
         trim: true,
+        default: "My Snippet Readme",
       },
       description: {
         type: String,
         trim: true,
+        default: "No Description",
       },
       content: {
         type: String,
@@ -78,6 +83,20 @@ const cardSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-cardSchema.index({ title: "text", description: "text", content: "text" });
+cardSchema.index(
+  {
+    title: "text",
+    description: "text",
+    content: "text",
+  },
+  {
+    weights: {
+      title: 10,
+      description: 5,
+      content: 1,
+    },
+    name: "card_full_text_search",
+  }
+);
 
 module.exports = mongoose.model("Card", cardSchema);

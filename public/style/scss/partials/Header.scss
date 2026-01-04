@@ -107,7 +107,7 @@ header {
         max-height: 45px;
         min-height: 45px;
         border: 0.5px solid gary;
-        border-radius: 50px;
+        border-radius: 50% !important;
         object-fit: cover;
       }
       .profile-bar {

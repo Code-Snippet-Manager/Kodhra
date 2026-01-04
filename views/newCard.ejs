@@ -160,7 +160,7 @@
                 <header class="snippet-header">
                   <label for="title1">
                     <span
-                      style="display: flex; justify-content: start; align-items: center; gap: 5px; font-size: 15px !important;">
+                      style="display: flex; justify-content: start; align-items: center; gap: 5px; font-size: 15px !important; white-space: nowrap;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="   -file-code-icon  -file-code">
@@ -173,11 +173,11 @@
                       Snippet Title
                     </span>
                     <input type="text" id="title1" placeholder="Snippet title…" class="snippet-title"
-                      style="display: inline-block !important;" value="Untitled." />
+                      style="display: inline-block !important;min-width: 300px;" value="Untitled." />
                   </label>
                   <div class="snippet-actions">
                     <button onclick="submitData()"
-                      style="background: var(--accent2);color: var(--color);width: 150px; border: none;">
+                      style="background: var(--accent2);color: var(--color);min-width: 150px; border: none;">
                       Save Snippet
                     </button>
                     <button onclick="window.location.reload()"

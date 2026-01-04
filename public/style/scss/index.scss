@@ -1638,3 +1638,75 @@ select {
     color: var(--color);
   }
 }
+
+@media screen and (max-width: 700px) {
+  .overview {
+    flex-wrap: wrap;
+  }
+
+  .lastActive {
+    display: none;
+  }
+
+  .reports {
+    flex-wrap: wrap;
+  }
+
+  .reports .dailywisechart {
+    width: 100% !important;
+  }
+
+  .reports #languageChart {
+    width: 100% !important;
+  }
+
+  .right {
+    width: 100% !important;
+  }
+
+  .card_description {
+    width: 250px !important;
+  }
+  .card_title {
+    width: 250px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .snippet-header {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .snippet-actions > button {
+    width: 100% !important;
+  }
+  .snippet-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+  .meta-field {
+    width: 100% !important;
+  }
+}
+
+.card_description {
+  width: 300px;
+}
+.card_title {
+  width: 300px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

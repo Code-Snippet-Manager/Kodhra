@@ -21,10 +21,7 @@ async function searchAlgoritm(searchTerm, user_Name, Language, pageNum = 1) {
   // Search in cards
   let query = { isDeleted: false };
   if (searchTerm) {
-    query.$or = [
-      { title: { $regex: searchTerm, $options: "i" } },
-      { description: { $regex: searchTerm, $options: "i" } },
-    ];
+    query.$text = { $search: searchTerm };
   }
 
   if (user_Name) {
@@ -68,9 +65,18 @@ async function searchAlgoritm(searchTerm, user_Name, Language, pageNum = 1) {
   const skip = (page - 1) * limit;
 
   const users = await userDB.find(useridQuery);
-  const notebooks = await notebookDB.find(notebookQuery).populate("author").skip(skip).limit(limit);
-    const folders = await folderDB.find(folderQuery).populate("author").limit(30);
-  const cards = await cardDB.find(query).populate("author").skip(skip).limit(limit);
+  const notebooks = await notebookDB
+    .find(notebookQuery)
+    .populate("author")
+    .skip(skip)
+    .limit(limit);
+  const folders = await folderDB.find(folderQuery).populate("author").limit(30);
+  const cards = await cardDB
+    .find(query, { score: { $meta: "textScore" } })
+    .sort({ score: { $meta: "textScore" } })
+    .populate("author")
+    .skip(skip)
+    .limit(limit);
 
   return {
     users,
