@@ -1,4 +1,4 @@
-# Kodhra – Code Snippet Manager
+# Kodhra – Code Snippet Manager (Alpha version on - 2026-Jun)
 
 Kodhra is a privately developed **Code Snippet Management platform** created to support structured, long-term code reuse for professional development workflows.
 
