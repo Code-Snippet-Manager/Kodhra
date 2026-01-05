@@ -71,7 +71,6 @@ googleAuthrouter.get("/callback", async (req, res) => {
         { email },
         {
           providerId: sub,
-          userImage: picture,
           provider: "google",
         },
         { new: true }

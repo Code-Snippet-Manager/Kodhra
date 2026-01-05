@@ -59,6 +59,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@codewithajoydas/toastmaster@2.3.5/dist/toaster.min.css">
   <script src="/socket.io/socket.io.js"></script>
   <script src="/scripts/getSettings.js"></script>
+  <script>
+    window.USER_ID = "<%= userId %>"
+  </script>
 </head>
 
 <body data-theme="light">
@@ -413,7 +416,7 @@
 
 
 
-    <script>
+    <!-- <script>
       async function pinIt(btn, id) {
         try {
           let res = await fetch(`/card/pin/${id}`, {
@@ -456,7 +459,7 @@
         window.location.assign(`/card/${id}`);
       }
 
-    </script>
+    </script> -->
     <script>
       window.onload = () => {
         let loader = document.querySelector(".loader");

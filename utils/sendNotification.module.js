@@ -1,13 +1,18 @@
 const { getIO } = require("../routes/socket");
 const Notification = require("../models/notification");
 
-async function sendNotification(title, message, link, userId) {
+async function sendNotification(title, message, link, userId, fromUserId = null) {
   const newNotification = await Notification.create({
     userId,
     title,
     message,
     link,
     isRead: false,
+    fromUserId: {
+      userName: fromUserId?.userName,
+      userImage: fromUserId?.userImage,
+      userId: fromUserId?._id,
+    }
   });
 
   const unreadCount = await Notification.countDocuments({
@@ -23,6 +28,7 @@ async function sendNotification(title, message, link, userId) {
     link: newNotification.link,
     unreadCount,
     createdAt: newNotification.createdAt,
+    fromUserId,
   });
 }
 

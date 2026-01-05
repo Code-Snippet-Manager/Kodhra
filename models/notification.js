@@ -6,6 +6,17 @@ const notificationSchema = new mongoose.Schema({
   message: String,
   link: String,
   isRead: { type: Boolean, default: false },
+  fromUserId: {
+    userName: {
+      type: String,
+    },
+    userImage: {
+      type: String,
+    },
+    userId: {
+      type: String,
+    },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -12,6 +12,8 @@ const { getIO } = require("./socket");
 const Settings = require("../models/settings");
 const draftDB = require("../models/drafts");
 const Version = require("../models/versioning");
+const sendNotification = require("../utils/sendNotification.module");
+const io = getIO();
 cardRouter.get("/", async (req, res) => {
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
@@ -254,7 +256,7 @@ cardRouter.put("/pin/:id", async (req, res) => {
 cardRouter.put("/fav/:id", async (req, res) => {
   try {
     const cardId = req.params.id;
-    const token = req.cookies.token;
+    const { token } = req.cookies;
     const decode = jwt.verify(token, process.env.SECRET);
     const userId = decode.checkUser._id;
 
@@ -262,62 +264,50 @@ cardRouter.put("/fav/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid Card ID" });
     }
 
-    const checkCard = await cardSchema.findOne({
-      _id: cardId,
-      isDeleted: false,
-    });
-    if (!checkCard) {
-      return res.status(404).json({ error: "Card not found" });
-    }
+    const card = await cardSchema
+      .findOne({
+        _id: cardId,
+        isDeleted: false,
+      })
+      .populate("author");
+
+    if (!card) return res.status(404).json({ error: "Card not found" });
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const isFavorite = user.favoriteCards.includes(cardId);
 
-    if (isFavorite) {
-      user.favoriteCards.pull(cardId); // remove
-      await cardSchema.findByIdAndUpdate(
-        cardId,
-        { $pull: { likes: user._id } },
-        { new: true }
-      );
-      await createActivity({
-        title: "Card Unfavorited",
-        author: user._id,
-        activity: "updated",
-        entityId: cardId,
-        entityType: "snippet",
-        status: "success",
-      });
-    } else {
-      user.favoriteCards.push(cardId);
-      await cardSchema.findByIdAndUpdate(
-        cardId,
-        { $push: { likes: user._id } },
-        { new: true }
-      );
-      await createActivity({
-        title: "Card Favorited",
-        author: user._id,
-        activity: "updated",
-        entityId: cardId,
-        entityType: "snippet",
-        status: "success",
-      });
+    await User.findByIdAndUpdate(
+      userId,
+      isFavorite
+        ? { $pull: { favoriteCards: cardId } }
+        : { $addToSet: { favoriteCards: cardId } }
+    );
+
+    await cardSchema.findByIdAndUpdate(cardId, {
+      [isFavorite ? "$pull" : "$addToSet"]: { likes: userId },
+    });
+
+    if (!isFavorite && !card.author._id.equals(userId)) {
+      sendNotification(
+        "Card Liked",
+        `${user.userName} liked your card`,
+        `/card/${cardId}`,
+        card.author._id,
+        user
+      ).catch(console.error);
     }
 
-    await user.save();
-    const likes = (await cardSchema.find({ _id: cardId }).populate("likes"))
-      .length;
+    const updatedCard = await cardSchema.findById(cardId).select("likes");
+
     res.json({
       success: true,
-      message: `${isFavorite ? "unfavorited" : "favorited"}`,
-      favoriteCards: user.favoriteCards,
-      likes: likes,
+      message: isFavorite ? "unfavorited" : "favorited",
+      likes: updatedCard.likes.length,
     });
   } catch (err) {
-    console.error("Error favoriting card:", err.message);
+    console.error("Favorite error:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
@@ -550,7 +540,6 @@ cardRouter.post("/:id", async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 cardRouter.get("/:did", async (req, res) => {
   const id = req.params.did;

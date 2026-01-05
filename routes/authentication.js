@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
     
     sendNotification(
       "Login Success",
-      "You have successfully logged in, now you can create snippets and folders ",
+      "You have successfully logged in.",
       "/card/create",
       checkUser._id
     );

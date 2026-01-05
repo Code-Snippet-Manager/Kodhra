@@ -8,6 +8,7 @@ const getIO = require("./socket");
 const findFavPinned = require("../utils/findFavPin.module");
 const multer = require("multer");
 const cloudinary = require("../config/cloudinary.config");
+const sendNotification = require("../utils/sendNotification.module");
 const upload = multer({ dest: "uploads/" });
 profileRouter.get("/:user", async (req, res) => {
   try {
@@ -43,7 +44,7 @@ profileRouter.get("/", async (req, res) => {
   const { _id, userName, email, userImage } = decode.checkUser;
   const user = await User.findById(_id);
   const cardlen = await Card.find({ author: user._id }).countDocuments();
-  const cards = await Card.find({ author: user._id, isDeleted:false })
+  const cards = await Card.find({ author: user._id, isDeleted: false })
     .populate("author")
     .sort({ likes: -1 })
     .limit(10);
@@ -113,6 +114,13 @@ profileRouter.post("/follow/:id", async (req, res) => {
             { $addToSet: { following: targetUser } }
           ).session(session),
         ]);
+        sendNotification(
+          "New follower",
+          `${user.userName} is now following you.`,
+          `/profile/${user.userName}`,
+          targetUser,
+          user
+        );
       } else {
         await Promise.all([
           User.updateOne(
@@ -128,8 +136,6 @@ profileRouter.post("/follow/:id", async (req, res) => {
       }
     });
 
-
-    
     return res.json({
       status: true,
       message: "OK",
@@ -293,7 +299,6 @@ profileRouter.post("/update", async (req, res) => {
     });
   }
 });
-
 
 profileRouter.post("/updateLinks", async (req, res) => {
   try {

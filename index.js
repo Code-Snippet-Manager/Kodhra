@@ -18,7 +18,6 @@ const profileRouter = require("./routes/profile");
 const signup = require("./routes/authoraization");
 const googleAuthrouter = require("./routes/googleAuth");
 const gitroute = require("./routes/githubOauth");
-const cardRouter = require("./routes/card");
 const session = require("express-session");
 const fpRouter = require("./routes/forgotPass.js");
 const cookieParser = require("cookie-parser");
@@ -37,6 +36,29 @@ app.set("view engine", "ejs");
 const User = require("./models/User");
 const connectDB = require("./config/mongoose.config");
 connectDB();
+
+const os = require("os");
+const http = require("http");
+const server = http.createServer(app);
+const socketModule = require("./routes/socket");
+const io = socketModule.init(server);
+
+io.use((socket, next) => {
+  const rowCookie = socket.handshake.headers.cookie;
+  const token = cookie.parse(rowCookie).token;
+  if (!token) return next(new Error("Unauthorized"));
+  const decoded = jwt.verify(token, process.env.SECRET);
+  socket.userId = decoded.checkUser._id;
+  next();
+});
+
+io.on("connection", (socket) => {
+  socket.join(socket.userId);
+  console.log("User Connected:", socket.userId);
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
 const authMiddleware = require("./middleware/auth.middleware");
 const vRouter = require("./routes/verifyEmail");
 const Card = require("./models/Card");
@@ -51,10 +73,6 @@ const sRouter = require("./routes/setting");
 const moveRouter = require("./routes/move");
 const deleteRouter = require("./routes/delete");
 const imageRouter = require("./routes/getimage");
-const os = require("os");
-const http = require("http");
-const server = http.createServer(app);
-const socket = require("./routes/socket");
 const notificationRouter = require("./routes/notification");
 const sendNotification = require("./utils/sendNotification.module");
 const shareRouter = require("./routes/share");
@@ -78,17 +96,11 @@ const Version = require("./models/versioning");
 const versioningRouter = require("./routes/versionRestore");
 const extNotebook = require("./routes/extension/notebook");
 const extSnippet = require("./routes/extension/snippet");
+const cookie = require("cookie");
 app.get("/favicon.ico", (req, res) => res.status(204));
-const io = socket.init(server);
-io.on("connection", (socket) => {
-  socket.on("register", (userId) => {
-    socket.join(userId);
-    console.log("User connected:", userId);
-  });
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-});
+
+const cardRouter = require("./routes/card");
+
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.use(express.json());
 app.use(

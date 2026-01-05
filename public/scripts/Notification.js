@@ -1,4 +1,6 @@
-let socket = io();
+let socket = io({
+  withCredentials: true,
+});
 socket.emit("register", window.USER_ID);
 socket.on("notification", (data) => {
   createNotification([data]);
@@ -37,7 +39,11 @@ function createNotification(data) {
           e.createdAt
         ).toLocaleString()}</span>
       </div>
-      <p class="n-description">${e.message}</p>
+      <p class="n-description"> <span><img src="${
+        e?.fromUserId?.userImage
+      }" onerror="this.src='/icons/icon-192-maskable.png'"/></span>${
+      e.message
+    }</p>
       <a href="${
         e.link || "#"
       }" class="action-button">Take action <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -chevron-right-icon  -chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>
@@ -54,7 +60,6 @@ notification.addEventListener("click", async () => {
   let data = await res.json();
   updateUnreadCount(0);
 });
-
 
 let notificationBar = document.querySelector(".notification-bar");
 notificationBar.addEventListener("click", (e) => {
