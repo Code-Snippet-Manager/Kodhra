@@ -92,335 +92,337 @@
 </head>
 
 <body>
-  <div class="content">
-    <%- include("partials/header", {appVersion}) %>
-      <div class="container">
-        <%- include("partials/sidebar", { navigation: 'home' }) %>
-          <main style="height: calc(100vh - 70px);">
-            <div class="page_title" onclick="collapse(this)">
-              <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="   -chevron-down-icon  -chevron-down">
-                  <path d="m6 9 6 6 6-6" />
-                </svg></span>
-              Overview Section
-            </div>
-            <section class="overview"
-              style="transition: all .5s ease-in; position: relative; display: flex; justify-content: space-evenly;">
-              <div>
-                <div class="somthing" style="display: flex;justify-content: space-between;align-items: center;">
-                  <div class="greeting">
-                    <img src="\assets\motivation-3d-icon.webp" alt="motivational image">
-                    <span>
-                      <h1>Hello, <span id="username" style="text-transform: capitalize;">
-                          <%= author %>
-                        </span></h1>
-                      <span class="motivation"></span>
-                    </span>
-                  </div>
-                  <div class="lastActive" style="padding-inline: 10px;">
-                    <p style="font-size: smaller; display: flex; justify-content: start;align-items: center;gap: 5px;">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="   -clock-fading-icon  -clock-fading">
-                        <path d="M12 2a10 10 0 0 1 7.38 16.75" />
-                        <path d="M12 6v6l4 2" />
-                        <path d="M2.5 8.875a10 10 0 0 0-.5 3" />
-                        <path d="M2.83 16a10 10 0 0 0 2.43 3.4" />
-                        <path d="M4.636 5.235a10 10 0 0 1 .891-.857" />
-                        <path d="M8.644 21.42a10 10 0 0 0 7.631-.38" />
-                      </svg>Last Logged In
-                    </p>
-                    <span><span id="lastActive" style="font-weight: bolder; font-size: small;"></span></span>
-                  </div>
-                </div>
-                <div class="count" style="gap: 10px; display: flex; flex-wrap: wrap;">
-                  <div class="totalSnippet" onclick="window.location.assign('/card')">
-                    <div class="img">
-                      <img src="\assets\code-snippet-3d-icon.webp" alt="" width="60px">
-                    </div>
-                    <div>
-                      <span id="totalSnippet">0</span>
-                      <span style="white-space: nowrap;">Total Snippets</span>
-                    </div>
-                  </div>
-                  <div class="totalFolder" onclick="window.location.assign('/folder')">
-                    <div class="img">
-                      <img src="\assets\folder-3d-icon.webp" alt="">
-                    </div>
-                    <div>
-                      <span id="totalFolder">0</span>
-                      <span style="white-space: nowrap;">Total Folders</span>
-                    </div>
-                  </div>
-                  <div class="totalTag" onclick="window.location.assign('/tags')">
-                    <div class="img">
-                      <img src="\assets\3d-isolated-price-tag.webp" alt="">
-                    </div>
-                    <div>
-                      <span id="totalTag">0</span>
-                      <span style="white-space: nowrap;">Total Tags</span>
-                    </div>
-                  </div>
-                  <div class="totalTag" onclick="window.location.assign('/draft')">
-                    <div class="img">
-                      <img src="/assets/document-3d-icon.webp" alt="">
-                    </div>
-                    <div>
-                      <span id="totalTag" class="draft">
-                        <%=draftCount || 0 %>
-                      </span>
-                      <span style="white-space: nowrap;">Total Drafts</span>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div class="reports">
-                  <div class="dailywisechart">
-                    <div style="display: flex;justify-content: space-between;align-items: center;">
-                      <span style="font-weight: bolder; padding-bottom: 10px;">Daily Wise Report</span>
-                      <input type="month" style="border: 1px solid var(--accent);padding: 10px;border-radius: 10px;"
-                        aria-label="Select Month" id="datePicker">
-                    </div>
-                    <canvas id="dailyChart"></canvas>
-                  </div>
-                  <canvas id="languageChart" width="100" height="100"></canvas>
-                </div>
-              </div>
-
-              <div class="right"
-                style="height: 100%; display: flex;flex-direction: column; gap: 10px; justify-content: start;">
-
-                <div class="recent_activity" style="background: var(--bg-color);  border-radius: 10px; ">
-                  <div class="headerTtitle"
-                    style=" padding: 10px; display: flex;justify-content: start;align-items: center;gap: 10px;">
-                    <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="   -history-icon  -history">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                        <path d="M3 3v5h5" />
-                        <path d="M12 7v5l4 2" />
-                      </svg></span>
-                    <div class="span">Recent History</div>
-                  </div>
-                  <hr style="margin-block: 5px;">
-                  <div class="list">
-                    <ul class="activity"
-                      style="list-style: none; font-size: small; max-height: 300px; overflow-y: auto;">
-                      <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="   -circle-icon  -circle">
-                            <circle cx="12" cy="12" r="10" />
-                          </svg></span> Created a new snippet on <br> 11-11-2022</li>
-                      <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="   -circle-icon  -circle">
-                            <circle cx="12" cy="12" r="10" />
-                          </svg></span> Created a new snippet on <br> 11-11-2022</li>
-                      <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="   -circle-icon  -circle">
-                            <circle cx="12" cy="12" r="10" />
-                          </svg></span> Created a new snippet on <br> 11-11-2022</li>
-                      <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="   -circle-icon  -circle">
-                            <circle cx="12" cy="12" r="10" />
-                          </svg></span> Created a new snippet on <br> 11-11-2022</li>
-                    </ul>
-                    <!-- <a href="#" style="font-size: smaller;color: blue;padding: 10px;">See
-                        All</a> -->
-                  </div>
-                </div>
-
-                <div class="validated_cards" style="height: fit-content;  padding: 10px;">
-                  <div class="headerTtitle"
-                    style=" padding: 10px; display: flex;justify-content: start;align-items: center;gap: 10px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="   -file-text-icon  -file-text">
-                      <path
-                        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
-                      <path d="M14 2v5a1 1 0 0 0 1 1h5" />
-                      <path d="M10 9H8" />
-                      <path d="M16 13H8" />
-                      <path d="M16 17H8" />
-                    </svg>
-                    <div class="span">Duplicate Snippets</div>
-                  </div>
-                  <hr>
-                  <div class="pendingdata" style="display: flex;
-                  justify-content: center;
-                  flex-direction: column;
-                  align-items: center;">
-                    <span style="font-size: x-large;" class="vp">450/503</span>
-
-                    <span id="delete_dup"
-                      style="display: flex;justify-content: center;align-items: center;gap: 10px; font-size: smaller;"><span><svg
-                          xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                          class="   -trash-icon  -trash">
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                          <path d="M3 6h18" />
-                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        </svg></span>Delete duplicate snippets</span>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <% if(folders.length !==0){%>
+  <%- include("partials/loader.ejs") %>
+    <div class="content">
+      <%- include("partials/header", {appVersion}) %>
+        <div class="container">
+          <%- include("partials/sidebar", { navigation: 'home' }) %>
+            <main style="height: calc(100vh - 70px);">
               <div class="page_title" onclick="collapse(this)">
                 <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="   -chevron-down-icon  -chevron-down">
                     <path d="m6 9 6 6 6-6" />
                   </svg></span>
-                Recent Folders
+                Overview Section
               </div>
-
-              <section style="width: 100%;">
-                <div id="folders"
-                  style="overflow-y: scroll !important; display: flex;flex-wrap: wrap;gap: 10px;margin: 10px;justify-content: start; padding-block:10px ;">
-                  <% folders.forEach((folder, i)=> { %>
-                    <div class="folder" tabindex="0" data-id="<%= folder._id %>" data-name="<%= folder.folderName %>"
-                      data-contextmenu="true" data-menus="delete,  move, share, rename"
-                      onclick="window.location.href = `/folder/<%= folder._id %>`"
-                      data-cardName="<%= folder.folderName %>" data-mtype="folder"
-                      data-cardauthor="<%= folder.author._id %>" data-userId="<%= userId %>"
-                      style="flex: 1;min-width: 197px; max-width: 210px;display: flex;align-items: center;gap: 10px; padding: 10px;background: var(--bg-color);border-radius: 10px;justify-content: space-between; box-shadow: var(--box-shadow);">
-                      <div style="display: flex;justify-content: center;align-items: center;gap: 10px;">
-                        <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
-                            fill="#F7B31B" stroke="currentColor" stroke-width=".1" stroke-linecap="round"
-                            stroke-linejoin="round" class="   -folder-icon  -folder">
-                            <path
-                              d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
-                          </svg></span><span
-                          style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">
-                          <%= folder.folderName%>
-                        </span>
-                      </div>
-                      <div class="menu_top" data-menu-id="<%= folder._id %>" data-id="<%= folder._id %>"
-                        data-menus="delete, move, share, rename" onclick="openContextMenu(event)"
-                        data-userId="<%= userId %>" data-cardauthor="<%= folder.author._id %>"
-                        data-cardName="<%= folder.folderName %>" data-mtype="folder" data-contextMenu="true"
-                        tabindex="0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              <section class="overview"
+                style="transition: all .5s ease-in; position: relative; display: flex; justify-content: space-evenly;">
+                <div>
+                  <div class="somthing" style="display: flex;justify-content: space-between;align-items: center;">
+                    <div class="greeting">
+                      <img src="\assets\motivation-3d-icon.webp" alt="motivational image">
+                      <span>
+                        <h1>Hello, <span id="username" style="text-transform: capitalize;">
+                            <%= author %>
+                          </span></h1>
+                        <span class="motivation"></span>
+                      </span>
+                    </div>
+                    <div class="lastActive" style="padding-inline: 10px;">
+                      <p
+                        style="font-size: smaller; display: flex; justify-content: start;align-items: center;gap: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                          class="   -ellipsis-vertical-icon  -ellipsis-vertical">
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="12" cy="5" r="1" />
-                          <circle cx="12" cy="19" r="1" />
-                        </svg>
+                          class="   -clock-fading-icon  -clock-fading">
+                          <path d="M12 2a10 10 0 0 1 7.38 16.75" />
+                          <path d="M12 6v6l4 2" />
+                          <path d="M2.5 8.875a10 10 0 0 0-.5 3" />
+                          <path d="M2.83 16a10 10 0 0 0 2.43 3.4" />
+                          <path d="M4.636 5.235a10 10 0 0 1 .891-.857" />
+                          <path d="M8.644 21.42a10 10 0 0 0 7.631-.38" />
+                        </svg>Last Logged In
+                      </p>
+                      <span><span id="lastActive" style="font-weight: bolder; font-size: small;"></span></span>
+                    </div>
+                  </div>
+                  <div class="count" style="gap: 10px; display: flex; flex-wrap: wrap;">
+                    <div class="totalSnippet" onclick="window.location.assign('/card')">
+                      <div class="img">
+                        <img src="\assets\code-snippet-3d-icon.webp" alt="" width="60px">
+                      </div>
+                      <div>
+                        <span id="totalSnippet">0</span>
+                        <span style="white-space: nowrap;">Total Snippets</span>
                       </div>
                     </div>
-                    <% })%>
+                    <div class="totalFolder" onclick="window.location.assign('/folder')">
+                      <div class="img">
+                        <img src="\assets\folder-3d-icon.webp" alt="">
+                      </div>
+                      <div>
+                        <span id="totalFolder">0</span>
+                        <span style="white-space: nowrap;">Total Folders</span>
+                      </div>
+                    </div>
+                    <div class="totalTag" onclick="window.location.assign('/tags')">
+                      <div class="img">
+                        <img src="\assets\3d-isolated-price-tag.webp" alt="">
+                      </div>
+                      <div>
+                        <span id="totalTag">0</span>
+                        <span style="white-space: nowrap;">Total Tags</span>
+                      </div>
+                    </div>
+                    <div class="totalTag" onclick="window.location.assign('/draft')">
+                      <div class="img">
+                        <img src="/assets/document-3d-icon.webp" alt="">
+                      </div>
+                      <div>
+                        <span id="totalTag" class="draft">
+                          <%=draftCount || 0 %>
+                        </span>
+                        <span style="white-space: nowrap;">Total Drafts</span>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="reports">
+                    <div class="dailywisechart">
+                      <div style="display: flex;justify-content: space-between;align-items: center;">
+                        <span style="font-weight: bolder; padding-bottom: 10px;">Daily Wise Report</span>
+                        <input type="month" style="border: 1px solid var(--accent);padding: 10px;border-radius: 10px;"
+                          aria-label="Select Month" id="datePicker">
+                      </div>
+                      <canvas id="dailyChart"></canvas>
+                    </div>
+                    <canvas id="languageChart" width="100" height="100"></canvas>
+                  </div>
+                </div>
+
+                <div class="right"
+                  style="height: 100%; display: flex;flex-direction: column; gap: 10px; justify-content: start;">
+
+                  <div class="recent_activity" style="background: var(--bg-color);  border-radius: 10px; ">
+                    <div class="headerTtitle"
+                      style=" padding: 10px; display: flex;justify-content: start;align-items: center;gap: 10px;">
+                      <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round" class="   -history-icon  -history">
+                          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                          <path d="M3 3v5h5" />
+                          <path d="M12 7v5l4 2" />
+                        </svg></span>
+                      <div class="span">Recent History</div>
+                    </div>
+                    <hr style="margin-block: 5px;">
+                    <div class="list">
+                      <ul class="activity"
+                        style="list-style: none; font-size: small; max-height: 300px; overflow-y: auto;">
+                        <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="   -circle-icon  -circle">
+                              <circle cx="12" cy="12" r="10" />
+                            </svg></span> Created a new snippet on <br> 11-11-2022</li>
+                        <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="   -circle-icon  -circle">
+                              <circle cx="12" cy="12" r="10" />
+                            </svg></span> Created a new snippet on <br> 11-11-2022</li>
+                        <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="   -circle-icon  -circle">
+                              <circle cx="12" cy="12" r="10" />
+                            </svg></span> Created a new snippet on <br> 11-11-2022</li>
+                        <li><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round" class="   -circle-icon  -circle">
+                              <circle cx="12" cy="12" r="10" />
+                            </svg></span> Created a new snippet on <br> 11-11-2022</li>
+                      </ul>
+                      <!-- <a href="#" style="font-size: smaller;color: blue;padding: 10px;">See
+                        All</a> -->
+                    </div>
+                  </div>
+
+                  <div class="validated_cards" style="height: fit-content;  padding: 10px;">
+                    <div class="headerTtitle"
+                      style=" padding: 10px; display: flex;justify-content: start;align-items: center;gap: 10px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="   -file-text-icon  -file-text">
+                        <path
+                          d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                        <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                        <path d="M10 9H8" />
+                        <path d="M16 13H8" />
+                        <path d="M16 17H8" />
+                      </svg>
+                      <div class="span">Duplicate Snippets</div>
+                    </div>
+                    <hr>
+                    <div class="pendingdata" style="display: flex;
+                  justify-content: center;
+                  flex-direction: column;
+                  align-items: center;">
+                      <span style="font-size: x-large;" class="vp">450/503</span>
+
+                      <span id="delete_dup"
+                        style="display: flex;justify-content: center;align-items: center;gap: 10px; font-size: smaller;"><span><svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="   -trash-icon  -trash">
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          </svg></span>Delete duplicate snippets</span>
+                    </div>
+                  </div>
                 </div>
               </section>
-              <%}%>
 
+              <% if(folders.length !==0){%>
+                <div class="page_title" onclick="collapse(this)">
+                  <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="   -chevron-down-icon  -chevron-down">
+                      <path d="m6 9 6 6 6-6" />
+                    </svg></span>
+                  Recent Folders
+                </div>
 
-                <% if(card.length !==0){%>
-                  <div class="page_title" onclick="collapse(this)">
-                    <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="   -chevron-down-icon  -chevron-down">
-                        <path d="m6 9 6 6 6-6" />
-                      </svg></span>
-                    Recent Snippets
-                  </div>
-                  <section class="cardsasd">
-                    <div id="cards" style="overflow-y: scroll !important;">
-                      <%- include("partials/cards") %>
-                    </div>
-                    <div style="display: flex;justify-content: center;align-items: center;margin-block: 10px;">
-                      <a href="/card" class="see_all"
-                        style="display: flex;justify-content: center;align-items: center; padding:10px 40px;border-radius: 10px; ">
-                        <span style="display: flex; justify-content: center;align-items: center;"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                <section style="width: 100%;">
+                  <div id="folders"
+                    style="overflow-y: scroll !important; display: flex;flex-wrap: wrap;gap: 10px;margin: 10px;justify-content: start; padding-block:10px ;">
+                    <% folders.forEach((folder, i)=> { %>
+                      <div class="folder" tabindex="0" data-id="<%= folder._id %>" data-name="<%= folder.folderName %>"
+                        data-contextmenu="true" data-menus="delete,  move, share, rename"
+                        onclick="window.location.href = `/folder/<%= folder._id %>`"
+                        data-cardName="<%= folder.folderName %>" data-mtype="folder"
+                        data-cardauthor="<%= folder.author._id %>" data-userId="<%= userId %>"
+                        style="flex: 1;min-width: 197px; max-width: 210px;display: flex;align-items: center;gap: 10px; padding: 10px;background: var(--bg-color);border-radius: 10px;justify-content: space-between; box-shadow: var(--box-shadow);">
+                        <div style="display: flex;justify-content: center;align-items: center;gap: 10px;">
+                          <span><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
+                              fill="#F7B31B" stroke="currentColor" stroke-width=".1" stroke-linecap="round"
+                              stroke-linejoin="round" class="   -folder-icon  -folder">
+                              <path
+                                d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+                            </svg></span><span
+                            style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px;">
+                            <%= folder.folderName%>
+                          </span>
+                        </div>
+                        <div class="menu_top" data-menu-id="<%= folder._id %>" data-id="<%= folder._id %>"
+                          data-menus="delete, move, share, rename" onclick="openContextMenu(event)"
+                          data-userId="<%= userId %>" data-cardauthor="<%= folder.author._id %>"
+                          data-cardName="<%= folder.folderName %>" data-mtype="folder" data-contextMenu="true"
+                          tabindex="0">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="   -eye-icon  -eye">
-                            <path
-                              d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg></span>
-                        See All</a>
-                    </div>
-                  </section>
-                  <%}%>
-
-
-
-                    <div class="move_folder">
-                      <div class="header_title" style="font-weight: bolder">
-                        <div class="span">Move " folderName"</div>
+                            class="   -ellipsis-vertical-icon  -ellipsis-vertical">
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="12" cy="5" r="1" />
+                            <circle cx="12" cy="19" r="1" />
+                          </svg>
+                        </div>
                       </div>
-                      <hr />
-                      <div class="folders_name">
-                        <ul>
-                          <% if (folders.length===0) { %>
-                            <span style="margin: 10px; color: red">No folder found</span>
-                            <% } %>
-                              <% folders.forEach((folder, i)=> { %>
-                                <li>
-                                  <label>
-                                    <input type="radio" name="moveFolder" value="<%= folder._id %>"
-                                      id="moveFolder<%= i %>" />
-                                    <div class="folder">
-                                      <div class="folder_icon">
-                                        <!-- SVG folder icon -->
-                                      </div>
-                                      <div class="folder_name" style="
+                      <% })%>
+                  </div>
+                </section>
+                <%}%>
+
+
+                  <% if(card.length !==0){%>
+                    <div class="page_title" onclick="collapse(this)">
+                      <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round" class="   -chevron-down-icon  -chevron-down">
+                          <path d="m6 9 6 6 6-6" />
+                        </svg></span>
+                      Recent Snippets
+                    </div>
+                    <section class="cardsasd">
+                      <div id="cards" style="overflow-y: scroll !important;">
+                        <%- include("partials/cards") %>
+                      </div>
+                      <div style="display: flex;justify-content: center;align-items: center;margin-block: 10px;">
+                        <a href="/card" class="see_all"
+                          style="display: flex;justify-content: center;align-items: center; padding:10px 40px;border-radius: 10px; ">
+                          <span style="display: flex; justify-content: center;align-items: center;"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                              class="   -eye-icon  -eye">
+                              <path
+                                d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg></span>
+                          See All</a>
+                      </div>
+                    </section>
+                    <%}%>
+
+
+
+                      <div class="move_folder">
+                        <div class="header_title" style="font-weight: bolder">
+                          <div class="span">Move " folderName"</div>
+                        </div>
+                        <hr />
+                        <div class="folders_name">
+                          <ul>
+                            <% if (folders.length===0) { %>
+                              <span style="margin: 10px; color: red">No folder found</span>
+                              <% } %>
+                                <% folders.forEach((folder, i)=> { %>
+                                  <li>
+                                    <label>
+                                      <input type="radio" name="moveFolder" value="<%= folder._id %>"
+                                        id="moveFolder<%= i %>" />
+                                      <div class="folder">
+                                        <div class="folder_icon">
+                                          <!-- SVG folder icon -->
+                                        </div>
+                                        <div class="folder_name" style="
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
                                 gap: 10px;
                               ">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                          viewBox="0 0 24 24" fill="#EDCE44" stroke="none" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round"
-                                          class="   -folder-icon  -folder">
-                                          <path
-                                            d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
-                                        </svg>
-                                        <span style="
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="#EDCE44" stroke="none" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="   -folder-icon  -folder">
+                                            <path
+                                              d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
+                                          </svg>
+                                          <span style="
                                   display: block;
                                   width: 120px;
                                   white-space: nowrap;
                                   overflow: hidden;
                                   text-overflow: ellipsis;
                                 " title="<%= folder.folderName %>">
-                                          <%= folder.folderName %>
-                                        </span>
+                                            <%= folder.folderName %>
+                                          </span>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </label>
-                                </li>
-                                <% }) %>
-                        </ul>
-                        <button class="move_btn" onclick="moveIt()" <%=folders.length===0 ? "disabled" : "" %> > Move
-                        </button>
-                      </div>
-                    </div>
-                    <%- include("partials/fab") %>
-                      <%- include("partials/share") %>
-                        <div class="dragover-container">
-                          <span style="text-align: center;">
-                            <img
-                              src="https://cdn3d.iconscout.com/3d/premium/thumb/drag-and-drop-3d-icon-png-download-12385391.png"
-                              alt="" width="200px">
-                            <br>
-                            <h2>Drop here to upload</h2>
-                            <p>Drag and drop snippets to upload them</p>
-                          </span>
+                                    </label>
+                                  </li>
+                                  <% }) %>
+                          </ul>
+                          <button class="move_btn" onclick="moveIt()" <%=folders.length===0 ? "disabled" : "" %> > Move
+                          </button>
                         </div>
-          </main>
-      </div>
-  </div>
+                      </div>
+                      <%- include("partials/fab") %>
+                        <%- include("partials/share") %>
+                          <div class="dragover-container">
+                            <span style="text-align: center;">
+                              <img
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/drag-and-drop-3d-icon-png-download-12385391.png"
+                                alt="" width="200px">
+                              <br>
+                              <h2>Drop here to upload</h2>
+                              <p>Drag and drop snippets to upload them</p>
+                            </span>
+                          </div>
+            </main>
+        </div>
+    </div>
 
-  <%- include("partials/share") %>
-    <div id="context_menu" style="
+    <%- include("partials/share") %>
+      <div id="context_menu" style="
         position: absolute;
         top: 0;
         left: 0;
@@ -428,323 +430,323 @@
         z-index: 1000000;
         width: 200px;
       ">
-      <ul id="context_menu_list"></ul>
-    </div>
+        <ul id="context_menu_list"></ul>
+      </div>
 
-    <div class="networkInfo" style="display: none;">
-      <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="   -info-icon  -info">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 16v-4" />
-          <path d="M12 8h.01" />
-        </svg></span>
+      <div class="networkInfo" style="display: none;">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="   -info-icon  -info">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
+          </svg></span>
 
-      <span id="networkInfo"></span>
-    </div>
-
-
+        <span id="networkInfo"></span>
+      </div>
 
 
 
-    <script>
-
-      const datePicker = document.getElementById("datePicker");
-      const motivation = document.querySelector(".motivation");
-      window.onload = async () => {
-        const res = await fetch("/motivational.json");
-        const data = await res.json();
-        motivation.textContent = data[Math.floor(Math.random() * data.length)];
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        datePicker.value = `${year}-${month}`;
-        document.querySelector(".loader").style.display = "none";
-      };
-      datePicker.addEventListener("input", () => {
-        console.log(datePicker.value)
-      })
-    </script>
-
-    <script>
-      let dailyCounts = [];
-      let dailyChartInstance = null;
-
-      window.onload = async () => {
-        const res = await fetch("/motivational.json");
-        const data = await res.json();
-        motivation.textContent = data[Math.floor(Math.random() * data.length)];
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        datePicker.value = `${year}-${month}`;
-        getCounts(year, Number(month));
-        document.querySelector(".loader").classList.add("active");
-        const content = document.querySelector(".content").style.opacity = "1";
-      };
-
-      async function getCounts(selectedYear, selectedMonth) {
-        const res = await fetch("/report");
-        const data = await res.json();
-        document.getElementById("totalSnippet").textContent = data.totalCards;
-        document.getElementById("totalFolder").textContent = data.totalFolders;
-        document.getElementById("totalTag").textContent = data.totalTags;
-        dailyCounts = data.dailyCounts;
-        const languageReport = data.languageReport;
-
-        const langLabels = languageReport.map(l => l._id).splice(0, 3);
-        const langData = languageReport.map(l => l.count).splice(0, 3);
-        const colors = languageReport.map(() => getRandomColor());
-
-        const langCtx = document.getElementById("languageChart").getContext("2d");
-
-        new Chart(langCtx, {
-          type: "bar",
-          data: {
-            labels: langLabels,
-            datasets: [{
-              label: "Snippets per Language",
-              data: langData,
-              backgroundColor: colors,
-              borderColor: "rgba(255, 255, 255, 1)",
-              borderWidth: 0,
-              borderRadius: 10,
-              borderSkipped: false
-            }]
-          },
-          options: {
-            plugins: {
-              legend: {
-                display: false
-              },
-              title: {
-                display: true,
-                text: "Snippets per Language"
-              }
-            },
-            scales: {
-              x: {
-                beginAtZero: true,
-                grid: {
-                  azis: "y",
-                  display: false,
-                  color: "rgba(230,230,230,0.3)"
-                }
-              },
-              y: {
-                grid: {
-                  display: false
-                },
-                ticks: {
-                  color: "#555",
-                  font: { size: 12 }
-                }
-              }
-            }
-          }
-        });
 
 
-        renderDailyChart(selectedYear, selectedMonth);
-      }
+      <script>
 
-      function getRandomColor(alpha = 0.6) {
-        const r = Math.floor(Math.random() * 255);
-        const g = Math.floor(Math.random() * 255);
-        const b = Math.floor(Math.random() * 255);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      }
+        const datePicker = document.getElementById("datePicker");
+        const motivation = document.querySelector(".motivation");
+        window.onload = async () => {
+          const res = await fetch("/motivational.json");
+          const data = await res.json();
+          motivation.textContent = data[Math.floor(Math.random() * data.length)];
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          datePicker.value = `${year}-${month}`;
+          document.querySelector(".loader").style.display = "none";
+        };
+        datePicker.addEventListener("input", () => {
+          console.log(datePicker.value)
+        })
+      </script>
 
-      function renderDailyChart(selectedYear, selectedMonth) {
-        const filtered = dailyCounts.filter(d =>
-          d._id.year === selectedYear && d._id.month === selectedMonth
-        );
+      <script>
+        let dailyCounts = [];
+        let dailyChartInstance = null;
 
-        const dailyCountsLabels = filtered.map(d =>
-          `${String(d._id.day).padStart(2, "0")}`
-        );
-
-        const dailyCountsData = filtered.map(d => d.count);
-
-        const dailyCtx = document.getElementById("dailyChart").getContext("2d");
-
-        if (dailyChartInstance) dailyChartInstance.destroy();
-
-        dailyChartInstance = new Chart(dailyCtx, {
-          type: "line",
-          data: {
-            labels: dailyCountsLabels,
-            datasets: [{
-              label: "Snippets per Day",
-              data: dailyCountsData,
-              backgroundColor: "#7274E0",
-              borderColor: "rgba(255, 255, 255, 0.5)",
-              borderWidth: 2,
-              fill: true,
-              tension: 0.3,
-              pointRadius: 5,
-              pointHoverRadius: 7
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { display: false },
-              title: { display: false, text: "Snippets per Day" }
-            },
-            scales: {
-              y: { beginAtZero: true }
-            }
-          }
-        });
-      }
-
-      datePicker.addEventListener("change", () => {
-        const [year, month] = datePicker.value.split("-").map(Number);
-        renderDailyChart(year, month);
-      });
-
-
-
-    </script>
-
-
-    <script>
-      let dragover_container = document.querySelector(".dragover-container");
-      let dragCounter = 0;
-
-      window.addEventListener("dragenter", (e) => {
-        e.preventDefault();
-        dragCounter++;
-        dragover_container.classList.add("active");
-      });
-
-      window.addEventListener("dragleave", (e) => {
-        e.preventDefault();
-        dragCounter--;
-        if (dragCounter === 0) {
-          dragover_container.classList.remove("active");
-        }
-      });
-
-      window.addEventListener("dragover", (e) => e.preventDefault());
-
-      window.addEventListener("drop", async (e) => {
-        e.preventDefault();
-        dragCounter = 0;
-        dragover_container.classList.remove("active");
-
-        const file = e.dataTransfer.files[0];
-        const fileExtension = file.name.split(".").pop().trim().toLowerCase();
-
-        const extensionMap = {
-          js: "javascript", jsx: "react", ts: "typescript", tsx: "react-typescript",
-          html: "html", css: "css", scss: "scss", sass: "sass",
-          json: "json", xml: "xml", py: "python", java: "java",
-          c: "c", cpp: "cpp", cs: "csharp", php: "php", rb: "ruby",
-          go: "golang", rs: "rust", swift: "swift", kt: "kotlin",
-          dart: "dart", sql: "sql", md: "markdown", sh: "bash",
-          bat: "batch", ini: "ini", yml: "yaml", yaml: "yaml",
-          vue: "vue", svelte: "svelte", astro: "astro", hbs: "handlebars",
-          handlebars: "handlebars", svg: "svg", txt: "text", env: "dotenv",
-          lock: "lockfile", toml: "toml", dockerfile: "docker"
+        window.onload = async () => {
+          const res = await fetch("/motivational.json");
+          const data = await res.json();
+          motivation.textContent = data[Math.floor(Math.random() * data.length)];
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, "0");
+          datePicker.value = `${year}-${month}`;
+          getCounts(year, Number(month));
+          document.querySelector(".loader").classList.add("active");
+          const content = document.querySelector(".content").style.opacity = "1";
         };
 
-        if (fileExtension === "json") {
-          const reader = new FileReader();
+        async function getCounts(selectedYear, selectedMonth) {
+          const res = await fetch("/report");
+          const data = await res.json();
+          document.getElementById("totalSnippet").textContent = data.totalCards;
+          document.getElementById("totalFolder").textContent = data.totalFolders;
+          document.getElementById("totalTag").textContent = data.totalTags;
+          dailyCounts = data.dailyCounts;
+          const languageReport = data.languageReport;
 
-          reader.onload = async (event) => {
-            const fileContent = event.target.result;
+          const langLabels = languageReport.map(l => l._id).splice(0, 3);
+          const langData = languageReport.map(l => l.count).splice(0, 3);
+          const colors = languageReport.map(() => getRandomColor());
 
-            const formData = new FormData();
-            formData.append("file", file);
+          const langCtx = document.getElementById("languageChart").getContext("2d");
 
-            try {
-              let answer = confirm("Are you sure you want to upload this file?");
-              if (answer) {
-                new Toastmaster({
-                  title: "Uploading file",
-                  message: "Please wait while we upload your file.",
-                  type: "info",
-                  delay: 7000
-                }).showNotification();
-                const res = await fetch("/import-export", {
-                  method: "POST",
-                  body: formData,
-                });
-                const data = await res.json();
-                if (res.ok) {
-                  new Toastmaster({
-                    title: "File uploaded successfully",
-                    message: data.message,
-                    type: "success",
-                    delay: 5000
-                  }).showNotification();
+          new Chart(langCtx, {
+            type: "bar",
+            data: {
+              labels: langLabels,
+              datasets: [{
+                label: "Snippets per Language",
+                data: langData,
+                backgroundColor: colors,
+                borderColor: "rgba(255, 255, 255, 1)",
+                borderWidth: 0,
+                borderRadius: 10,
+                borderSkipped: false
+              }]
+            },
+            options: {
+              plugins: {
+                legend: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: "Snippets per Language"
+                }
+              },
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  grid: {
+                    azis: "y",
+                    display: false,
+                    color: "rgba(230,230,230,0.3)"
+                  }
+                },
+                y: {
+                  grid: {
+                    display: false
+                  },
+                  ticks: {
+                    color: "#555",
+                    font: { size: 12 }
+                  }
                 }
               }
-            } catch (err) {
-              new Toastmaster({
-                title: "Faild to upload file",
-                message: "Please Upload a valid JSON file and try again.",
-                type: "error",
-                delay: 5000
-              }).showNotification();
             }
+          });
+
+
+          renderDailyChart(selectedYear, selectedMonth);
+        }
+
+        function getRandomColor(alpha = 0.6) {
+          const r = Math.floor(Math.random() * 255);
+          const g = Math.floor(Math.random() * 255);
+          const b = Math.floor(Math.random() * 255);
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function renderDailyChart(selectedYear, selectedMonth) {
+          const filtered = dailyCounts.filter(d =>
+            d._id.year === selectedYear && d._id.month === selectedMonth
+          );
+
+          const dailyCountsLabels = filtered.map(d =>
+            `${String(d._id.day).padStart(2, "0")}`
+          );
+
+          const dailyCountsData = filtered.map(d => d.count);
+
+          const dailyCtx = document.getElementById("dailyChart").getContext("2d");
+
+          if (dailyChartInstance) dailyChartInstance.destroy();
+
+          dailyChartInstance = new Chart(dailyCtx, {
+            type: "line",
+            data: {
+              labels: dailyCountsLabels,
+              datasets: [{
+                label: "Snippets per Day",
+                data: dailyCountsData,
+                backgroundColor: "#7274E0",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: { display: false },
+                title: { display: false, text: "Snippets per Day" }
+              },
+              scales: {
+                y: { beginAtZero: true }
+              }
+            }
+          });
+        }
+
+        datePicker.addEventListener("change", () => {
+          const [year, month] = datePicker.value.split("-").map(Number);
+          renderDailyChart(year, month);
+        });
+
+
+
+      </script>
+
+
+      <script>
+        let dragover_container = document.querySelector(".dragover-container");
+        let dragCounter = 0;
+
+        window.addEventListener("dragenter", (e) => {
+          e.preventDefault();
+          dragCounter++;
+          dragover_container.classList.add("active");
+        });
+
+        window.addEventListener("dragleave", (e) => {
+          e.preventDefault();
+          dragCounter--;
+          if (dragCounter === 0) {
+            dragover_container.classList.remove("active");
+          }
+        });
+
+        window.addEventListener("dragover", (e) => e.preventDefault());
+
+        window.addEventListener("drop", async (e) => {
+          e.preventDefault();
+          dragCounter = 0;
+          dragover_container.classList.remove("active");
+
+          const file = e.dataTransfer.files[0];
+          const fileExtension = file.name.split(".").pop().trim().toLowerCase();
+
+          const extensionMap = {
+            js: "javascript", jsx: "react", ts: "typescript", tsx: "react-typescript",
+            html: "html", css: "css", scss: "scss", sass: "sass",
+            json: "json", xml: "xml", py: "python", java: "java",
+            c: "c", cpp: "cpp", cs: "csharp", php: "php", rb: "ruby",
+            go: "golang", rs: "rust", swift: "swift", kt: "kotlin",
+            dart: "dart", sql: "sql", md: "markdown", sh: "bash",
+            bat: "batch", ini: "ini", yml: "yaml", yaml: "yaml",
+            vue: "vue", svelte: "svelte", astro: "astro", hbs: "handlebars",
+            handlebars: "handlebars", svg: "svg", txt: "text", env: "dotenv",
+            lock: "lockfile", toml: "toml", dockerfile: "docker"
           };
 
-          reader.readAsText(file);
-        }
-      });
-    </script>
+          if (fileExtension === "json") {
+            const reader = new FileReader();
+
+            reader.onload = async (event) => {
+              const fileContent = event.target.result;
+
+              const formData = new FormData();
+              formData.append("file", file);
+
+              try {
+                let answer = confirm("Are you sure you want to upload this file?");
+                if (answer) {
+                  new Toastmaster({
+                    title: "Uploading file",
+                    message: "Please wait while we upload your file.",
+                    type: "info",
+                    delay: 7000
+                  }).showNotification();
+                  const res = await fetch("/import-export", {
+                    method: "POST",
+                    body: formData,
+                  });
+                  const data = await res.json();
+                  if (res.ok) {
+                    new Toastmaster({
+                      title: "File uploaded successfully",
+                      message: data.message,
+                      type: "success",
+                      delay: 5000
+                    }).showNotification();
+                  }
+                }
+              } catch (err) {
+                new Toastmaster({
+                  title: "Faild to upload file",
+                  message: "Please Upload a valid JSON file and try again.",
+                  type: "error",
+                  delay: 5000
+                }).showNotification();
+              }
+            };
+
+            reader.readAsText(file);
+          }
+        });
+      </script>
 
 
-    <script>
-      const icon = {
-        snippet: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -square-dashed-bottom-code-icon  -square-dashed-bottom-code"><path d="M10 9.5 8 12l2 2.5"/><path d="M14 21h1"/><path d="m14 9.5 2 2.5-2 2.5"/><path d="M5 21a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2"/><path d="M9 21h1"/></svg>`,
+      <script>
+        const icon = {
+          snippet: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -square-dashed-bottom-code-icon  -square-dashed-bottom-code"><path d="M10 9.5 8 12l2 2.5"/><path d="M14 21h1"/><path d="m14 9.5 2 2.5-2 2.5"/><path d="M5 21a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2"/><path d="M9 21h1"/></svg>`,
 
-        folder: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -folder-icon  -folder"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>`,
+          folder: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -folder-icon  -folder"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>`,
 
-        tag: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -tag-icon  -tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>`,
+          tag: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -tag-icon  -tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>`,
 
-        user: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -user-icon  -user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
-        file: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -file-icon  -file"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></svg>`,
-        setting: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -cog-icon  -cog"><path d="M11 10.27 7 3.34"/><path d="m11 13.73-4 6.93"/><path d="M12 22v-2"/><path d="M12 2v2"/><path d="M14 12h8"/><path d="m17 20.66-1-1.73"/><path d="m17 3.34-1 1.73"/><path d="M2 12h2"/><path d="m20.66 17-1.73-1"/><path d="m20.66 7-1.73 1"/><path d="m3.34 17 1.73-1"/><path d="m3.34 7 1.73 1"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="8"/></svg>`,
-        system: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -monitor-cog-icon  -monitor-cog"><path d="M12 17v4"/><path d="m14.305 7.53.923-.382"/><path d="m15.228 4.852-.923-.383"/><path d="m16.852 3.228-.383-.924"/><path d="m16.852 8.772-.383.923"/><path d="m19.148 3.228.383-.924"/><path d="m19.53 9.696-.382-.924"/><path d="m20.772 4.852.924-.383"/><path d="m20.772 7.148.924.383"/><path d="M22 13v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><path d="M8 21h8"/><circle cx="18" cy="6" r="3"/></svg>`,
-        other: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -earth-icon  -earth"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></svg>`,
-        default: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+          user: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -user-icon  -user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+          file: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -file-icon  -file"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></svg>`,
+          setting: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -cog-icon  -cog"><path d="M11 10.27 7 3.34"/><path d="m11 13.73-4 6.93"/><path d="M12 22v-2"/><path d="M12 2v2"/><path d="M14 12h8"/><path d="m17 20.66-1-1.73"/><path d="m17 3.34-1 1.73"/><path d="M2 12h2"/><path d="m20.66 17-1.73-1"/><path d="m20.66 7-1.73 1"/><path d="m3.34 17 1.73-1"/><path d="m3.34 7 1.73 1"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="8"/></svg>`,
+          system: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -monitor-cog-icon  -monitor-cog"><path d="M12 17v4"/><path d="m14.305 7.53.923-.382"/><path d="m15.228 4.852-.923-.383"/><path d="m16.852 3.228-.383-.924"/><path d="m16.852 8.772-.383.923"/><path d="m19.148 3.228.383-.924"/><path d="m19.53 9.696-.382-.924"/><path d="m20.772 4.852.924-.383"/><path d="m20.772 7.148.924.383"/><path d="M22 13v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><path d="M8 21h8"/><circle cx="18" cy="6" r="3"/></svg>`,
+          other: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -earth-icon  -earth"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></svg>`,
+          default: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" class="   -help-circle">
           <circle cx="12" cy="12" r="10"/>
           <path d="M9.09 9a3 3 0 1 1 5.83 1c-.47 1.09-1.99 1.66-1.99 3"/>
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>`
-      };
+        };
 
-      const activityEle = document.querySelector(".activity");
+        const activityEle = document.querySelector(".activity");
 
-      async function getActivity() {
-        try {
-          activityEle.innerHTML = `<p style="padding:10px; text-align:center;">Loading...</p>`;
+        async function getActivity() {
+          try {
+            activityEle.innerHTML = `<p style="padding:10px; text-align:center;">Loading...</p>`;
 
-          const res = await fetch("/activity");
-          const data = await res.json();
-          const activities = Array.isArray(data) ? data : data.data || [];
+            const res = await fetch("/activity");
+            const data = await res.json();
+            const activities = Array.isArray(data) ? data : data.data || [];
 
-          activityEle.innerHTML = "";
+            activityEle.innerHTML = "";
 
-          if (activities.length === 0) {
-            activityEle.innerHTML = `<p class="empty" style="text-align:center; padding:10px;">No recent activity</p>`;
-            return;
-          }
+            if (activities.length === 0) {
+              activityEle.innerHTML = `<p class="empty" style="text-align:center; padding:10px;">No recent activity</p>`;
+              return;
+            }
 
-          activities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          activities.forEach((element) => {
-            const date = new Date(element.createdAt).toLocaleString();
-            const statusIcon = icon[element.entityType] || icon.default;
-            const li = document.createElement("li");
-            li.classList.add("activity-item");
-            li.innerHTML = `
+            activities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            activities.forEach((element) => {
+              const date = new Date(element.createdAt).toLocaleString();
+              const statusIcon = icon[element.entityType] || icon.default;
+              const li = document.createElement("li");
+              li.classList.add("activity-item");
+              li.innerHTML = `
               <span class="activity-icon">${statusIcon}</span>
               <div class="activity-info">
                 <strong>${element.title}</strong><br>
@@ -752,92 +754,91 @@
               </div>
             `;
 
-            activityEle.appendChild(li);
-          });
+              activityEle.appendChild(li);
+            });
 
-        } catch (err) {
-          console.error("Failed to load activities:", err);
-          activityEle.innerHTML = `<li class="error" style="color:red; padding:10px;">Unable to load activities</li>`;
+          } catch (err) {
+            console.error("Failed to load activities:", err);
+            activityEle.innerHTML = `<li class="error" style="color:red; padding:10px;">Unable to load activities</li>`;
+          }
         }
-      }
 
-      getActivity();
-    </script>
-
-
-    <script src="\scripts\home.js"></script>
-    <script src="\scripts\shortcut.js"></script>
-    <script src="\scripts\index.js"></script>
-    <script src="\scripts\context_menu.js"></script>
-    <script src="\scripts\Notification.js"></script>
-    <script src="\scripts\ad_search.js"></script>
-    <script src="\scripts\isonline.js"></script>
-    <script src="\scripts\header.js"></script>
-    <script src="\scripts\searchFunction.js"></script>
-    <script src="\scripts\collapse.js"></script>
-    <script src="\scripts\saveDraft.js"></script>
-    <!-- <script src="\scripts\getAllDraft.js"></script> -->
+        getActivity();
+      </script>
 
 
-    <script>
-      async function getdata() {
-        const res = await fetch("/a", { credentials: "include" });
-        const data = await res.json();
+      <script src="\scripts\home.js"></script>
+      <script src="\scripts\shortcut.js"></script>
+      <script src="\scripts\index.js"></script>
+      <script src="\scripts\context_menu.js"></script>
+      <script src="\scripts\Notification.js"></script>
+      <script src="\scripts\ad_search.js"></script>
+      <script src="\scripts\isonline.js"></script>
+      <script src="\scripts\header.js"></script>
+      <script src="\scripts\searchFunction.js"></script>
+      <script src="\scripts\collapse.js"></script>
+      <script src="\scripts\saveDraft.js"></script>
+      <!-- <script src="\scripts\getAllDraft.js"></script> -->
 
-        const date = new Date(data.lastActive);
-        const formatted = date.toLocaleString();
 
-        document.getElementById("lastActive").textContent = formatted;
-      }
+      <script>
+        async function getdata() {
+          const res = await fetch("/a", { credentials: "include" });
+          const data = await res.json();
 
-      getdata();
-      setInterval(async () => {
-        let res = await fetch("/lastactive", { credentials: "include" });
-        let data = await res.json();
+          const date = new Date(data.lastActive);
+          const formatted = date.toLocaleString();
+
+          document.getElementById("lastActive").textContent = formatted;
+        }
+
         getdata();
-      }, 1000);
-    </script>
+        setInterval(async () => {
+          let res = await fetch("/lastactive", { credentials: "include" });
+          let data = await res.json();
+          getdata();
+        }, 1000);
+      </script>
 
 
 
-    <script>
-      const vp = document.querySelector(".vp");
-      async function DuplicateCount() {
+      <script>
+        const vp = document.querySelector(".vp");
+        async function DuplicateCount() {
+          const dup_delete = document.getElementById("delete_dup");
+
+          const res = await fetch("/card/validation");
+          const data = await res.json();
+          if (data.duplicatesToDelete === 0) {
+            dup_delete.style.display = "none";
+          }
+          vp.innerHTML = `<span data-tooltip="Duplicate Count">${data.duplicatesToDelete}</span> / <span data-tooltip="Total Count">${data.totalCount}</span>`;
+        }
+        DuplicateCount()
+      </script>
+
+      <script>
         const dup_delete = document.getElementById("delete_dup");
+        dup_delete.addEventListener("click", async () => {
+          const res = await fetch("/delete/duplicates", { credentials: "include" });
+          const data = await res.json();
+          if (data.status === 200) {
+            new Toastmaster({
+              title: "Duplicates deleted",
+              message: data.message,
+              type: "success",
+              delay: 5000,
+            }).showNotification();
+          }
+        })
+      </script>
 
-        const res = await fetch("/card/validation");
-        const data = await res.json();
-        if (data.duplicatesToDelete === 0) {
-          dup_delete.style.display = "none";
-        }
-        vp.innerHTML = `<span data-tooltip="Duplicate Count">${data.duplicatesToDelete}</span> / <span data-tooltip="Total Count">${data.totalCount}</span>`;
-      }
-      DuplicateCount()
-    </script>
-
-    <script>
-      const dup_delete = document.getElementById("delete_dup");
-      dup_delete.addEventListener("click", async () => {
-        const res = await fetch("/delete/duplicates", { credentials: "include" });
-        const data = await res.json();
-        if (data.status === 200) {
-          new Toastmaster({
-            title: "Duplicates deleted",
-            message: data.message,
-            type: "success",
-            delay: 5000,
-          }).showNotification();
-        }
-      })
-    </script>
-
-    <script>
+      <script>
 
 
-    </script>
-    <script src="/scripts/Tooltips.js"></script>
-    <script src="/scripts/drafts.js"></script>
-    <%- include("partials/loader.ejs") %>
+      </script>
+      <script src="/scripts/Tooltips.js"></script>
+      <script src="/scripts/drafts.js"></script>
 
 </body>
 
