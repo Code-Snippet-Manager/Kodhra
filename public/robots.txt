@@ -1,28 +1,15 @@
 User-agent: *
 Allow: /
 
-# Block private/auth pages
-Disallow: /login
-Disallow: /signup
-Disallow: /settings
-
-# Block create/edit flows
+# Block non-content actions
 Disallow: /card/create
-Disallow: /notebook
+Disallow: /card/edit
 
-# Block search & filtered URLs
-Disallow: /search?
+# Block search & filter URLs (crawl waste)
+Disallow: /search
 Disallow: /*?q=
 Disallow: /*&q=
 Disallow: /*?filter=
 Disallow: /*?sort=
-Disallow: /*?page=
 
-# Allow important public sections
-Allow: /explore
-Allow: /folder
-Allow: /notebook/get
-Allow: /profile
-
-# Sitemap
 Sitemap: https://kodhra.codewithajoydas.live/sitemap.xml

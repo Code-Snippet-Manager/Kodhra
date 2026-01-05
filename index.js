@@ -303,6 +303,7 @@ app.get("/sitemap.xml", async (req, res) => {
     const staticUrls = [
       "/",
       "/landing/features",
+      "/landing",
       "/landing/workflow",
       "/explore",
       "/profile",
