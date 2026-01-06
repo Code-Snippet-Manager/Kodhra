@@ -9,7 +9,7 @@ const app = express();
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 const dotenv = require("dotenv");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, set } = require("mongoose");
 dotenv.config();
 const fs = require("fs");
 const paymentRouter = require("./routes/payments");
@@ -23,6 +23,13 @@ const fpRouter = require("./routes/forgotPass.js");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const settingMiddleWare = require("./middleware/settings.middleware");
+const webpush = require("web-push");
+
+webpush.setVapidDetails(
+  "mailto:codewithajoydas@gmail.com",
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 const RedisStore = require("connect-redis").RedisStore;
 const client = require("./config/redis.config.js");
@@ -43,22 +50,7 @@ const server = http.createServer(app);
 const socketModule = require("./routes/socket");
 const io = socketModule.init(server);
 
-io.use((socket, next) => {
-  const rowCookie = socket.handshake.headers.cookie;
-  const token = cookie.parse(rowCookie).token;
-  if (!token) return next(new Error("Unauthorized"));
-  const decoded = jwt.verify(token, process.env.SECRET);
-  socket.userId = decoded.checkUser._id;
-  next();
-});
 
-io.on("connection", (socket) => {
-  socket.join(socket.userId);
-  console.log("User Connected:", socket.userId);
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-});
 const authMiddleware = require("./middleware/auth.middleware");
 const vRouter = require("./routes/verifyEmail");
 const Card = require("./models/Card");
@@ -100,6 +92,7 @@ const cookie = require("cookie");
 app.get("/favicon.ico", (req, res) => res.status(204));
 
 const cardRouter = require("./routes/card");
+const Subscription = require("./models/subscriptions.n");
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.use(express.json());
@@ -420,6 +413,35 @@ app.get("/democards", async (req, res) => {
     userId: decode.checkUser._id,
     folders,
   });
+});
+
+app.post("/subscribe", async (req, res) => {
+  const token = req.cookies.token;
+  const decode = jwt.verify(token, process.env.SECRET);
+  const { _id } = decode.checkUser;
+  const subscriptionCode = req.body.subscription;
+  console.log(subscriptionCode);
+  const existingSubscription = await Subscription.findOne({
+    userId: _id,
+  });
+  if (existingSubscription) {
+    await Subscription.updateOne(
+      { userId: _id },
+      { $set: { subscription: subscriptionCode } }
+    );
+    res.status(200).json({ message: "Subscription updated successfully" });
+    return;
+  }
+  try {
+    await Subscription.create({
+      userId: _id,
+      subscription: subscriptionCode,
+    });
+    return res.status(200).json({ message: "Subscription saved successfully" });
+  } catch (error) {
+    console.error("Error saving subscription:", error);
+    return res.status(500).json({ error: "Failed to save subscription" });
+  }
 });
 
 app.get("/logout", (req, res) => {

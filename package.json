@@ -40,7 +40,8 @@
     "razorpay": "^2.9.6",
     "redis": "^5.8.1",
     "sass": "^1.90.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

@@ -117,7 +117,7 @@
       language._id === 'COBOL' ? 'cobol' :
       language._id === 'Erlang' ? 'erlang' :
       language._id === 'VB.NET' ? 'vbnet' :
-                                                                                                                language._id.toLowerCase().replace(/[+#.\s()]/g, '')%>"
+                                                                                                                language?._id?.toLowerCase()?.replace(/[+#.\s()]/g, '')%>"
                                                 alt="<%= language %> icon"
                                                 onerror="this.src = 'https://cdn-icons-png.flaticon.com/512/1049/1049443.png'" />
                                         </div>
@@ -136,7 +136,6 @@
                                 <%- include("partials/no-data.ejs")%>
                             </div>
                         <%}%>
-                      <%- include("partials/footer.ejs")%>
 
                     </main>
 
