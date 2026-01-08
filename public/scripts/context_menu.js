@@ -44,6 +44,7 @@ const icons = {
   share_profile: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -share2-icon  -share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`,
   mute: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -message-circle-x-icon  -message-circle-x"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>`,
   open: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="   -package-open-icon  -package-open"><path d="M12 22v-9"/><path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/><path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/><path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg>`,
+  duplicate: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-copy-icon lucide-book-copy"><path d="M5 7a2 2 0 0 0-2 2v11"/><path d="M5.803 18H5a2 2 0 0 0 0 4h9.5a.5.5 0 0 0 .5-.5V21"/><path d="M9 15V4a2 2 0 0 1 2-2h9.5a.5.5 0 0 1 .5.5v14a.5.5 0 0 1-.5.5H11a2 2 0 0 1 0-4h10"/></svg>`,
 };
 
 const actions = {
@@ -62,6 +63,7 @@ const actions = {
     shareProfile(card.dataset.targetid, card.dataset.currentid),
   mute: (card) => muteUser(card.dataset.targetid, card.dataset.currentid),
   open: (card) => openNotebook(card.dataset.id, card.dataset.mtype),
+  duplicate: (card) => duplicateCard(card.dataset.id, card.dataset.mtype),
 };
 
 actions.unblock = actions.block;
@@ -697,7 +699,8 @@ document.addEventListener("click", (e) => {
     .then(() => {
       const text = btn.querySelector("span");
       text.textContent = "Copied!";
-      btn.style.color = "green";
+      text.style.transition = "all 0.2s ease";
+      btn.style.color = "lightgreen";
       new Toastmaster({
         title: "Code Copied!",
         message: "Copied Code Successfully",
@@ -783,7 +786,7 @@ async function getTheme() {
   });
   if (res.ok) {
     const data = await res.json();
-    console.log(data.themev2)
+    console.log(data.themev2);
     const theme = data.themev2;
     if (theme === "dark") {
       document.body.setAttribute("data-theme", "dark");
@@ -804,6 +807,10 @@ getTheme();
 function changeSnippetStatus(e, id) {
   e.stopPropagation();
 
+  const card_status = e.target.closest("[data-cardstatus]").dataset.cardstatus;
+  if (card_status === "duplicate" || card_status === "draft") {
+    return;
+  }
   document.body.classList.add("active");
   document.querySelector(".cardStatus")?.remove();
 
@@ -870,8 +877,6 @@ window.addEventListener("click", (e) => {
   document.body.classList.remove("active");
 });
 
-
-
 // Delete Draft Snippet
 function draft_Delete(id) {
   const openDataBase = indexedDB.open("draftDB", 1);
@@ -899,4 +904,90 @@ function draft_Delete(id) {
       }).showNotification();
     };
   };
+}
+
+async function duplicateCard(id, type) {
+  const res = await fetch(`/duplicate/${id}`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (res.ok) {
+    new Toastmaster({
+      title: "Success",
+      message: "Card duplicated successfully",
+      type: "success",
+      delay: 3000,
+    }).showNotification();
+  }
+}
+
+async function initPush() {
+  await navigator.serviceWorker.register("/service-worker.js");
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    console.log("Notification Permission Rejected.");
+
+    new Toastmaster({
+      title: "Notifications Disabled",
+      message: "You can enable notifications anytime from settings.",
+      type: "info",
+      delay: 5000,
+    }).showNotification();
+
+    return;
+  }
+
+  console.log("Notification Permission Granted.");
+
+  const registration = await navigator.serviceWorker.ready;
+
+  let subscription = await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey:
+        "BLnrr096oKCCk3AEvXNtCsGcgtW3GmutYqIPypuOuJ-dMFS7xx6yFIpK1Hq4woUp5ZiezCnLTad50idS52SOJmU",
+    });
+  }
+
+  const res = await fetch("/subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ subscription }),
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    document.querySelector(".enableNotification").style.display = "none";
+
+    new Toastmaster({
+      title: "Subscribed",
+      message: data.message,
+      type: "success",
+      delay: 5000,
+    }).showNotification();
+  } else {
+    new Toastmaster({
+      title: "Error",
+      message: "Failed to subscribe",
+      type: "error",
+      delay: 5000,
+    }).showNotification();
+  }
+}
+
+function closeModel() {
+  document.querySelector(".enableNotification").style.display = "none";
+}
+if (Notification.permission === "granted") {
+  document.querySelector(".enableNotification").style.display = "none";
+} else if (Notification.permission === "denied") {
+  document.querySelector(".enableNotification").style.display = "none";
+} else if (Notification.permission === "default") {
+  document.querySelector(".enableNotification").style.display = "flex";
 }

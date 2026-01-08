@@ -140,272 +140,296 @@
             min-height: 100px;
             width: 100%;
         }
+
+        .goToOriginal:hover {
+            color: var(--accent2)
+        }
+
+        .goToOriginal {
+            transition: all .3s ease-in-out;
+        }
     </style>
 </head>
 
 <body data-theme="light">
     <%- include('partials/loader.ejs')%>
         <div class="content">
-            <%- include('partials/header')%>
-                <div class="container">
-                    <%- include('partials/sidebar', {navigation: 'card' })%>
-                        <main style="height: calc(100vh - 70px);">
+            <% function timeAgo(date) { const now=new Date(); const past=new Date(date); const seconds=Math.floor((now -
+                past) / 1000); if (seconds < 60) return "just now" ; const intervals=[ { label: "year" , seconds:
+                31536000 }, { label: "month" , seconds: 2592000 }, { label: "day" , seconds: 86400 }, { label: "hour" ,
+                seconds: 3600 }, { label: "minute" , seconds: 60 } ]; for (const interval of intervals) { const
+                count=Math.floor(seconds / interval.seconds); if (count>=
+                1) {
+                return count + " " + interval.label + (count > 1 ? "s" : "") + " ago";
+                }
+                }
 
-                            <div class="single-card"
-                                style="background: var(--bg-color);padding: 10px;border-radius: 10px;">
-                                <div class="card-header"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="card-info" style="display: flex; gap: 10px; align-items: center;">
-                                        <div class="avator">
-                                            <img src="<%= card.author.userImage %>" alt="<%= card.author.userName%>"
-                                                width="50">
-                                        </div>
-                                        <div class="name">
-                                            <h2 style="margin: 0;" class="header_title">
-                                                <%= card.title%>
-                                            </h2>
-                                            <div style=" font-size:small;color: gray; margin-top: 5px;display: flex;">
-                                                <span
-                                                    style="display: -webkit-box; line-clamp: 1; -webkit-line-clamp: 1; -webkit-box-orient: vertical; max-width: 500px;overflow: hidden;">
-                                                    <%= card.description %>,
-                                                </span>
-                                                <span id="lan" data-tooltip="Language"
-                                                    style="padding: 2px 10px; background: var(--accent2); border-radius: 5px; color: var(--color); margin-inline: 5px;">
-                                                    <%= card.category%>
-                                                </span>
-                                                <% if(card.status==="draft" ){%>
-                                                    <span data-tooltip="Snippet Status" style="padding: 2px 10px; background: pink; border-radius: 5px; color: red; margin-inline: 5px; text-transform: capitalize;">
-                                                        <%= card.status %>
+                return "just now";
+                }
+                %>
+                <%- include('partials/header')%>
+                    <div class="container">
+                        <%- include('partials/sidebar', {navigation: 'card' })%>
+                            <main style="height: calc(100vh - 70px);">
+
+                                <div class="single-card"
+                                    style="background: var(--bg-color);padding: 10px;border-radius: 10px;">
+                                    <div class="card-header"
+                                        style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="card-info" style="display: flex; gap: 10px; align-items: center;">
+                                            <div class="avator">
+                                                <img src="<%= card.author.userImage %>" alt="<%= card.author.userName%>"
+                                                    width="50">
+                                            </div>
+                                            <div class="name">
+                                                <h2 style="margin: 0;" class="header_title">
+                                                    <%= card.title%>
+                                                </h2>
+                                                <div
+                                                    style=" font-size:small;color: gray; margin-top: 5px;display: flex;">
+                                                    <span
+                                                        style="display: -webkit-box; line-clamp: 1; -webkit-line-clamp: 1; -webkit-box-orient: vertical; max-width: 500px;overflow: hidden;">
+                                                        <%= card.description %>,
+                                                    </span>
+                                                    <span id="lan" data-tooltip="Language"
+                                                        style="padding: 2px 10px; background: var(--accent2); border-radius: 5px; color: var(--color); margin-inline: 5px;">
+                                                        <%= card.category%>
+                                                    </span>
+                                                    <% if(card.status==="draft" || card.status==="duplicate" ){%>
+                                                        <span data-tooltip="Snippet Status"
+                                                            style="padding: 2px 10px; background: pink; border-radius: 5px; color: red; margin-inline: 5px; text-transform: capitalize;">
+                                                            <%= card.status %>
+                                                        </span>
+                                                        <%}%>
+                                                </div>
+                                                <% if(card.duplicatedFrom){%>
+                                                    <span
+                                                        style="font-size:small; margin-top: 5px; display: flex; align-items: center;">Author:
+                                                       <a href="/profile/ <%= card.duplicatedFrom.author.userName%>" style="padding-left: 5px !important;margin: 0 !important;"><%= card.duplicatedFrom.author.userName%></a>, <a
+                                                                class="goToOriginal"
+                                                                href="/card/<%= card.duplicatedFrom._id%>" style="padding-left: 5px ">Go to
+                                                                original card</a>
                                                     </span>
                                                     <%}%>
                                             </div>
                                         </div>
-                                    </div>
-                                    <style>
-                                        .menu-top {
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-                                            width: 40px;
-                                            height: 40px;
-                                            border-radius: 50%;
-                                            transition: all 0.25s;
-                                        }
+                                        <style>
+                                            .menu-top {
+                                                display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                width: 40px;
+                                                height: 40px;
+                                                border-radius: 50%;
+                                                transition: all 0.25s;
+                                            }
 
-                                        .menu-top:hover {
-                                            background: var(--accent);
-                                            cursor: pointer;
-                                        }
+                                            .menu-top:hover {
+                                                background: var(--accent);
+                                                cursor: pointer;
+                                            }
 
-                                        .versions {
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-                                            min-width: 40px;
-                                            height: 40px;
-                                            border-radius: 10px;
-                                            padding: 0px 10px;
-                                            transition: all 0.25s;
-                                        }
+                                            .versions {
+                                                display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                min-width: 40px;
+                                                height: 40px;
+                                                border-radius: 10px;
+                                                padding: 0px 10px;
+                                                transition: all 0.25s;
+                                            }
 
-                                        .versions:hover {
-                                            background: var(--accent);
-                                            cursor: pointer;
-                                        }
-                                    </style>
-                                    <div class="actions"
-                                        style="display: flex; justify-content: start; align-items: center;gap: 10px;">
-                                        <time datetime="<%= card.updatedAt%>"
-                                            style="font-size: small; display: flex;justify-content: start;align-items: center;gap: 5px; white-space: nowrap;"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -calendar-clock-icon  -calendar-clock">
-                                                <path d="M16 14v2.2l1.6 1" />
-                                                <path d="M16 2v4" />
-                                                <path
-                                                    d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
-                                                <path d="M3 10h5" />
-                                                <path d="M8 2v4" />
-                                                <circle cx="16" cy="16" r="6" />
-                                            </svg>
-                                            <% function timeAgo(date) { const now=new Date(); const past=new Date(date);
-                                                const seconds=Math.floor((now - past) / 1000); if (seconds < 60)
-                                                return "just now" ; const intervals=[ { label: "year" , seconds:
-                                                31536000 }, { label: "month" , seconds: 2592000 }, { label: "day" ,
-                                                seconds: 86400 }, { label: "hour" , seconds: 3600 }, { label: "minute" ,
-                                                seconds: 60 } ]; for (const interval of intervals) { const
-                                                count=Math.floor(seconds / interval.seconds); if (count>=
-                                                1) {
-                                                return count + " " + interval.label + (count > 1 ? "s" : "") + " ago";
-                                                }
-                                                }
+                                            .versions:hover {
+                                                background: var(--accent);
+                                                cursor: pointer;
+                                            }
+                                        </style>
+                                        <div class="actions"
+                                            style="display: flex; justify-content: start; align-items: center;gap: 10px;">
+                                            <time datetime="<%= card.updatedAt%>"
+                                                style="font-size: small; display: flex;justify-content: start;align-items: center;gap: 5px; white-space: nowrap;"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -calendar-clock-icon  -calendar-clock">
+                                                    <path d="M16 14v2.2l1.6 1" />
+                                                    <path d="M16 2v4" />
+                                                    <path
+                                                        d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
+                                                    <path d="M3 10h5" />
+                                                    <path d="M8 2v4" />
+                                                    <circle cx="16" cy="16" r="6" />
+                                                </svg>
 
-                                                return "just now";
-                                                }
-                                                %>
                                                 Last updated <%= timeAgo(card.updatedAt)%>
-                                        </time>
-                                        <div class="versions" data-tooltip="Version History"
-                                            onclick="openVersionModel(event)"
-                                            style="font-size: small; display: flex;justify-content: start;align-items: center;gap: 5px; white-space: nowrap;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -history-icon  -history">
-                                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                                <path d="M3 3v5h5" />
-                                                <path d="M12 7v5l4 2" />
-                                            </svg>
-                                            <span>Versions</span>
-                                        </div>
-                                        <div class="menu-top" data-menu-id="<%= card._id %>" data-id="<%= card._id %>"
-                                            data-tooltip="Open Menu" data-menus="delete, edit, move, share"
-                                            onclick="openContextMenu(event)" data-userId="<%= userId %>"
-                                            data-cardauthor="<%= card.author._id %>" data-cardName="<%= card.title %>"
-                                            data-mtype="card" data-contextMenu="true" tabindex="0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -ellipsis-vertical-icon  -ellipsis-vertical">
-                                                <circle cx="12" cy="12" r="1" />
-                                                <circle cx="12" cy="5" r="1" />
-                                                <circle cx="12" cy="19" r="1" />
-                                            </svg>
+                                            </time>
+                                            <div class="versions" data-tooltip="Version History"
+                                                onclick="openVersionModel(event)"
+                                                style="font-size: small; display: flex;justify-content: start;align-items: center;gap: 5px; white-space: nowrap;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -history-icon  -history">
+                                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                                    <path d="M3 3v5h5" />
+                                                    <path d="M12 7v5l4 2" />
+                                                </svg>
+                                                <span>Versions</span>
+                                            </div>
+                                            <div class="menu-top" data-menu-id="<%= card._id %>"
+                                                data-id="<%= card._id %>" data-tooltip="Open Menu"
+                                                data-menus="delete, edit, duplicate, move, share"
+                                                onclick="openContextMenu(event)" data-userId="<%= userId %>"
+                                                data-cardauthor="<%= card.author._id %>"
+                                                data-cardName="<%= card.title %>" data-mtype="card"
+                                                data-contextMenu="true" tabindex="0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -ellipsis-vertical-icon  -ellipsis-vertical">
+                                                    <circle cx="12" cy="12" r="1" />
+                                                    <circle cx="12" cy="5" r="1" />
+                                                    <circle cx="12" cy="19" r="1" />
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="page_title" onclick="collapse(this)"
-                                        style="margin: 0 !important; padding: 0 !important; background: none !important; margin-top: 10px !important;">
-                                        <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -chevron-down-icon  -chevron-down">
-                                                <path d="m6 9 6 6 6-6" />
-                                            </svg></span>
-                                        Code
-                                    </div>
-                                    <div class="card-content">
-                                        <textarea name="codeMirrorViewer"
-                                            id="codeMirrorViewer"><%= card.content%></textarea>
-                                        <div class="options"
-                                            style="margin-block:5px; display: flex; align-items: center;justify-content: space-between;">
-                                            <div class="download" style="display: flex; align-items: center;gap: 5px;">
-                                                <button
-                                                    style="background: var(--color);color: var(--bg-color); --accent2:var(--color); display:flex; align-items: center;gap: 5px;"
-                                                    onclick="window.location.href = `/folders/download/<%= card._id%>`">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="lucide lucide-arrow-big-down-dash-icon lucide-arrow-big-down-dash">
-                                                        <path
-                                                            d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z" />
-                                                        <path d="M9 4h6" />
-                                                    </svg>Download
-                                                    File</button>
-                                                <%if(userId==card.author._id){%>
-                                                    <button id="restoreButton"
-                                                        style="display: none; align-items: center;gap: 5px; --accent2:pink; color:red"><svg
-                                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                    <div class="card-body">
+                                        <div class="page_title" onclick="collapse(this)"
+                                            style="margin: 0 !important; padding: 0 !important; background: none !important; margin-top: 10px !important;">
+                                            <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -chevron-down-icon  -chevron-down">
+                                                    <path d="m6 9 6 6 6-6" />
+                                                </svg></span>
+                                            Code
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea name="codeMirrorViewer"
+                                                id="codeMirrorViewer"><%= card.content%></textarea>
+                                            <div class="options"
+                                                style="margin-block:5px; display: flex; align-items: center;justify-content: space-between;">
+                                                <div class="download"
+                                                    style="display: flex; align-items: center;gap: 5px;">
+                                                    <button
+                                                        style="background: var(--color);color: var(--bg-color); --accent2:var(--color); display:flex; align-items: center;gap: 5px;"
+                                                        onclick="window.location.href = `/folders/download/<%= card._id%>`">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                             stroke-width="2" stroke-linecap="round"
                                                             stroke-linejoin="round"
-                                                            class="lucide lucide-rotate-ccw-icon lucide-rotate-ccw">
+                                                            class="lucide lucide-arrow-big-down-dash-icon lucide-arrow-big-down-dash">
                                                             <path
-                                                                d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                                                            <path d="M3 3v5h5" />
-                                                        </svg>Restore Version</button>
-                                                    <%}%>
-                                            </div>
+                                                                d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z" />
+                                                            <path d="M9 4h6" />
+                                                        </svg>Download
+                                                        File</button>
+                                                    <%if(userId==card.author._id){%>
+                                                        <button id="restoreButton"
+                                                            style="display: none; align-items: center;gap: 5px; --accent2:pink; color:red"><svg
+                                                                xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                height="20" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="lucide lucide-rotate-ccw-icon lucide-rotate-ccw">
+                                                                <path
+                                                                    d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                                                <path d="M3 3v5h5" />
+                                                            </svg>Restore Version</button>
+                                                        <%}%>
+                                                </div>
 
-                                            <div class="sub_menu"
-                                                style="display: flex; justify-content: end;align-items: center;gap: 10px;">
-                                                <div class="gist_upload card" onclick="copy_cdn_link(event)"
-                                                    data-tooltip="Copy CDN Link" data-id="<%= card._id%>">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="   -link-icon  -link">
-                                                        <path
-                                                            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                                        <path
-                                                            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                                                    </svg>
-                                                </div>
-                                                <div class="pin" onclick="pinIt(this,'<%= card._id %>')"
-                                                    data-tooltip="Pin" data-id="<%= card._id%>" tabindex="0">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                        viewBox="0 0 24 24" class="<%= card.isPinned ? 'active' : '' %>"
-                                                        fill="none" stroke="currentColor" stroke-width="2"
-                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                        class="   -pin-icon  -pin">
-                                                        <path d="M12 17v5" />
-                                                        <path
-                                                            d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
-                                                    </svg>
-                                                </div>
-                                                <div style="
+                                                <div class="sub_menu"
+                                                    style="display: flex; justify-content: end;align-items: center;gap: 10px;">
+                                                    <div class="gist_upload card" onclick="copy_cdn_link(event)"
+                                                        data-tooltip="Copy CDN Link" data-id="<%= card._id%>">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="   -link-icon  -link">
+                                                            <path
+                                                                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                                            <path
+                                                                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                                        </svg>
+                                                    </div>
+                                                    <div class="pin" onclick="pinIt(this,'<%= card._id %>')"
+                                                        data-tooltip="Pin" data-id="<%= card._id%>" tabindex="0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24"
+                                                            class="<%= card.isPinned ? 'active' : '' %>" fill="none"
+                                                            stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="   -pin-icon  -pin">
+                                                            <path d="M12 17v5" />
+                                                            <path
+                                                                d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div style="
                                                                                                   display: flex;
                                                                                                   justify-content: center;
                                                                                                   align-items: center;
                                                                                                   gap: 4px;">
-                                                    <span style="font-size: small" class="like-count"
-                                                        id="like-count-<%= card._id%>">
-                                                        <%= card.likes?.length || 0 %>
-                                                    </span>
+                                                        <span style="font-size: small" class="like-count"
+                                                            id="like-count-<%= card._id%>">
+                                                            <%= card.likes?.length || 0 %>
+                                                        </span>
 
-                                                    <div class="fav" data-tooltip="Favorite"
-                                                        onclick="favIt(this, '<%= card._id %>')"
-                                                        data-id="<%= card._id%>" tabindex="0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                            viewBox="0 0 24 24"
-                                                            class="<%= card.isFavorite ? 'active' : '' %>" fill="none"
-                                                            stroke="currentColor" stroke-width="2"
-                                                            stroke-linecap="round" stroke-linejoin="round"
-                                                            class="   -star-icon  -star">
-                                                            <path
-                                                                d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-                                                        </svg>
+                                                        <div class="fav" data-tooltip="Favorite"
+                                                            onclick="favIt(this, '<%= card._id %>')"
+                                                            data-id="<%= card._id%>" tabindex="0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                height="20" viewBox="0 0 24 24"
+                                                                class="<%= card.isFavorite ? 'active' : '' %>"
+                                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="   -star-icon  -star">
+                                                                <path
+                                                                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="readme-body">
-                                    <div class="page_title" onclick="collapse(this)"
-                                        style="margin: 0 !important; padding: 0 !important; background: none !important;">
-                                        <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                                height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -chevron-down-icon  -chevron-down">
-                                                <path d="m6 9 6 6 6-6" />
-                                            </svg></span>
-                                        Documentation
+                                    <div class="readme-body">
+                                        <div class="page_title" onclick="collapse(this)"
+                                            style="margin: 0 !important; padding: 0 !important; background: none !important;">
+                                            <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                    height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -chevron-down-icon  -chevron-down">
+                                                    <path d="m6 9 6 6 6-6" />
+                                                </svg></span>
+                                            Documentation
+                                        </div>
+                                        <div id="readmefile" data-content="<%= card.readmefile.content%>"
+                                            style="margin:10px;">
+                                            <h2
+                                                style="margin: 0 !important; display: flex;align-items: center;gap: 5px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="   -book-open-icon  -book-open">
+                                                    <path d="M12 7v14" />
+                                                    <path
+                                                        d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+                                                </svg>
+                                                <%= card.readmefile.title || 'No title' %>
+                                            </h2>
+                                        </div>
                                     </div>
-                                    <div id="readmefile" data-content="<%= card.readmefile.content%>"
-                                        style="margin:10px;">
-                                        <h2 style="margin: 0 !important; display: flex;align-items: center;gap: 5px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="   -book-open-icon  -book-open">
-                                                <path d="M12 7v14" />
-                                                <path
-                                                    d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
-                                            </svg>
-                                            <%= card.readmefile.title || 'No title' %>
-                                        </h2>
-                                    </div>
                                 </div>
-                            </div>
-                            <%- include("partials/footer.ejs")%>
+                                <%- include("partials/footer.ejs")%>
 
-                        </main>
+                            </main>
 
 
-                        <div id="context_menu" style="
+                            <div id="context_menu" style="
                                 position: absolute;
                                 top: 0;
                                 left: 0;
@@ -413,73 +437,74 @@
                                 z-index: 1000000;
                                 width: 200px;
                               ">
-                            <ul id="context_menu_list"></ul>
-                        </div>
-
-                        <div class="networkInfo" style="display: none;">
-                            <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="   -info-icon  -info">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <path d="M12 16v-4" />
-                                    <path d="M12 8h.01" />
-                                </svg></span>
-
-                            <span id="networkInfo"></span>
-                        </div>
-                        <div class="move_folder">
-                            <div class="header_title" style="font-weight: bolder">
-                                <div class="span">Move " folderName"</div>
+                                <ul id="context_menu_list"></ul>
                             </div>
-                            <hr />
-                            <div class="folders_name">
-                                <ul>
-                                    <% if (folders.length===0) { %>
-                                        <span style="margin: 10px; color: red">No folder found</span>
-                                        <% } %>
-                                            <% folders.forEach((folder, i)=> { %>
-                                                <li>
-                                                    <label>
-                                                        <input type="radio" name="moveFolder" value="<%= folder._id %>"
-                                                            id="moveFolder<%= i %>" />
-                                                        <div class="folder">
-                                                            <div class="folder_icon">
-                                                                <!-- SVG folder icon -->
-                                                            </div>
-                                                            <div class="folder_name" style="
+
+                            <div class="networkInfo" style="display: none;">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="   -info-icon  -info">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M12 16v-4" />
+                                        <path d="M12 8h.01" />
+                                    </svg></span>
+
+                                <span id="networkInfo"></span>
+                            </div>
+                            <div class="move_folder">
+                                <div class="header_title" style="font-weight: bolder">
+                                    <div class="span">Move " folderName"</div>
+                                </div>
+                                <hr />
+                                <div class="folders_name">
+                                    <ul>
+                                        <% if (folders.length===0) { %>
+                                            <span style="margin: 10px; color: red">No folder found</span>
+                                            <% } %>
+                                                <% folders.forEach((folder, i)=> { %>
+                                                    <li>
+                                                        <label>
+                                                            <input type="radio" name="moveFolder"
+                                                                value="<%= folder._id %>" id="moveFolder<%= i %>" />
+                                                            <div class="folder">
+                                                                <div class="folder_icon">
+                                                                    <!-- SVG folder icon -->
+                                                                </div>
+                                                                <div class="folder_name" style="
                                             display: flex;
                                             justify-content: center;
                                             align-items: center;
                                             gap: 10px;
                                           ">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                    height="24" viewBox="0 0 24 24" fill="#EDCE44"
-                                                                    stroke="none" stroke-width="2"
-                                                                    stroke-linecap="round" stroke-linejoin="round"
-                                                                    class="   -folder-icon  -folder">
-                                                                    <path
-                                                                        d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
-                                                                </svg>
-                                                                <span style="
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="#EDCE44"
+                                                                        stroke="none" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="   -folder-icon  -folder">
+                                                                        <path
+                                                                            d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
+                                                                    </svg>
+                                                                    <span style="
                                               display: block;
                                               width: 120px;
                                               white-space: nowrap;
                                               overflow: hidden;
                                               text-overflow: ellipsis;
                                             " title="<%= folder.folderName %>">
-                                                                    <%= folder.folderName %>
-                                                                </span>
+                                                                        <%= folder.folderName %>
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </label>
-                                                </li>
-                                                <% }) %>
-                                </ul>
-                                <button class="move_btn" onclick="moveIt()" <%=folders.length===0 ? "disabled" : "" %> >
-                                    Move </button>
+                                                        </label>
+                                                    </li>
+                                                    <% }) %>
+                                    </ul>
+                                    <button class="move_btn" onclick="moveIt()" <%=folders.length===0 ? "disabled" : ""
+                                        %> >
+                                        Move </button>
+                                </div>
                             </div>
-                        </div>
-                </div>
+                    </div>
         </div>
 
         <style>
@@ -539,38 +564,147 @@
                     <rect width="18" height="12" x="3" y="10" rx="2" />
                 </svg> Previous Versions</h2>
             <hr style="margin-block: 10px;">
-            <% if(versions.length === 0) {%>
+            <% if(versions.length===0) {%>
                 <p>No previous versions</p>
-            <%}%>
-            <ul class="versions_list">
-                <% versions.forEach((version, i)=> {%>
-                    <li class="version" id="version_<%= version._id %>" data-version="<%= version.version %>"
-                        onclick="getVersionDetails('<%= version._id%>')">
-                        <div class="author-image">
-                            <img src="<%= version.author.userImage%>" alt="" width="40px" height="40px">
-                        </div>
-                        <div>
-                            <span class="version_number">
-                                <span style="font-weight: bolder;">
-                                    <%= version.cardId.title%>-v<%= version.version %>
-                                </span>
-                                <span
-                                    style="font-size: small; display: block; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; width: 300px; overflow: hidden;">
-                                    <%= version.cardId.description%>
-                                </span>
-                            </span>
-                            <time style="font-size: small;color: gray; display: block;">
-                                <span>
-                                    <%= version.author.userName%>,
-                                </span> last updated <%= timeAgo(version.createdAt) %>
-                            </time>
-                        </div>
-                    </li>
-                    <%})%>
-            </ul>
+                <%}%>
+                    <ul class="versions_list">
+                        <% versions.forEach((version, i)=> {%>
+                            <li class="version" id="version_<%= version._id %>" data-version="<%= version.version %>"
+                                onclick="getVersionDetails('<%= version._id%>')">
+                                <div class="author-image">
+                                    <img src="<%= version.author.userImage%>" alt="" width="40px" height="40px">
+                                </div>
+                                <div>
+                                    <span class="version_number">
+                                        <span style="font-weight: bolder;">
+                                            <%= version.cardId.title%>-v<%= version.version %>
+                                        </span>
+                                        <span
+                                            style="font-size: small; display: block; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; width: 300px; overflow: hidden;">
+                                            <%= version.cardId.description%>
+                                        </span>
+                                    </span>
+                                    <time style="font-size: small;color: gray; display: block;">
+                                        <span>
+                                            <%= version.author.userName%>,
+                                        </span> last updated <%= timeAgo(version.createdAt) %>
+                                    </time>
+                                </div>
+                            </li>
+                            <%})%>
+                    </ul>
         </div>
 
+        <style>
+            .enableNotification {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999999;
+                backdrop-filter: blur(2px);
+            }
 
+            .notify-card {
+                width: 360px;
+                background: var(--bg-color);
+                border-radius: 16px;
+                padding: 20px 22px;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            }
+
+            .notify-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 10px;
+            }
+
+            .notify-header img {
+                width: 42px;
+                height: 42px;
+            }
+
+            .notify-header h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: #111;
+            }
+
+            .notify-text {
+                font-size: 14px;
+                color: #555;
+                line-height: 1.5;
+                margin-bottom: 14px;
+            }
+
+            .notify-list {
+                margin: 0 0 18px;
+                padding-left: 18px;
+                font-size: 13px;
+                color: #444;
+            }
+
+            .notify-list li {
+                margin-bottom: 6px;
+            }
+
+            .notify-actions {
+                display: flex;
+                gap: 10px;
+            }
+
+            .notify-actions button {
+                flex: 1;
+                padding: 10px 0;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+                border: none;
+            }
+
+            .btn-enable {
+                --bg-color: #6d5efc;
+                background: var(--bg-color);
+                color: #fff;
+                font-weight: 500;
+            }
+
+            .btn-later {
+                background: var(--accent);
+                color: #444;
+            }
+        </style>
+
+        <div class="enableNotification">
+            <div class="notify-card">
+                <div class="notify-header">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/check-notification-bell-3d-icon-png-download-10489313.png"
+                        alt="Notification Bell" />
+                    <h3>Stay in the loop</h3>
+                </div>
+
+                <p class="notify-text">
+                    Enable notifications to get timely updates about activity in your workspace.
+                </p>
+
+                <ul class="notify-list">
+                    <li>When someone shares a snippet</li>
+                    <li>Collaboration updates</li>
+                    <li>Someone Like your snippet</li>
+                    <li>New Followers in your workspace</li>
+                    <li>Security & important alerts</li>
+                </ul>
+
+                <div class="notify-actions">
+                    <button class="btn-enable" onclick="initPush()">Enable Notifications</button>
+                    <button class="btn-later" onclick="closeModel()">Maybe later</button>
+                </div>
+            </div>
+        </div>
 
         <script>
             const languageModeMap = {

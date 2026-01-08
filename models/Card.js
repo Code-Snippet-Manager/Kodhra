@@ -73,8 +73,24 @@ const cardSchema = new mongoose.Schema(
         trim: true,
       },
     },
+    isDuplicate: {
+      type: Boolean,
+      default: false,
+    },
+    duplicatedFrom: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Card",
+    },
+    duplicatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    isArchived: {
+      type: Boolean,
+      default: false,
+    },
     status: {
-      enum: ["draft", "published", "private", "archived"],
+      enum: ["draft", "published", "private", "archived", "deleted", "duplicate"],
       type: String,
       default: "published",
     },

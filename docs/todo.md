@@ -1,163 +1,384 @@
-# Kodhra – Missing Features TODO List
+# A. SNIPPET CORE ACTIONS
 
-## PHASE 1 — **Must-Have (Before Public Launch)**
-
-These protect user trust and prevent data loss.
-
-### 1. Snippet Lifecycle & Safety
-
-* [x] Add snippet status (`draft / published / private / archived`)
-* [ ] Separate visibility from draft logic
-* [ ] Add “last edited at / by” metadata
-
----
-
-### 2. Snippet Versioning (Minimal but Solid)
-
-* [x] Store version history on each save
-* [x] Allow rollback to previous version
-
-
----
-
-### 3. Search Must Actually Search Code
-
-* [x] Enable full-text search inside code content
-* [x] Index title + description + code body
-* [ ] Highlight matched code lines in results
+* [X] Create snippet
+* [X] Edit snippet
+* [X] Delete snippet
+* [X] Restore snippet
+* [X] Permanent delete
+* [x] Duplicate snippet
+* [X] Copy snippet content
+* [ ] Copy with formatting
+* [ ] Copy as plain text
+* [ ] Copy as markdown
+* [ ] Download as `.txt`
+* [ ] Download as `.md`
+* [ ] Download as language file
+* [ ] Bulk download
+* [ ] Download as ZIP
+* [ ] Rename snippet
+* [ ] Change snippet language
+* [ ] Preview snippet
+* [ ] Fullscreen view
+* [ ] Read-only view
 
 ---
 
-### 4. Data Safety
+## B. SHARING & VISIBILITY
 
-* [ ] Full account export (snippets + folders + notebooks)
-* [ ] Folder-wise export
-* [ ] Backup snapshot generation
-* [ ] Restore from snapshot
-
----
-
-### 5. Permission Basics
-
-* [ ] Private but shareable snippets (link-based)
-* [ ] Read-only shared access
-* [ ] Token expiration / revoke access
-
----
-
-## PHASE 2 — **Power-User Features (V1.1 / V2)**
-
-These turn Kodhra into a daily-use tool.
-
-### 6. Advanced Search & Filters
-
-* [ ] Search operators (`language:`, `tag:`, `author:`)
-* [ ] Date filters (`created:`, `updated:`)
-* [ ] Save search filters (Smart Views)
-* [ ] Result ranking (recency + favorites + usage)
+* [ ] Share with specific user
+* [ ] Share with team
+* [ ] Public share link
+* [ ] Private share link
+* [ ] Password-protected link
+* [ ] Expiring share link
+* [ ] Read-only sharing
+* [ ] Edit permission sharing
+* [ ] Comment-only sharing
+* [ ] Revoke shared access
+* [ ] View shared users
+* [ ] Share notification
+* [ ] Share activity log
+* [ ] Share analytics
+* [ ] Disable resharing
 
 ---
 
-### 7. Organization Improvements
+## C. TEAM MANAGEMENT
 
+* [ ] Create team
+* [ ] Rename team
+* [ ] Delete team
+* [ ] Invite member
+* [ ] Remove member
+* [ ] Accept invite
+* [ ] Reject invite
+* [ ] Team admin role
+* [ ] Team editor role
+* [ ] Team viewer role
+* [ ] Team permissions
+* [ ] Team snippet pool
+* [ ] Team folders
+* [ ] Team tags
+* [ ] Team activity feed
+
+---
+
+## D. PERMISSIONS & ACCESS
+
+* [ ] Snippet-level permissions
+* [ ] Folder-level permissions
+* [ ] Team-level permissions
+* [ ] View-only access
+* [ ] Edit access
+* [ ] Comment access
+* [ ] Lock snippet
+* [ ] Unlock snippet
+* [ ] Permission audit log
+* [ ] Access expiration
+
+---
+
+## E. FOLDERS & STRUCTURE
+
+* [ ] Create folder
+* [ ] Rename folder
+* [ ] Delete folder
 * [ ] Nested folders
-* [ ] Folder breadcrumbs
-* [ ] Move snippet between folders via shortcut
-* [ ] Detect unorganized snippets (no folder / no tags)
+* [ ] Move snippet to folder
+* [ ] Bulk move snippets
+* [ ] Folder color
+* [ ] Folder icon
+* [ ] Folder description
+* [ ] Folder permissions
+* [ ] Pin folder
+* [ ] Favorite folder
 
 ---
 
-### 8. Editor Experience Enhancements
+## F. TAGGING & LABELS
 
-* [ ] Autosave status indicator
-* [ ] Conflict detection (multiple tabs)
-* [ ] Snippet templates per language
-* [ ] Code formatting toggle
-* [ ] Indentation normalization
-
----
-
-### 9. Usage Analytics (Private)
-
-* [ ] Most opened snippets
-* [ ] Least used snippets
-* [ ] Never-opened snippets
-* [ ] Weekly / monthly activity stats
+* [ ] Create tag
+* [ ] Rename tag
+* [ ] Delete tag
+* [ ] Assign tag
+* [ ] Remove tag
+* [ ] Multiple tags
+* [ ] Tag colors
+* [ ] Tag description
+* [ ] Tag filter
+* [ ] Tag usage count
 
 ---
 
-## PHASE 3 — **Social & Collaboration Layer**
+## G. SEARCH & FILTER
 
-Only after core stability.
-
-### 10. Social Interactions
-
-* [ ] Comment system on snippets
-* [ ] Fork snippet with attribution
-* [ ] Fork history tracking
-* [ ] Favorite / fork counts
+* [ ] Search by title
+* [ ] Search by content
+* [ ] Search by language
+* [ ] Search by tag
+* [ ] Search by owner
+* [ ] Search by team
+* [ ] Filter shared snippets
+* [ ] Filter personal snippets
+* [ ] Filter team snippets
+* [ ] Sort by name
+* [ ] Sort by date
+* [ ] Sort by usage
+* [ ] Save search
+* [ ] Search history
 
 ---
 
-### 11. Activity & Notifications
+## H. COMMENTS & DISCUSSION
 
-* [ ] Activity feed (publish, fork, favorite)
-* [ ] Notification system
+* [ ] Add comment
+* [ ] Edit comment
+* [ ] Delete comment
+* [ ] Reply to comment
+* [ ] Threaded comments
+* [ ] Resolve comment
+* [ ] Mention user
+* [ ] Comment notification
+* [ ] Comment history
+* [ ] Lock comments
+
+---
+
+## I. VERSION HISTORY
+
+* [ ] View version history
+* [ ] Compare versions
+* [ ] Restore old version
+* [ ] Version comments
+* [ ] Version timestamps
+* [ ] Version author
+* [ ] Name version
+* [ ] Lock version
+* [ ] Download version
+
+---
+
+## J. IMPORT & EXPORT
+
+* [ ] Import from file
+* [ ] Import from JSON
+* [ ] Import from ZIP
+* [ ] Import from GitHub Gist
+* [ ] Detect duplicates
+* [ ] Overwrite on import
+* [ ] Skip duplicates
+* [ ] Export snippet
+* [ ] Export folder
+* [ ] Export selected
+* [ ] Export metadata
+* [ ] Export without metadata
+
+---
+
+## K. FAVORITES & QUICK ACCESS
+
+* [ ] Star snippet
+* [ ] Unstar snippet
+* [ ] View starred snippets
+* [ ] Pin snippet
+* [ ] Unpin snippet
+* [ ] Recent snippets
+* [ ] Recently shared
+* [ ] Recently edited
+* [ ] Quick open
+* [ ] Keyboard shortcuts
+
+---
+
+## L. NOTIFICATIONS
+
+* [ ] Share notification
+* [ ] Comment notification
+* [ ] Mention notification
+* [ ] Invite notification
+* [ ] Role change notification
+* [ ] Version update notification
+* [ ] Export completion notification
+* [ ] Import completion notification
+* [ ] Error notification
 * [ ] Notification preferences
 
 ---
 
-## PHASE 4 — **Performance & Scale**
+## M. USER ACCOUNT
 
-Invisible but critical.
-
-### 12. Performance Architecture
-
-* [ ] Explicit cache invalidation rules
-* [ ] Search index optimization
-* [ ] Tag / language indexing
-* [ ] Paginated infinite scroll fallback
-
----
-
-### 13. Offline & Sync (Advanced)
-
-* [ ] Offline read mode
-* [ ] Offline write queue
-* [ ] Sync conflict resolution
-* [ ] Manual sync control
+* [ ] Profile edit
+* [ ] Username change
+* [ ] Email change
+* [ ] Password change
+* [ ] Session management
+* [ ] Device listing
+* [ ] Revoke device
+* [ ] Account deletion
+* [ ] Account export
 
 ---
 
-## PHASE 5 — **Developer Ergonomics (Optional but Loved)**
+## N. EDITOR EXPERIENCE
 
-### 14. Keyboard-First UX
-
-* [ ] Global shortcut map
-* [ ] Vim-like navigation mode
-* [ ] Custom shortcut editor
+* [ ] Syntax highlighting
+* [ ] Line numbers
+* [ ] Line wrapping
+* [ ] Code folding
+* [ ] Find in snippet
+* [ ] Replace in snippet
+* [ ] Auto indent
+* [ ] Tab size control
+* [ ] Read-only editor
+* [ ] Fullscreen editor
 
 ---
 
-## FINAL PRIORITY SNAPSHOT
+## O. BULK OPERATIONS
 
-### Absolute Minimum (Non-Negotiable)
+* [ ] Bulk delete
+* [ ] Bulk move
+* [ ] Bulk tag
+* [ ] Bulk export
+* [ ] Bulk share
+* [ ] Bulk unshare
+* [ ] Bulk permission update
+* [ ] Bulk archive
 
-* Versioning
-* Code search
-* Permissions
-* Backup & restore
+---
 
-### High ROI (Feels Powerful)
+## P. ARCHIVE & TRASH
 
-* Search operators
-* Templates
-* Analytics
-* Nested folders
+* [ ] Archive snippet
+* [ ] Unarchive snippet
+* [ ] View archived snippets
+* [ ] Auto archive inactive
+* [ ] Trash view
+* [ ] Restore from trash
+* [ ] Empty trash
+* [ ] Trash retention policy
 
-### Nice Later
+---
 
-* Offline
-* Social
-* Notifications
+## Q. ACTIVITY & LOGS
+
+* [ ] Snippet activity log
+* [ ] Folder activity log
+* [ ] Team activity log
+* [ ] User activity log
+* [ ] Share log
+* [ ] Permission change log
+* [ ] Login history
+
+---
+
+## R. UI & UX
+
+* [ ] Responsive layout
+* [ ] Mobile view
+* [ ] Tablet view
+* [ ] Keyboard navigation
+* [ ] Accessibility labels
+* [ ] High contrast mode
+* [ ] Loading indicators
+* [ ] Empty states
+* [ ] Error states
+
+---
+
+## S. EXTENSIONS & INTEGRATIONS
+
+* [ ] Browser extension
+* [ ] Save snippet from browser
+* [ ] API access
+* [ ] API tokens
+* [ ] Read-only API keys
+* [ ] Webhooks
+* [ ] API logs
+
+---
+
+## T. BACKUP & RELIABILITY
+
+* [ ] Manual backup
+* [ ] Automatic backup
+* [ ] Backup history
+* [ ] Restore from backup
+* [ ] Backup encryption
+* [ ] Data integrity check
+
+---
+
+## U. ADMIN & SYSTEM
+
+* [ ] Admin dashboard
+* [ ] User management
+* [ ] Team management
+* [ ] Content moderation
+* [ ] Abuse reporting
+* [ ] Account suspension
+* [ ] Usage analytics
+
+---
+
+## V. MONETIZATION READY
+
+* [ ] Free plan
+* [ ] Paid plan
+* [ ] Team plan
+* [ ] Storage limits
+* [ ] Snippet limits
+* [ ] Feature gating
+* [ ] Billing history
+* [ ] Invoice download
+
+---
+
+## W. QUALITY OF LIFE
+
+* [ ] Undo actions
+* [ ] Redo actions
+* [ ] Autosave
+* [ ] Draft mode
+* [ ] Unsaved change warning
+* [ ] Session restore
+* [ ] Crash recovery
+* [ ] Tooltips
+
+---
+
+## X. ADVANCED SHARING
+
+* [ ] Embed snippet
+* [ ] Embed read-only
+* [ ] Embed theme
+* [ ] Embed expiration
+* [ ] Public profile snippets
+* [ ] User public page
+* [ ] Team public page
+* [ ] View count
+
+---
+
+## Y. DATA & METADATA
+
+* [ ] Line count
+* [ ] Character count
+* [ ] File size info
+* [ ] Encoding info
+* [ ] Metadata edit
+* [ ] Metadata export
+* [ ] Metadata lock
+
+---
+
+## Z. FUTURE & PLATFORM
+
+* [ ] Feature flags
+* [ ] Beta features toggle
+* [ ] Migration tools
+* [ ] Schema versioning
+* [ ] Backward compatibility
+* [ ] Forward compatibility
+
 

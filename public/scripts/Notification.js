@@ -68,14 +68,31 @@ notificationBar.addEventListener("click", (e) => {
 let notificationlist = document.querySelectorAll(".notification-list");
 let n_openerBtn = document.querySelector(".notification");
 n_openerBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  notificationBar.classList.toggle("active");
-  document.querySelector("body").classList.toggle("active");
-  notificationlist.forEach((e) => {
-    e.classList.toggle("active");
-  });
-  // readmsg();
+  if (Notification.permission === "default") {
+    document.querySelector(".enableNotification").style.display = "flex";
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    e.stopPropagation();
+    notificationBar.classList.toggle("active");
+    document.querySelector("body").classList.toggle("active");
+    notificationlist.forEach((el) => {
+      el.classList.toggle("active");
+    });
+    return;
+  }
+
+  if (Notification.permission === "denied") {
+    new Toastmaster({
+      title: "Notifications blocked",
+      message: "Enable notifications from browser settings to receive alerts.",
+      type: "info",
+      delay: 4000,
+    }).showNotification();
+  }
 });
+
 document.addEventListener("click", () => {
   notificationBar.classList.remove("active");
   document.querySelector("body").classList.remove("active");

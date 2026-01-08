@@ -10,11 +10,20 @@ const User = require("../models/User.js");
 const { default: mongoose } = require("mongoose");
 const Notebook = require("../models/Notebook.js");
 const draftDB = require("../models/drafts");
+
 deleteRouter.delete("/folder/:id", async (req, res) => {
   const { id } = req.params;
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
   const userId = decode.checkUser._id;
+  const checkisalreadydeleted = await Folder.findOne({
+    _id: id,
+    isDeleted: true,
+  });
+  if (checkisalreadydeleted) {
+    const deleteParmanently = await Folder.findByIdAndDelete(id);
+    return res.json({ data: deleteParmanently });
+  }
   const folder = await Folder.findByIdAndUpdate(
     { _id: id, author: userId },
     { $set: { isDeleted: true } },
@@ -30,17 +39,28 @@ deleteRouter.delete("/folder/:id", async (req, res) => {
   });
   res.json({ data: folder });
 });
+
 deleteRouter.delete("/card/:id", async (req, res) => {
   const { id } = req.params;
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
   const userId = decode.checkUser._id;
-  const folder = await Card.findByIdAndUpdate(
+
+  const checkisalreadydeleted = await Card.findOne({
+    _id: id,
+    isDeleted: true,
+  });
+  if (checkisalreadydeleted) {
+    const deleteParmanently = await Card.findByIdAndDelete(id);
+    return res.json({ data: deleteParmanently });
+  }
+
+  const card = await Card.findByIdAndUpdate(
     { _id: id, author: userId },
     { $set: { isDeleted: true } },
     { new: true }
   );
-  if (!folder) {
+  if (!card) {
     const deleteDraft = await draftDB.findOneAndDelete({
       author: userId,
       _id: id,
@@ -48,24 +68,33 @@ deleteRouter.delete("/card/:id", async (req, res) => {
     return res.json({ data: deleteDraft });
   }
   await User.findOneAndUpdate(
-    { _id: folder.author },
-    { $pull: { favoriteCards: folder._id, pinnedCards: folder._id } }
+    { _id: card.author },
+    { $pull: { favoriteCards: card._id, pinnedCards: card._id } }
   );
   await createActivity({
     title: "Card Deleted",
-    author: folder.author,
+    author: card.author,
     activity: "deleted",
-    entityId: folder._id,
+    entityId: card._id,
     entityType: "snippet",
     status: "success",
   });
-  res.json({ data: folder });
+  res.json({ data: card });
 });
+
 deleteRouter.delete("/notebook/:id", async (req, res) => {
   const { id } = req.params;
   const token = req.cookies.token;
   const decode = jwt.verify(token, process.env.SECRET);
   const userId = decode.checkUser._id;
+  const checkisalreadydeleted = await Notebook.findOne({
+    _id: id,
+    isDeleted: true,
+  });
+  if (checkisalreadydeleted) {
+    const deleteParmanently = await Notebook.findByIdAndDelete(id);
+    return res.json({ data: deleteParmanently });
+  }
   const notebook = await Notebook.findByIdAndUpdate(
     { _id: id, author: userId },
     { $set: { isDeleted: true } },

@@ -190,6 +190,116 @@
                             style="position: absolute;top: 0;left: 0;display: none;z-index: 1000000;width: 200px;">
                             <ul id="context_menu_list"></ul>
                         </div>
+                            <style>
+                              .enableNotification {
+                                position: fixed;
+                                inset: 0;
+                                background: rgba(0, 0, 0, 0.45);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                z-index: 9999999;
+                                backdrop-filter: blur(2px);
+                              }
+                            
+                              .notify-card {
+                                width: 360px;
+                                background: var(--bg-color);
+                                border-radius: 16px;
+                                padding: 20px 22px;
+                                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+                              }
+                            
+                              .notify-header {
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                                margin-bottom: 10px;
+                              }
+                            
+                              .notify-header img {
+                                width: 42px;
+                                height: 42px;
+                              }
+                            
+                              .notify-header h3 {
+                                margin: 0;
+                                font-size: 18px;
+                                font-weight: 600;
+                                color: #111;
+                              }
+                            
+                              .notify-text {
+                                font-size: 14px;
+                                color: #555;
+                                line-height: 1.5;
+                                margin-bottom: 14px;
+                              }
+                            
+                              .notify-list {
+                                margin: 0 0 18px;
+                                padding-left: 18px;
+                                font-size: 13px;
+                                color: #444;
+                              }
+                            
+                              .notify-list li {
+                                margin-bottom: 6px;
+                              }
+                            
+                              .notify-actions {
+                                display: flex;
+                                gap: 10px;
+                              }
+                            
+                              .notify-actions button {
+                                flex: 1;
+                                padding: 10px 0;
+                                border-radius: 5px;
+                                font-size: 14px;
+                                cursor: pointer;
+                                border: none;
+                              }
+                            
+                              .btn-enable {
+                                --bg-color: #6d5efc;
+                                background: var(--bg-color);
+                                color: #fff;
+                                font-weight: 500;
+                              }
+                            
+                              .btn-later {
+                                background: var(--accent);
+                                color: #444;
+                              }
+                            </style>
+                            
+                            <div class="enableNotification">
+                              <div class="notify-card">
+                                <div class="notify-header">
+                                  <img src="https://cdn3d.iconscout.com/3d/premium/thumb/check-notification-bell-3d-icon-png-download-10489313.png"
+                                    alt="Notification Bell" />
+                                  <h3>Stay in the loop</h3>
+                                </div>
+                            
+                                <p class="notify-text">
+                                  Enable notifications to get timely updates about activity in your workspace.
+                                </p>
+                            
+                                <ul class="notify-list">
+                                  <li>When someone shares a snippet</li>
+                                  <li>Collaboration updates</li>
+                                  <li>Someone Like your snippet</li>
+                                  <li>New Followers in your workspace</li>
+                                  <li>Security & important alerts</li>
+                                </ul>
+                            
+                                <div class="notify-actions">
+                                  <button class="btn-enable" onclick="initPush()">Enable Notifications</button>
+                                  <button class="btn-later" onclick="closeModel()">Maybe later</button>
+                                </div>
+                              </div>
+                            </div>
                 </div>
         </div>
 

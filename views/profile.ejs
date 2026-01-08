@@ -157,8 +157,7 @@
                                       <a href="javascript:void(0)" class="openlink" data-tooltip="Add New Link">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round"
-                                          class="   -plus-icon">
+                                          stroke-linecap="round" stroke-linejoin="round" class="   -plus-icon">
                                           <path d="M5 12h14" />
                                           <path d="M12 5v14" />
                                         </svg>
@@ -184,11 +183,15 @@
                                     <% } else { %>Follow
                                       <% } %>
                                 </button>
-                                <button class="contact" style="color: var(--bg-color);">Get In Touch</button>
+                                <button class="contact" style="color: var(--bg-color);" onclick="window.location.href">
+                                  <a href="#" class="contact-btn" data-email="<%= user.email %>"
+                                    data-name="<%= user.userName || 'there' %>" style="--color:var(--bg-color)">
+                                    Request Contact
+                                  </a></button>
                               </div>
                               <%}%>
                 </div>
-                <div class="counts">
+                <div class=" counts">
                   <div class="followers" style="cursor: pointer;"
                     onclick="window.location.href = '/followers/<%= user._id%>'">
                     <span>Followers</span>
@@ -502,7 +505,117 @@
                           </div>
                         </div>
 
-                      <%- include("partials/footer.ejs")%>
+                        <style>
+                          .enableNotification {
+                            position: fixed;
+                            inset: 0;
+                            background: rgba(0, 0, 0, 0.45);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            z-index: 9999999;
+                            backdrop-filter: blur(2px);
+                          }
+
+                          .notify-card {
+                            width: 360px;
+                            background: var(--bg-color);
+                            border-radius: 16px;
+                            padding: 20px 22px;
+                            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+                          }
+
+                          .notify-header {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            margin-bottom: 10px;
+                          }
+
+                          .notify-header img {
+                            width: 42px;
+                            height: 42px;
+                          }
+
+                          .notify-header h3 {
+                            margin: 0;
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #111;
+                          }
+
+                          .notify-text {
+                            font-size: 14px;
+                            color: #555;
+                            line-height: 1.5;
+                            margin-bottom: 14px;
+                          }
+
+                          .notify-list {
+                            margin: 0 0 18px;
+                            padding-left: 18px;
+                            font-size: 13px;
+                            color: #444;
+                          }
+
+                          .notify-list li {
+                            margin-bottom: 6px;
+                          }
+
+                          .notify-actions {
+                            display: flex;
+                            gap: 10px;
+                          }
+
+                          .notify-actions button {
+                            flex: 1;
+                            padding: 10px 0;
+                            border-radius: 5px;
+                            font-size: 14px;
+                            cursor: pointer;
+                            border: none;
+                          }
+
+                          .btn-enable {
+                            --bg-color: #6d5efc;
+                            background: var(--bg-color);
+                            color: #fff;
+                            font-weight: 500;
+                          }
+
+                          .btn-later {
+                            background: var(--accent);
+                            color: #444;
+                          }
+                        </style>
+
+                        <div class="enableNotification">
+                          <div class="notify-card">
+                            <div class="notify-header">
+                              <img
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/check-notification-bell-3d-icon-png-download-10489313.png"
+                                alt="Notification Bell" />
+                              <h3>Stay in the loop</h3>
+                            </div>
+
+                            <p class="notify-text">
+                              Enable notifications to get timely updates about activity in your workspace.
+                            </p>
+
+                            <ul class="notify-list">
+                              <li>When someone shares a snippet</li>
+                              <li>Collaboration updates</li>
+                              <li>Someone Like your snippet</li>
+                              <li>New Followers in your workspace</li>
+                              <li>Security & important alerts</li>
+                            </ul>
+
+                            <div class="notify-actions">
+                              <button class="btn-enable" onclick="initPush()">Enable Notifications</button>
+                              <button class="btn-later" onclick="closeModel()">Maybe later</button>
+                            </div>
+                          </div>
+                        </div>
 
             </main>
             <div class="networkInfo" style="display: none">
@@ -922,6 +1035,51 @@
 
     </script>
 
+
+    <script>
+      document.querySelectorAll(".contact-btn").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const email = this.dataset.email;
+          const name = this.dataset.name;
+
+          const subject = "Professional Contact Request via Kodhra";
+          const body = `
+Hello ${name},
+
+This message is being sent via Kodhra as a formal contact request.
+
+I came across your work on Kodhra and found it relevant and valuable. I would like to connect with you regarding a potential discussion, collaboration, or technical query.
+
+Please feel free to respond at your convenience. If this is not the appropriate channel or time, you may ignore this message.
+
+Thank you for your time.
+
+Kind regards,
+[Your Name]
+Sent via Kodhra
+      `.trim();
+
+          const mailtoLink =
+            "mailto:" + email +
+            "?subject=" + encodeURIComponent(subject) +
+            "&body=" + encodeURIComponent(body);
+
+          const win = window.open(mailtoLink, "_blank");
+
+          setTimeout(() => {
+            if (!win || win.closed || typeof win.closed === "undefined") {
+              alert(
+                "Your browser could not open an email client.\n\n" +
+                "You can manually email:\n" + email
+              );
+              navigator.clipboard?.writeText(email);
+            }
+          }, 300);
+        });
+      });
+    </script>
 
     <script src="/scripts/ad_search.js"></script>
     <script src="/scripts/Fab.js"></script>

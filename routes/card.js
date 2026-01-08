@@ -403,7 +403,8 @@ cardRouter.get("/view/:id", async (req, res) => {
   let card = null;
   card = await cardSchema
     .findOne({ _id: id, isDeleted: false })
-    .populate("author", "userName userImage");
+    .populate("author", "userName userImage")
+    .populate("card");
   if (!card) {
     card = await draftDB
       .findOne({ _id: id })
@@ -562,8 +563,16 @@ cardRouter.get("/:did", async (req, res) => {
 
   const cards = await cardSchema
     .find({ _id: id, isDeleted: false })
+    .populate({
+      path: "duplicatedFrom",
+      populate: {
+        path: "author",
+        select: "userName userImage email  createdAt",
+      },
+    })
     .populate("author", "userName userImage");
 
+  console.log(cards);
   if (cards.length === 0) {
     const drafts = await draftDB
       .find({ _id: id })

@@ -62,6 +62,71 @@
   <script>
     window.USER_ID = "<%= userId %>"
   </script>
+  <!-- THEME -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-vsc-dark-plus.css">
+
+  
+  <!-- CORE -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  
+  <!-- BASE DEPENDENCIES -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-clike.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  
+  <!-- MARKUP FIRST -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-markup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-css.min.js"></script>
+  
+  <!-- WEB / SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-graphql.min.js"></script>
+  
+  <!-- C FAMILY -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-c.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-cpp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-csharp.min.js"></script>
+  
+  <!-- JAVA FIRST -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-java.min.js"></script>
+  
+  <!-- JVM LANGUAGES -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-kotlin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-scala.min.js"></script>
+  
+  <!-- SCRIPTING -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-ruby.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-php.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-perl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-lua.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-r.min.js"></script>
+  
+  <!-- SYSTEM / MODERN -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-rust.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-swift.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-dart.min.js"></script>
+  
+  <!-- FUNCTIONAL -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-haskell.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-clojure.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-elixir.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-erlang.min.js"></script>
+  
+  <!-- SHELL / DATA -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-powershell.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-sql.min.js"></script>
+  
+  <!-- LEGACY -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-objectivec.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-vbnet.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-matlab.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-fortran.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-cobol.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-asm6502.min.js"></script>
+
+
 </head>
 
 <body data-theme="light">
@@ -184,8 +249,7 @@
                         onclick="collapse(document.querySelector('.cardsasd'))">
                         <span class="down"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round"
-                            class="   -chevron-down-icon  -chevron-down">
+                            stroke-linecap="round" stroke-linejoin="round" class="   -chevron-down-icon  -chevron-down">
                             <path d="m6 9 6 6 6-6" />
                           </svg></span>
                         All Snippet Cards
@@ -225,6 +289,118 @@
                         <ul id="context_menu_list"></ul>
                       </div>
 
+
+                      <style>
+                        .enableNotification {
+                          position: fixed;
+                          inset: 0;
+                          background: rgba(0, 0, 0, 0.45);
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          z-index: 9999999;
+                          backdrop-filter: blur(2px);
+                        }
+
+                        .notify-card {
+                          width: 360px;
+                          background: var(--bg-color);
+                          border-radius: 16px;
+                          padding: 20px 22px;
+                          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+                        }
+
+                        .notify-header {
+                          display: flex;
+                          align-items: center;
+                          gap: 12px;
+                          margin-bottom: 10px;
+                        }
+
+                        .notify-header img {
+                          width: 42px;
+                          height: 42px;
+                        }
+
+                        .notify-header h3 {
+                          margin: 0;
+                          font-size: 18px;
+                          font-weight: 600;
+                          color: #111;
+                        }
+
+                        .notify-text {
+                          font-size: 14px;
+                          color: #555;
+                          line-height: 1.5;
+                          margin-bottom: 14px;
+                        }
+
+                        .notify-list {
+                          margin: 0 0 18px;
+                          padding-left: 18px;
+                          font-size: 13px;
+                          color: #444;
+                        }
+
+                        .notify-list li {
+                          margin-bottom: 6px;
+                        }
+
+                        .notify-actions {
+                          display: flex;
+                          gap: 10px;
+                        }
+
+                        .notify-actions button {
+                          flex: 1;
+                          padding: 10px 0;
+                          border-radius: 5px;
+                          font-size: 14px;
+                          cursor: pointer;
+                          border: none;
+                        }
+
+                        .btn-enable {
+                          --bg-color: #6d5efc;
+                          background: var(--bg-color);
+                          color: #fff;
+                          font-weight: 500;
+                        }
+
+                        .btn-later {
+                          background: var(--accent);
+                          color: #444;
+                        }
+                      </style>
+
+                      <div class="enableNotification">
+                        <div class="notify-card">
+                          <div class="notify-header">
+                            <img
+                              src="https://cdn3d.iconscout.com/3d/premium/thumb/check-notification-bell-3d-icon-png-download-10489313.png"
+                              alt="Notification Bell" />
+                            <h3>Stay in the loop</h3>
+                          </div>
+
+                          <p class="notify-text">
+                            Enable notifications to get timely updates about activity in your workspace.
+                          </p>
+
+                          <ul class="notify-list">
+                            <li>When someone shares a snippet</li>
+                            <li>Collaboration updates</li>
+                            <li>Someone Like your snippet</li>
+                            <li>New Followers in your workspace</li>
+                            <li>Security & important alerts</li>
+                          </ul>
+
+                          <div class="notify-actions">
+                            <button class="btn-enable" onclick="initPush()">Enable Notifications</button>
+                            <button class="btn-later" onclick="closeModel()">Maybe later</button>
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="networkInfo" style="display: none;">
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -579,6 +755,9 @@
       }
 
     </script>
+
+
+ 
 
     <script src="/scripts/Tooltips.js"></script>
 </body>

@@ -50,7 +50,6 @@ const server = http.createServer(app);
 const socketModule = require("./routes/socket");
 const io = socketModule.init(server);
 
-
 const authMiddleware = require("./middleware/auth.middleware");
 const vRouter = require("./routes/verifyEmail");
 const Card = require("./models/Card");
@@ -88,11 +87,13 @@ const Version = require("./models/versioning");
 const versioningRouter = require("./routes/versionRestore");
 const extNotebook = require("./routes/extension/notebook");
 const extSnippet = require("./routes/extension/snippet");
+const chatRouter = require("./routes/messagener");
 const cookie = require("cookie");
 app.get("/favicon.ico", (req, res) => res.status(204));
 
 const cardRouter = require("./routes/card");
 const Subscription = require("./models/subscriptions.n");
+const duplicateRouter = require('./routes/duplicate');
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 app.use(express.json());
@@ -147,6 +148,8 @@ app.use("/drafts", authMiddleware, settingMiddleWare, draftRouter);
 app.use("/version", authMiddleware, settingMiddleWare, versioningRouter);
 app.use("/extionsion/", extNotebook);
 app.use("/s/ex/", extSnippet);
+app.use("/chat", chatRouter);
+app.use("/duplicate", duplicateRouter);
 app.get("/landing", (req, res) => {
   res.render("landingPage");
 });

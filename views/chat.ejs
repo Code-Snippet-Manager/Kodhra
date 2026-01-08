@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kodhra Chat | Code Snippet Manager</title>
+    <link rel="stylesheet" href="/style/css/partials/Header.css">
+    <link rel="stylesheet" href="/style/css/ad_search.css">
+    <link rel="stylesheet" href="/style/css/Notification.css">
+    <link rel="stylesheet" href="/style/css/index.css">
+    <link rel="stylesheet" href="/style/css/chip.css">
+    <link rel="stylesheet" href="/style/css/card.css">
+    <link rel="stylesheet" href="/style/css/loader.css">
+    <link rel="stylesheet" href="/style/css/folder.css">
+    <link rel="stylesheet" href="/style/css/toast.css">
+    <script src="\scripts\shortcut.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/assets/logo.webp" type="image/png" />
+
+
+</head>
+
+<body data-theme="light">
+    <%- include("partials/loader.ejs") %>
+        <div class="content">
+            <%- include("partials/header.ejs")%>
+                <div class="container">
+                    <%- include("partials/sidebar.ejs", { navigation: 'fav' })%>
+                        <main style="height: calc(100vh - 70px); margin: 0; padding: 0; width: 100%; position: relative;">
+                            <div class="chat-header"
+                                style="background-color: var(--bg-color); padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+                                <span
+                                    style="display: flex; align-items: center; gap: 10px; text-transform: capitalize;"><img
+                                        src="<%= targetUser.userImage%>" width="40px" alt="">
+                                    <%= targetUser.userName%>
+                                </span>
+                                <div class="menu_top">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical">
+                                        <circle cx="12" cy="12" r="1" />
+                                        <circle cx="12" cy="5" r="1" />
+                                        <circle cx="12" cy="19" r="1" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="chat">
+                                <ul>
+                                    <li>name</li>
+                                </ul>
+                            </div>
+                            <div class="sendmsg" style="position: fixed; bottom: 0; width:100%; background: var(--accent); ">
+                                <input type="text" placeholder="Type a message..." id="message" style="padding: 10px;" style="width:100%">
+                            </div>
+                        </main>
+                </div>
+        </div>
+
+
+
+        <script src="/scripts/ad_search.js"></script>
+        <script src="/scripts/Fab.js"></script>
+        <script src="/scripts/Notification.js"></script>
+        <script src="/scripts/searchFunction.js"></script>
+        <script src="/scripts/context_menu.js"></script>
+        <script src="\scripts\isonline.js"></script>
+        <script src="/scripts/header.js"></script>
+        <script src="/scripts/collapse.js"></script>
+
+
+</body>
+
+</html>
