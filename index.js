@@ -309,7 +309,6 @@ app.get("/sitemap.xml", async (req, res) => {
     const baseUrl = "https://kodhra.codewithajoydas.live";
 
     const staticUrls = [
-      "/",
       "/landing/features",
       "/landing",
       "/landing/workflow",
