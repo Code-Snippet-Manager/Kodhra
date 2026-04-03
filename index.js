@@ -313,26 +313,20 @@ app.get("/sitemap.xml", async (req, res) => {
       "/landing/features",
       "/landing",
       "/landing/workflow",
-      "/explore",
-      "/profile",
-      "/card",
-      "/search",
-      "/folder",
-      "/notbook/get",
     ];
 
-    const snippets = await Card.find({
-      isDeleted: false,
-    }).select("_id");
-    const folders = await folder
-      .find({
-        isDeleted: false,
-      })
-      .select("_id");
-    const notebooks = await Notebook.find({
-      isDeleted: false,
-    }).select("_id");
-    const users = await User.find({ visibility: "public" }).select("userName");
+    // const snippets = await Card.find({
+    //   isDeleted: false,
+    // }).select("_id");
+    // const folders = await folder
+    //   .find({
+    //     isDeleted: false,
+    //   })
+    //   .select("_id");
+    // const notebooks = await Notebook.find({
+    //   isDeleted: false,
+    // }).select("_id");
+    // const users = await User.find({ visibility: "public" }).select("userName");
 
     let urls = [];
 
@@ -345,41 +339,41 @@ app.get("/sitemap.xml", async (req, res) => {
       `);
     });
 
-    snippets.forEach((s) => {
-      urls.push(`
-        <url>
-          <loc>${baseUrl}/card/view/${s._id}</loc>
-          <priority>0.7</priority>
-        </url>
-      `);
-    });
+    // snippets.forEach((s) => {
+    //   urls.push(`
+    //     <url>
+    //       <loc>${baseUrl}/card/view/${s._id}</loc>
+    //       <priority>0.7</priority>
+    //     </url>
+    //   `);
+    // });
 
-    folders.forEach((f) => {
-      urls.push(`
-        <url>
-          <loc>${baseUrl}/folder/${f._id}</loc>
-          <priority>0.6</priority>
-        </url>
-      `);
-    });
+    // folders.forEach((f) => {
+    //   urls.push(`
+    //     <url>
+    //       <loc>${baseUrl}/folder/${f._id}</loc>
+    //       <priority>0.6</priority>
+    //     </url>
+    //   `);
+    // });
 
-    notebooks.forEach((n) => {
-      urls.push(`
-        <url>
-          <loc>${baseUrl}/notebook/view/${n._id}</loc>
-          <priority>0.6</priority>
-        </url>
-      `);
-    });
+    // notebooks.forEach((n) => {
+    //   urls.push(`
+    //     <url>
+    //       <loc>${baseUrl}/notebook/view/${n._id}</loc>
+    //       <priority>0.6</priority>
+    //     </url>
+    //   `);
+    // });
 
-    users.forEach((u) => {
-      urls.push(`
-        <url>
-          <loc>${baseUrl}/profile/${u.userName}</loc>
-          <priority>0.5</priority>
-        </url>
-      `);
-    });
+    // users.forEach((u) => {
+    //   urls.push(`
+    //     <url>
+    //       <loc>${baseUrl}/profile/${u.userName}</loc>
+    //       <priority>0.5</priority>
+    //     </url>
+    //   `);
+    // });
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
