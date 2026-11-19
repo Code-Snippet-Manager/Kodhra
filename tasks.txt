@@ -12,7 +12,7 @@ KODHRA should be more than a code snippet manager. It should be an all-in-one de
 - Syntax Highlighting [DONE]
 - Multiple Programming Languages [DONE]
 - Code Formatting [DONE]
-- Code Copying 
+- Code Copying [Done]
 - Code Preview
 - Snippet Categories
 - Tags Management

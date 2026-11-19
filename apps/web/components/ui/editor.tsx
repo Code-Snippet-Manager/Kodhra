@@ -10,6 +10,7 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   className?: React.ComponentProps<"div">["className"];
+  h?:boolean
 }
 
 export default function CodeEditor({
@@ -18,29 +19,26 @@ export default function CodeEditor({
   onChange,
   readOnly = false,
   className,
+  h=false
 }: CodeEditorProps) {
   const editorHeight = useMemo(() => {
     const lineCount = value.split("\n").length;
-
     const lineHeight = 21;
     const padding = 32;
     const minHeight = 100;
     const maxHeight = 500;
-
-    return Math.min(
-      Math.max(lineCount * lineHeight + padding, minHeight),
-      maxHeight
-    );
+    return Math.min(Math.max(lineCount * lineHeight + padding, minHeight), maxHeight);
   }, [value]);
 
   return (
     <div className={clsx("overflow-hidden rounded-lg border", className)}>
       <Editor
+      className="h-100"
         language={language}
         theme="vs-dark"
         value={value}
         onChange={(value) => onChange?.(value ?? "")}
-        height={`${editorHeight}px`}
+        height={h ? undefined : `${editorHeight}px`}
         options={{
           contextmenu: !readOnly,
           fontSize: 14,

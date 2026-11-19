@@ -7,6 +7,7 @@ import {
   getAllSnippetsService,
   getSnippetService,
   saveSnippetService,
+  searchSnippetService,
   updateSnippetService,
 } from "../services/snippets.js";
 type Snippet = {
@@ -105,5 +106,17 @@ export const deleteSnippetController = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       apiResponse(res, error.message, 500, "error");
     }
+  }
+};
+export const searchSnippetController = async (req: Request, res: Response) => {
+  try {
+    const { search } = req.query;
+    logger.info(`query: ${search}`);
+    const userId = res.locals.user.id;
+    const getSnippets = await searchSnippetService(search as string, userId);
+    apiResponse(res, "Snippets Fetched Successfully", 200, "success", getSnippets)
+  } catch (error) {
+    logger.error(`Internal Server Error ${error}`);
+    res.json("sometuhg")
   }
 };

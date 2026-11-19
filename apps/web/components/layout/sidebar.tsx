@@ -35,7 +35,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
 export const SIDEBAR_ITEMS = [
   {
     category: "Main Pages",
@@ -83,25 +82,21 @@ export const SIDEBAR_ITEMS = [
 ];
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-useEffect(() => {
-  console.log("Sidebar mounted");
-
-  const handleOpenModal = () => {
-    console.log("Event received!");
-    setIsOpen(true);
-  };
-
-  window.addEventListener("open-modal", handleOpenModal);
-
-  return () => {
-    console.log("Sidebar unmounted");
-    window.removeEventListener("open-modal", handleOpenModal);
-  };
-}, []);
+  useEffect(() => {
+    console.log("Sidebar mounted");
+    const handleOpenModal = () => {
+      console.log("Event received!");
+      setIsOpen(true);
+    };
+    window.addEventListener("open-modal", handleOpenModal);
+    return () => {
+      console.log("Sidebar unmounted");
+      window.removeEventListener("open-modal", handleOpenModal);
+    };
+  }, []);
   const path = usePathname();
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
-
   const createFolder = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-folder`, {
@@ -119,16 +114,15 @@ useEffect(() => {
       console.log("error creating folder.", error);
     }
   };
-
   return (
     <div className="w-62.5 border border-r  overflow-y-auto h-screen scrollbar-none hover:scrollbar-thin scrollbar-thumb-gray-300">
-      <div className="flex items-center gap-2  top-0 sticky bg-transparent backdrop-blur-2xl px-2 z-1 h-[55px]">
+      <div className="flex items-center gap-2  top-0 sticky bg-transparent backdrop-blur-2xl px-2 z-1 h-13.75">
         <Image
           src={"/icons/kodhra.webp"}
           width={30}
           height={30}
           alt="Logo of kodhra"
-          className="w-7.5 h-7.5"
+          className="w-7.5 h-7.5 dark:invert-100"
         />
         <div className="leading-none">
           <span className="text-sm font-bold block">Kodhra</span>
@@ -200,9 +194,9 @@ useEffect(() => {
                           key={item.label}
                           href={item.href || ""}
                           className={clsx(
-                            "text-sm flex gap-2 items-center px-2 py-1.5 hover:bg-gray-50 rounded flex-1 transition",
+                            "text-sm flex gap-2 items-center px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-zinc-900 rounded flex-1 transition",
                             {
-                              "bg-gray-50": path === item.href,
+                              "bg-gray-50 dark:bg-zinc-900": path === item.href,
                             },
                           )}
                         >

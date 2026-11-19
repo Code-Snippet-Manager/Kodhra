@@ -180,3 +180,27 @@ export const duplicateSnippetService = async (id: string, userId: string) => {
     throw error;
   }
 };
+export const searchSnippetService = async (
+  query: string,
+  userId: string
+) => {
+  const search = query.trim();
+  const result = await Snippet.aggregate([
+    {
+      $match: {
+        author: new mongoose.Types.ObjectId(userId),
+        isDeleted: false,
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+          { code: { $regex: search, $options: "i" } },
+          { tags: { $regex: search, $options: "i" } },
+        ],
+      },
+    },
+    {
+      $limit:20
+    }
+  ]);
+  return result;
+};

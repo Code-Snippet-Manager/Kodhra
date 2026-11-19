@@ -3,14 +3,12 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-
 const routes: string[] = [
   "/register",
   "/forgot-password",
   "/reset-password",
   "/verify-otp",
 ];
-
 export default function AuthHeader() {
   const pathname = usePathname();
   return (

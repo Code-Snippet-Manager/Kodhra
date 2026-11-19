@@ -6,6 +6,7 @@ import {
   getAllSnippetsController,
   getSnippetsController,
   saveSnippetController,
+  searchSnippetController,
   updateSnippetController,
 } from "../controllers/snippet.js";
 const snippetRouter = express.Router();
@@ -16,4 +17,6 @@ snippetRouter.get("/get-snippets", getAllSnippetsController);
 snippetRouter.get("/get-snippet/:id", getSnippetsController);
 snippetRouter.post("/duplicate-snippet/:id", duplicateSnippetController);
 snippetRouter.post("/delete-snippet/:id", deleteSnippetController);
+snippetRouter.get("/search-snippet", searchSnippetController);
+
 export { snippetRouter };

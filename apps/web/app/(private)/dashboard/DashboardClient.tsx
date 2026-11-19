@@ -55,6 +55,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { authClient } from "@/lib/auth-client";
 import {
   ArrowUpRight,
+  ClipboardCopy,
   Copy,
   Edit,
   Flag,
@@ -253,6 +254,19 @@ export default function DashboardClient() {
             });
           },
         },
+        {
+          label: "Copy Content",
+          value: "copy-content",
+          icon: ClipboardCopy,
+          onClick: (_: unknown | string, id: string, value?:string) => {
+            window.navigator.clipboard.writeText(value as string);
+            toast.add({
+              title: "Code copied successfully",
+              description: "The code has been copied to your clipboard.",
+              type: "success",
+            });
+          },
+        },
       ],
     },
     {
@@ -367,13 +381,8 @@ export default function DashboardClient() {
         credentials: "include",
       });
       const data = await response.json();
-      const folders = data.data.map((folder: { name: string; _id: string; color: string }) => {
-        return {
-          label: folder.name,
-          value: folder._id,
-          color: folder.color,
-        };
-      });
+      const folders = data.data;
+      console.log(folders);
       setFolderList(folders);
     };
     getFolders();
@@ -579,23 +588,26 @@ export default function DashboardClient() {
       <section>
         <p className="text-xs text-muted-foreground">Recent Folders</p>
         <div className="grid grid-cols-4 gap-4 mt-2">
-          {folderList.map((item: { id: string; label: string; color: string }, index) => {
-            if (index >= 4) {
-              return;
-            }
-            return (
-              <Card key={index}>
-                <CardContent className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm">{item.label}</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-muted">
-                    <Folder size={28} color={item.color} />
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {folderList.map(
+            (item: { id: string; name: string; color: string; createdAt: Date }, index) => {
+              if (index >= 4) {
+                return;
+              }
+              return (
+                <Card key={index} className="h-fit">
+                  <CardContent className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <p className="">{item.name}</p>
+                      <p className="text-xs text-card-foreground">Created At: {new Date(item.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-muted">
+                      <Folder size={28} color={item.color} />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            },
+          )}
         </div>
       </section>
       <section>
@@ -628,14 +640,14 @@ export default function DashboardClient() {
                             </Button>
                           }
                         />
-                        <DropdownMenuContent>
+                        <DropdownMenuContent className={"w-fit"}>
                           {snippetMenu.map((group) => (
                             <DropdownMenuGroup key={group.label}>
                               <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
                               {group.items.map((menu) => (
                                 <DropdownMenuItem
                                   key={menu.label}
-                                  onClick={() => menu.onClick(null, item._id)}
+                                  onClick={() => menu.onClick(null, item._id, item.code)}
                                 >
                                   <menu.icon className="mr-2 h-4 w-4" />
                                   {menu.label}
@@ -679,7 +691,7 @@ export default function DashboardClient() {
                         return (
                           <ContextMenuItem
                             key={menu.value}
-                            onClick={() => menu.onClick(null, item._id)}
+                            onClick={() => menu.onClick(null, item._id, item.code)}
                           >
                             <Icon />
                             {menu.label}
