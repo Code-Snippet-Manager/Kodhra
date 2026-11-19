@@ -1,52 +1,26 @@
 {
-  "name": "cms_backend",
-  "version": "1.0.4",
-  "main": "index.js",
+  "name": "kodhra",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@12.0.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "test": "jest",
-    "start": "npx nodemon index.js",
-    "build": "npx esbuild index.js --bundle --minify --outfile=dist/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "description": "",
-  "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "archiver": "^7.0.1",
-    "axios": "^1.11.0",
-    "bcryptjs": "^3.0.2",
-    "bson": "^6.10.4",
-    "cloudinary": "^2.7.0",
-    "connect-redis": "^9.0.0",
-    "cookie": "^1.1.1",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "ejs": "^3.1.10",
-    "electron": "^38.1.0",
-    "express": "^5.1.0",
-    "express-session": "^1.18.2",
-    "ioredis": "^5.7.0",
-    "jsonwebtoken": "^9.0.2",
-    "marked": "^17.0.1",
-    "mongoose": "^8.17.1",
-    "multer": "^2.0.2",
-    "node-fetch": "^3.3.2",
-    "nodemailer": "^7.0.5",
-    "open": "^10.2.0",
-    "querystring": "^0.2.1",
-    "razorpay": "^2.9.6",
-    "redis": "^5.8.1",
-    "sass": "^1.90.0",
-    "socket.io": "^4.8.1",
-    "web-push": "^3.6.7"
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "turbo run clean"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "esbuild": "^0.25.9",
-    "jest": "^30.2.0",
-    "supertest": "^7.1.4"
+    "prettier": "^3.6.2",
+    "turbo": "^2.11.2",
+    "typescript": "^5.9.2"
   }
 }

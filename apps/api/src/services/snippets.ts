@@ -1,0 +1,182 @@
+import mongoose from "mongoose";
+import { Snippet } from "../model/snippet.js";
+import { SnippetVersion } from "../model/snippet-version.js";
+import userSchema from "../model/user.js";
+type CreateSnippetInput = {
+  title: string;
+  description: string;
+  code: string;
+  language: string;
+  tags: string[];
+  author: mongoose.Types.ObjectId;
+  isFavorite: boolean;
+  isPinned: boolean;
+  isPublic: boolean;
+  isDeleted: boolean;
+  originalSnippetId?: mongoose.Types.ObjectId;
+};
+export type UpdateSnippetInput = {
+  title?: string;
+  description?: string;
+  code?: string;
+  language?: string;
+  tags?: string[];
+  folder?: mongoose.Types.ObjectId | null;
+};
+export const saveSnippetService = async (props: CreateSnippetInput) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const [snippet] = await Snippet.create([props], { session });
+    await SnippetVersion.create(
+      [
+        {
+          snippetId: snippet?._id as mongoose.Types.ObjectId,
+          changeMessage: "Initial version",
+          version: 1,
+          language: props.language,
+          code: props.code,
+          title: props.title,
+          description: props.description,
+          createdBy: props.author.toString(),
+        },
+      ],
+      { session },
+    );
+    await session.commitTransaction();
+    await session.endSession();
+    return snippet;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  }
+};
+export const deleteSnippetService = async (id: string, userId: string) => {
+  try {
+    const result = await Snippet.updateOne(
+      { _id: id, author: userId, isDeleted: false },
+      { $set: { isDeleted: true } },
+    );
+    if (result.matchedCount === 0) {
+      throw new Error("Snippet not found.");
+    }
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateSnippetService = async (
+  id: string,
+  userId: string,
+  props: UpdateSnippetInput,
+) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const snippet = await Snippet.findOne({
+      _id: id,
+      author: userId,
+      isDeleted: false,
+    }).session(session);
+    if (!snippet) {
+      throw new Error("Snippet not found.");
+    }
+    const lastVersion = await SnippetVersion.findOne({
+      snippetId: snippet._id,
+      isDeleted: false,
+    })
+      .sort({ version: -1 })
+      .session(session);
+    const updatedSnippet = await Snippet.findOneAndUpdate(
+      {
+        _id: id,
+        userId,
+        isDeleted: false,
+      },
+      {
+        $set: { ...props, version: (lastVersion?.version ?? 0) + 1 },
+      },
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
+    if (!updatedSnippet) {
+      throw new Error("Snippet update failed.");
+    }
+    const [newVersion] = await SnippetVersion.create(
+      [
+        {
+          snippetId: snippet._id,
+          version: (lastVersion?.version ?? 0) + 1,
+          title: updatedSnippet.title,
+          description: updatedSnippet.description,
+          code: updatedSnippet.code,
+          language: updatedSnippet.language,
+          createdBy: userId,
+          changeMessage: "Snippet updated",
+        },
+      ],
+      { session },
+    );
+    await session.commitTransaction();
+    return {
+      snippet: updatedSnippet,
+      version: newVersion,
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+};
+export const getSnippetService = async (id: string, userId: string) => {
+  const snippet = await Snippet.findById({ _id: id, author: userId, isDeleted: false });
+  if (!snippet) {
+    throw new Error("Snippet not found.");
+  }
+  return snippet;
+};
+export const getAllSnippetsService = async (userId: string) => {
+  const User = Snippet.db.models.User || Snippet.db.model("User", userSchema, "user");
+  const snippets = await Snippet.find({
+    author: userId,
+    isDeleted: false,
+  })
+    .populate({
+      path: "author",
+      model: User,
+      select: "name email image",
+    })
+    .sort({ createdAt: -1 });
+  return snippets;
+};
+export const duplicateSnippetService = async (id: string, userId: string) => {
+  try {
+    const snippet = await Snippet.findById(id);
+    if (!snippet) {
+      throw new Error("Snippet not found.");
+    }
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      _id,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      __v,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      createdAt,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      updatedAt,
+      ...snippetData
+    } = snippet.toObject();
+    const newSnippet = await saveSnippetService({
+      ...snippetData,
+      author: new mongoose.Types.ObjectId(userId),
+      originalSnippetId: snippet._id,
+    });
+    return newSnippet;
+  } catch (error) {
+    throw error;
+  }
+};
