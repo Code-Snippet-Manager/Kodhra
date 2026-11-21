@@ -10,7 +10,7 @@ export const getReportService = async (userId: string) => {
   });
   const getFolderCount = await Folder.countDocuments({
     userId: objectId,
-    isDeleted:false
+    isDeleted: false,
   });
   const totalUniqueTags = await Snippet.aggregate([
     {
@@ -102,6 +102,34 @@ export const getDailyWiseReportService = async (
     {
       $sort: {
         date: 1,
+      },
+    },
+  ]);
+  return reports;
+};
+
+export const getReportByLanguageService = async (userId: string) => {
+  const objectId = new mongoose.Types.ObjectId(userId);
+  const reports = await Snippet.aggregate([
+    {
+      $match: {
+        author: objectId,
+        isDeleted: false,
+      },
+    },
+    {
+      $group: {
+        _id: "$language",
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { count: -1 } },
+    { $limit: 5 },
+    {
+      $project: {
+        _id: 0,
+        language: "$_id",
+        count: 1,
       },
     },
   ]);

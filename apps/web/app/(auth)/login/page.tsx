@@ -25,7 +25,7 @@ export default function Login() {
     if (error) return setError(error?.message ?? "Error Logging In. Try Again.");
     if (!data) return setError("Error Logging In. Try Again.");
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.href = "/";
+    window.location.href = "/dashboard";
   };
   return (
     <main className="min-h-screen flex items-center justify-center bg-zinc-50 px-4 py-10">

@@ -22,6 +22,7 @@ export type UpdateSnippetInput = {
   language?: string;
   tags?: string[];
   folder?: mongoose.Types.ObjectId | null;
+  isPublic?: boolean;
 };
 export const saveSnippetService = async (props: CreateSnippetInput) => {
   const session = await mongoose.startSession();
@@ -90,7 +91,7 @@ export const updateSnippetService = async (
     const updatedSnippet = await Snippet.findOneAndUpdate(
       {
         _id: id,
-        userId,
+        author: userId,
         isDeleted: false,
       },
       {
@@ -132,8 +133,19 @@ export const updateSnippetService = async (
     await session.endSession();
   }
 };
-export const getSnippetService = async (id: string, userId: string) => {
-  const snippet = await Snippet.findById({ _id: id, author: userId, isDeleted: false });
+export const getSnippetService = async (
+  id: string,
+  userId: string,
+  page?: number,
+  limit?: number,
+) => {
+  const __page = page || 1;
+  const __limit = limit || 10;
+  const offset = (__page - 1) * __limit;
+  const snippet = await Snippet.findById({ _id: id, author: userId, isDeleted: false })
+    .skip(offset)
+    .limit(__limit)
+    .sort({ createdAt: -1 });
   if (!snippet) {
     throw new Error("Snippet not found.");
   }
@@ -180,10 +192,7 @@ export const duplicateSnippetService = async (id: string, userId: string) => {
     throw error;
   }
 };
-export const searchSnippetService = async (
-  query: string,
-  userId: string
-) => {
+export const searchSnippetService = async (query: string, userId: string) => {
   const search = query.trim();
   const result = await Snippet.aggregate([
     {
@@ -199,8 +208,19 @@ export const searchSnippetService = async (
       },
     },
     {
-      $limit:20
-    }
+      $limit: 20,
+    },
   ]);
   return result;
+};
+export const getSnippetVersionsService = async (id: string, userId: string) => {
+  const snippet = await Snippet.findById({ _id: id, author: userId, isDeleted: false });
+  if (!snippet) {
+    throw new Error("Snippet not found.");
+  }
+  const versions = await SnippetVersion.find({
+    snippetId: snippet._id,
+    isDeleted: false,
+  });
+  return versions;
 };

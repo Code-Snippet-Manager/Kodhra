@@ -37,9 +37,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { toast } from "@/components/ui/toast";
 type SearchSnippetType = {
   _id: string;
@@ -97,7 +95,7 @@ export default function AppHeader() {
         {
           credentials: "include",
           signal: controller.signal,
-        }
+        },
       );
       if (!res.ok) {
         throw new Error("Failed to fetch search results");
@@ -139,16 +137,14 @@ export default function AppHeader() {
         searchSnippets(value);
       }, 300);
     },
-    [searchSnippets]
+    [searchSnippets],
   );
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
     setIsSearchOpen(true);
     debounceSearch(value);
   };
-  const handleSearch = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!searchValue.trim()) return;
     if (listening) {
@@ -210,10 +206,7 @@ export default function AppHeader() {
   };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false);
       }
     };
@@ -235,19 +228,13 @@ export default function AppHeader() {
     <header className="sticky top-0 h-13.75 border-b flex items-center px-2 justify-between bg-white/50 backdrop-blur-2xl z-10 dark:bg-black/50">
       {/* Back Button */}
       {pathname !== "/dashboard" && (
-        <Button
-          variant="ghost"
-          onClick={() => window.history.back()}
-        >
+        <Button variant="ghost" onClick={() => window.history.back()}>
           <ArrowLeft />
           <span>Back</span>
         </Button>
       )}
       {/* Search */}
-      <FieldSet
-        className="w-[40%] max-w-125 min-w-25 relative"
-        ref={searchRef}
-      >
+      <FieldSet className="w-[40%] max-w-125 min-w-25 relative" ref={searchRef}>
         <form onSubmit={handleSearch}>
           <Field orientation="horizontal">
             <InputGroup>
@@ -255,9 +242,7 @@ export default function AppHeader() {
                 placeholder="Search snippets..."
                 autoComplete="off"
                 value={searchValue}
-                onChange={(e) =>
-                  handleSearchChange(e.target.value)
-                }
+                onChange={(e) => handleSearchChange(e.target.value)}
                 onFocus={() => {
                   if (searchValue.trim()) {
                     setIsSearchOpen(true);
@@ -269,11 +254,7 @@ export default function AppHeader() {
               </InputGroupAddon>
               {/* Clear Search */}
               {searchValue && (
-                <InputGroupButton
-                  type="button"
-                  onClick={handleClearSearch}
-                  title="Clear search"
-                >
+                <InputGroupButton type="button" onClick={handleClearSearch} title="Clear search">
                   <X />
                 </InputGroupButton>
               )}
@@ -282,30 +263,20 @@ export default function AppHeader() {
                 type="button"
                 onClick={handleVoiceSearch}
                 disabled={!browserSupportsSpeechRecognition}
-                title={
-                  listening
-                    ? "Stop voice search"
-                    : "Start voice search"
-                }
+                title={listening ? "Stop voice search" : "Start voice search"}
                 className={listening ? "text-red-500" : ""}
               >
                 {listening ? <MicOff /> : <Mic />}
                 {listening && (
                   <span className="flex items-center">
                     Listening
-                    <span className="animate-caret-blink">
-                      ...
-                    </span>
+                    <span className="animate-caret-blink">...</span>
                   </span>
                 )}
               </InputGroupButton>
             </InputGroup>
             <Button type="submit" disabled={!searchValue.trim()}>
-              {isLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Search />
-              )}
+              {isLoading ? <Loader2 className="animate-spin" /> : <Search />}
               Search
             </Button>
           </Field>
@@ -329,21 +300,15 @@ export default function AppHeader() {
                       key={item._id}
                       className="px-2 py-1 rounded-md hover:bg-muted cursor-pointer"
                     >
-                      <p className="font-medium text-sm">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {item.language}
-                      </p>
+                      <p className="font-medium text-sm">{item.title}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{item.language}</p>
                     </li>
                   ))}
                 </ul>
               )}
               {/* Empty State */}
               {!isLoading && searchResult.length === 0 && (
-                <p className="text-center text-sm text-muted-foreground py-4">
-                  No snippets found.
-                </p>
+                <p className="text-center text-sm text-muted-foreground py-4">No snippets found.</p>
               )}
             </CardContent>
           </Card>
@@ -351,27 +316,19 @@ export default function AppHeader() {
       </FieldSet>
       {/* Right Actions */}
       <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          className="w-10 h-10 rounded-full"
-        >
+        <Button variant="ghost" className="w-10 h-10 rounded-full">
           <Bell size={24} />
         </Button>
         {/* Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Avatar>
-              {session?.user?.image && (
-                <AvatarImage
-                  src={session.user.image}
-                  alt="Profile"
-                />
-              )}
-              <AvatarFallback>
-                {session?.user?.name?.charAt(0) || "U"}
-              </AvatarFallback>
-            </Avatar>
+              <Button variant="ghost" className="w-10 h-10 rounded-full">
+                <Avatar>
+                  {session?.user?.image && <AvatarImage src={session.user.image} alt="Profile" />}
+                  <AvatarFallback>{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
+                </Avatar>
+              </Button>
             }
           />
           <DropdownMenuContent align="end" className="w-50">
@@ -416,10 +373,7 @@ export default function AppHeader() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-2 cursor-pointer w-full"
-                >
+                <Link href="/dashboard" className="flex items-center gap-2 cursor-pointer w-full">
                   <LayoutDashboard size={16} />
                   Dashboard
                 </Link>

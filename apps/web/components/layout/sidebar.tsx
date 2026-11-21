@@ -8,8 +8,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/toast";
 import { clsx } from "cn";
 import {
   BookOpen,
@@ -80,8 +82,31 @@ export const SIDEBAR_ITEMS = [
     ],
   },
 ];
+const colors = [
+  {
+    label: "Red",
+    value: "#EF4444",
+  },
+  {
+    label: "Blue",
+    value: "#3B82F6",
+  },
+  {
+    label: "Green",
+    value: "#22C55E",
+  },
+  {
+    label: "Yellow",
+    value: "#EAB308",
+  },
+  {
+    label: "Purple",
+    value: "#A855F7",
+  },
+];
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [color, setColor] = useState<string | null>();
   useEffect(() => {
     console.log("Sidebar mounted");
     const handleOpenModal = () => {
@@ -102,16 +127,33 @@ export default function Sidebar() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-folder`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: folderName, description: folderDescription }),
+        body: JSON.stringify({ name: folderName, description: folderDescription, color }),
         credentials: "include",
       });
-      if (!res) {
-        console.log("error creating folder.");
+      if(!res.ok){
+
+        toast.add({
+          title: "Error",
+          description: "Failed to create folder",
+          type: "error",
+        })
+      }else{
+        toast.add({
+          title: "Success",
+          description: "Folder created successfully",
+          type: "success",
+        })
       }
-      const data = await res.json();
-      console.log(data);
+      
     } catch (error) {
-      console.log("error creating folder.", error);
+      console.log(error);
+      toast.add({
+        title: "Error",
+        description: "Failed to create folder",
+        type: "error",
+      })
+    }finally{
+      setIsOpen(false);
     }
   };
   return (
@@ -182,9 +224,33 @@ export default function Sidebar() {
                                 </FieldLabel>
                                 <Textarea
                                   id="description"
+                                  placeholder="Enter Description"
                                   onChange={(e) => setFolderDescription(e.target.value)}
                                 />
                               </FieldGroup>
+                              <label htmlFor="color">Select Color</label>
+                              <div className="flex gap-2 items-center justify-between">
+                                {colors.map((item) => {
+                                  return (
+                                    <div
+                                      key={item.label}
+                                      onClick={() => setColor(item.value)}
+                                      className="flex items-center gap-2 focus:outline-2 rounded-full outline-card-foreground"
+                                      tabIndex={0}
+                                    >
+                                      <div
+                                        className="w-10 h-10 rounded-full"
+                                        style={{ backgroundColor: item.value }}
+                                      ></div>
+                                    </div>
+                                  );
+                                })}
+                                <Input
+                                  type="color"
+                                  className="w-10 h-10 rounded-full"
+                                  onChange={(e) => setColor(e.target.value as string)}
+                                />
+                              </div>
                               <Button onClick={createFolder}>Create</Button>
                             </FieldSet>
                           </DialogContent>

@@ -6,10 +6,12 @@ import {
   duplicateSnippetService,
   getAllSnippetsService,
   getSnippetService,
+  getSnippetVersionsService,
   saveSnippetService,
   searchSnippetService,
   updateSnippetService,
 } from "../services/snippets.js";
+import mongoose from "mongoose";
 type Snippet = {
   title: string;
   language: string;
@@ -17,6 +19,8 @@ type Snippet = {
   tags: string[];
   description: string;
   id?: string;
+  folder?: mongoose.Types.ObjectId | null;
+  visibility?: string;
 };
 export const saveSnippetController = async (req: Request, res: Response) => {
   try {
@@ -46,28 +50,25 @@ export const saveSnippetController = async (req: Request, res: Response) => {
 export const updateSnippetController = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id;
-    const { title, language, code, tags, description, id }: Snippet = req.body;
-    if (!title || !language || !code || !tags || !description || !id) {
-      apiResponse(res, "Missing required fields", 400, "error");
+    const { id, ...data }: Snippet = req.body;
+    if (!id || Object.keys(data).length === 0) {
+      return apiResponse(res, "Missing required fields", 400, "error");
     }
-    const snippet = await updateSnippetService(id as string, userId, {
-      title,
-      language,
-      code,
-      tags,
-      description,
-    });
-    apiResponse(res, "Snippet updated successfully", 201, "success", snippet);
+    const snippet = await updateSnippetService(id as string, userId, { ...data });
+    return apiResponse(res, "Snippet updated successfully", 200, "success", snippet);
   } catch (error) {
-    logger.error({ err: error }, "Failed to connect to MongoDB");
-    apiResponse(res, "Failed to connect to MongoDB", 500, "error");
+    logger.error({ err: error }, "Failed to update snippet");
+    if (res.headersSent) return;
+    return apiResponse(res, "Failed to update snippet", 500, "error");
   }
 };
 export const getSnippetsController = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id;
     const snippet_id = req.params.id;
-    const snippets = await getSnippetService(snippet_id as string, userId);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const snippets = await getSnippetService(snippet_id as string, userId, page, limit);
     apiResponse(res, "Snippets fetched successfully", 200, "success", snippets);
   } catch (error) {
     logger.error({ err: error }, "Failed to connect to MongoDB");
@@ -114,9 +115,21 @@ export const searchSnippetController = async (req: Request, res: Response) => {
     logger.info(`query: ${search}`);
     const userId = res.locals.user.id;
     const getSnippets = await searchSnippetService(search as string, userId);
-    apiResponse(res, "Snippets Fetched Successfully", 200, "success", getSnippets)
+    apiResponse(res, "Snippets Fetched Successfully", 200, "success", getSnippets);
   } catch (error) {
     logger.error(`Internal Server Error ${error}`);
-    res.json("sometuhg")
+    res.json("sometuhg");
+  }
+};
+
+export const getSnippetVersionsController = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.user.id;
+    const snippetId = req.params.id;
+    const versions = await getSnippetVersionsService(snippetId as string, userId);
+    apiResponse(res, "Snippet Versions Fetched Successfully", 200, "success", versions);
+  } catch (error) {
+    apiResponse(res, "Internal Server Error", 500, "error");
+    logger.error(`Internal Server Error ${error}`);
   }
 };

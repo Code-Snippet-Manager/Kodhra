@@ -1,6 +1,6 @@
 "use client";
 
-import Editor from "@monaco-editor/react";
+import Editor, { EditorProps } from "@monaco-editor/react";
 import { clsx } from "cn";
 import React, { useMemo } from "react";
 
@@ -10,7 +10,8 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   className?: React.ComponentProps<"div">["className"];
-  h?:boolean
+  dynamicHeight?: boolean;
+  props?: EditorProps;
 }
 
 export default function CodeEditor({
@@ -19,7 +20,8 @@ export default function CodeEditor({
   onChange,
   readOnly = false,
   className,
-  h=false
+  dynamicHeight = true,
+  props,
 }: CodeEditorProps) {
   const editorHeight = useMemo(() => {
     const lineCount = value.split("\n").length;
@@ -31,15 +33,16 @@ export default function CodeEditor({
   }, [value]);
 
   return (
-    <div className={clsx("overflow-hidden rounded-lg border", className)}>
+    <div className={clsx("rounded-lg border", className)}>
       <Editor
-      className="h-100"
+        className="h-100"
         language={language}
         theme="vs-dark"
         value={value}
         onChange={(value) => onChange?.(value ?? "")}
-        height={h ? undefined : `${editorHeight}px`}
+        height={dynamicHeight ? `${editorHeight}px` : undefined}
         options={{
+          ...props,
           contextmenu: !readOnly,
           fontSize: 14,
           lineHeight: 21,
@@ -59,6 +62,7 @@ export default function CodeEditor({
           autoClosingQuotes: "always",
           readOnly,
           domReadOnly: readOnly,
+          mouseWheelZoom: true,
         }}
       />
     </div>

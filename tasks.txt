@@ -7,8 +7,8 @@ KODHRA should be more than a code snippet manager. It should be an all-in-one de
    1. CORE SNIPPET MANAGEMENT
    ============================================================
 - Create Code Snippets [DONE]
-- Edit Code Snippets [PENDING]
-- Delete Code Snippets
+- Edit Code Snippets [DONE]
+- Delete Code Snippets [DONE]
 - Syntax Highlighting [DONE]
 - Multiple Programming Languages [DONE]
 - Code Formatting [DONE]

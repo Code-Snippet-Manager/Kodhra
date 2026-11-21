@@ -5,6 +5,7 @@ import {
   duplicateSnippetController,
   getAllSnippetsController,
   getSnippetsController,
+  getSnippetVersionsController,
   saveSnippetController,
   searchSnippetController,
   updateSnippetController,
@@ -18,5 +19,6 @@ snippetRouter.get("/get-snippet/:id", getSnippetsController);
 snippetRouter.post("/duplicate-snippet/:id", duplicateSnippetController);
 snippetRouter.post("/delete-snippet/:id", deleteSnippetController);
 snippetRouter.get("/search-snippet", searchSnippetController);
+snippetRouter.get("/get-snippet-versions/:id", getSnippetVersionsController);
 
 export { snippetRouter };
