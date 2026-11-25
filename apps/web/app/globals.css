@@ -1,3 +1,6 @@
+@plugin "@tailwindcss/typography";
+@import "../styles/_variables.scss";
+@import "../styles/_keyframe-animations.scss";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -171,5 +174,399 @@ body {
     &:not(:where(.light, .light *)) {
       @slot;
     }
+  }
+}
+.notebook-editor {
+  width: 100%;
+  min-height: 550px;
+  outline: none;
+}
+.notebook-editor .tiptap {
+  min-height: 550px;
+  outline: none;
+  color: var(--foreground);
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+.notebook-editor .tiptap > :first-child {
+  margin-top: 0;
+}
+.notebook-editor .tiptap > * + * {
+  margin-top: 0.85em;
+}
+.notebook-editor .tiptap p {
+  margin: 0.75rem 0;
+}
+.notebook-editor h1,
+.notebook-editor h2,
+.notebook-editor h3,
+.notebook-editor h4,
+.notebook-editor h5,
+.notebook-editor h6 {
+  color: var(--foreground);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+.notebook-editor h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+}
+.notebook-editor h2 {
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+.notebook-editor h3 {
+  font-size: 1.4rem;
+}
+.notebook-editor h4 {
+  font-size: 1.2rem;
+}
+.notebook-editor h5 {
+  font-size: 1.05rem;
+}
+.notebook-editor h6 {
+  font-size: 0.95rem;
+}
+.notebook-editor strong {
+  font-weight: 700;
+}
+.notebook-editor em {
+  font-style: italic;
+}
+.notebook-editor u {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notebook-editor s {
+  text-decoration: line-through;
+}
+.notebook-editor mark {
+  background: #fef08a;
+  color: #713f12;
+  border-radius: 3px;
+  padding: 0 3px;
+}
+.notebook-editor sub {
+  vertical-align: sub;
+  font-size: 0.75em;
+}
+.notebook-editor sup {
+  vertical-align: super;
+  font-size: 0.75em;
+}
+.notebook-editor a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.notebook-editor a:hover {
+  opacity: 0.8;
+}
+.notebook-editor ul:not([data-type="taskList"]) {
+  list-style: disc;
+  padding-left: 1.6rem;
+  margin: 0.85rem 0;
+}
+.notebook-editor ul:not([data-type="taskList"]) ul {
+  list-style: circle;
+}
+.notebook-editor ul:not([data-type="taskList"]) ul ul {
+  list-style: square;
+}
+.notebook-editor ol {
+  list-style: decimal;
+  padding-left: 1.6rem;
+  margin: 0.85rem 0;
+}
+.notebook-editor ol ol {
+  list-style: lower-alpha;
+}
+.notebook-editor ol ol ol {
+  list-style: lower-roman;
+}
+.notebook-editor li {
+  padding-left: 0.2rem;
+  margin: 0.35rem 0;
+}
+.notebook-editor li::marker {
+  color: var(--muted-foreground);
+}
+.notebook-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.notebook-editor ul[data-type="taskList"] ul[data-type="taskList"] {
+  padding-left: 1.75rem;
+  margin: 0.4rem 0;
+}
+.notebook-editor li[data-type="taskItem"] {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0;
+  margin: 0.45rem 0;
+  list-style: none;
+}
+.notebook-editor li[data-type="taskItem"] > label {
+  display: flex;
+  flex: 0 0 18px;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  height: 1.8rem;
+}
+.notebook-editor li[data-type="taskItem"] > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.notebook-editor li[data-type="taskItem"] > label input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.notebook-editor li[data-type="taskItem"] > label input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--primary-foreground);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.notebook-editor li[data-type="taskItem"] > div[data-type="taskItem-content"] {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.notebook-editor li[data-type="taskItem"] > div[data-type="taskItem-content"] > p {
+  margin: 0;
+  line-height: 1.8;
+}
+.notebook-editor li[data-type="taskItem"][data-checked="true"] > div[data-type="taskItem-content"] {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.notebook-editor li[data-type="taskItem"] ul[data-type="taskList"] {
+  flex-basis: 100%;
+  width: 100%;
+}
+.notebook-editor blockquote {
+  border-left: 3px solid var(--border);
+  padding: 0.5rem 0 0.5rem 1.1rem;
+  margin: 1.5rem 0;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.notebook-editor blockquote p {
+  margin: 0.5rem 0;
+}
+.notebook-editor :not(pre) > code {
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88em;
+}
+.notebook-editor pre {
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+.notebook-editor pre code {
+  display: block;
+  background: transparent;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  white-space: pre;
+}
+.notebook-editor .hljs-comment,
+.notebook-editor .hljs-quote {
+  color: #89939f;
+  font-style: italic;
+}
+.notebook-editor .hljs-keyword,
+.notebook-editor .hljs-selector-tag,
+.notebook-editor .hljs-literal {
+  color: #c792ea;
+}
+.notebook-editor .hljs-string,
+.notebook-editor .hljs-doctag,
+.notebook-editor .hljs-regexp {
+  color: #c3e88d;
+}
+.notebook-editor .hljs-number,
+.notebook-editor .hljs-built_in,
+.notebook-editor .hljs-type,
+.notebook-editor .hljs-attr {
+  color: #f78c6c;
+}
+.notebook-editor .hljs-title,
+.notebook-editor .hljs-function,
+.notebook-editor .hljs-section {
+  color: #82aaff;
+}
+.notebook-editor .hljs-variable,
+.notebook-editor .hljs-template-variable,
+.notebook-editor .hljs-params {
+  color: #f07178;
+}
+.notebook-editor .hljs-tag,
+.notebook-editor .hljs-name,
+.notebook-editor .hljs-selector-class {
+  color: #f07178;
+}
+.notebook-editor .hljs-attribute,
+.notebook-editor .hljs-symbol {
+  color: #ffcb6b;
+}
+.notebook-editor .hljs-meta {
+  color: #89ddff;
+}
+.notebook-editor .hljs-emphasis {
+  font-style: italic;
+}
+.notebook-editor .hljs-strong {
+  font-weight: 700;
+}
+.notebook-editor hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+.notebook-editor img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 1.5rem auto;
+  cursor: pointer;
+}
+.notebook-editor img.ProseMirror-selectednode {
+  outline: 3px solid var(--ring);
+}
+.notebook-editor .tableWrapper {
+  overflow-x: auto;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+.notebook-editor table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  overflow: hidden;
+  margin: 0;
+}
+.notebook-editor th,
+.notebook-editor td {
+  position: relative;
+  min-width: 80px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  vertical-align: top;
+  text-align: left;
+}
+.notebook-editor th {
+  background: var(--muted);
+  font-weight: 600;
+}
+.notebook-editor td > *,
+.notebook-editor th > * {
+  margin: 0;
+}
+.notebook-editor .selectedCell {
+  background: var(--accent);
+}
+.notebook-editor .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary);
+  pointer-events: none;
+}
+.notebook-editor.resize-cursor {
+  cursor: col-resize;
+}
+.notebook-editor [style*="text-align: center"] {
+  text-align: center;
+}
+.notebook-editor [style*="text-align: right"] {
+  text-align: right;
+}
+.notebook-editor [style*="text-align: justify"] {
+  text-align: justify;
+}
+.notebook-editor .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+.notebook-editor ::selection {
+  background: var(--accent);
+}
+.notebook-editor .tiptap:focus {
+  outline: none;
+}
+@media (max-width: 640px) {
+  .notebook-editor .tiptap {
+    font-size: 14px;
+  }
+  .notebook-editor h1 {
+    font-size: 1.8rem;
+  }
+  .notebook-editor h2 {
+    font-size: 1.5rem;
+  }
+  .notebook-editor h3 {
+    font-size: 1.25rem;
+  }
+  .notebook-editor pre {
+    padding: 0.85rem;
+    font-size: 12px;
+  }
+  .notebook-editor th,
+  .notebook-editor td {
+    padding: 8px;
   }
 }

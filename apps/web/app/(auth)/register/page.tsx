@@ -47,10 +47,10 @@ export default function Register() {
     window.location.href = "/";
   };
   return (
-    <main className="min-h-screen flex items-center justify-center bg-zinc-50 px-4 py-10">
+    <main className="min-h-screen flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         {/* Signup Card */}
-        <Card className="rounded-lg border-zinc-200 shadow-sm">
+        <Card className="rounded-lg  shadow-sm">
           <CardHeader className="space-y-2 pb-6">
             <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
             <CardDescription>Start organizing your code snippets in one place.</CardDescription>
@@ -183,7 +183,7 @@ export default function Register() {
             {/* Divider */}
             <div className="relative my-6">
               <Separator />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-xs text-muted-foreground">
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-3 text-xs text-muted-foreground">
                 OR SIGN UP WITH
               </span>
             </div>

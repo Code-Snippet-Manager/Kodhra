@@ -61,11 +61,12 @@ import {
   Edit,
   Folder,
   FolderInput,
+  FolderOpen,
   Link2,
   MoreHorizontal,
   PaintBucket,
   Share2,
-  SquareKanbanPlus,
+  SquareDashedBottomCode,
   Tags,
   Trash2
 } from "lucide-react";
@@ -352,7 +353,7 @@ export default function DashboardClient() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parentFolderId:targetFolderId,
+          parentFolderId: targetFolderId,
         }),
       });
       if (!response.ok) {
@@ -481,7 +482,7 @@ export default function DashboardClient() {
       });
     }
   };
-  
+
   const handleSnippetAction = async (action: string, snippet: Snippets) => {
     switch (action) {
       case "edit":
@@ -537,8 +538,6 @@ export default function DashboardClient() {
         break;
     }
   };
- 
-
 
   useEffect(() => {
     if (isPending || !userId) return;
@@ -678,7 +677,7 @@ export default function DashboardClient() {
                 <p className="text-3xl font-bold">{counts?.getSnippetCount ?? 0}</p>
               </div>
               <div className="p-3 rounded-lg bg-muted">
-                <SquareKanbanPlus size={28} />
+                <SquareDashedBottomCode size={28} />
               </div>
             </CardContent>
             <CardFooter>
@@ -838,7 +837,11 @@ export default function DashboardClient() {
       </section>
       {}
       <section>
-        <p className="text-xs text-muted-foreground">Recent Folders</p>
+        <p className="text-xs text-muted-foreground flex gap-2 items-center">
+          {" "}
+          <FolderOpen size={18} />
+          Recent Folders
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {folderList.slice(0, 4).map((folder) => (
             <ContextMenu key={folder._id}>
@@ -903,7 +906,7 @@ export default function DashboardClient() {
       </section>
       {}
       <section>
-        <p className="text-xs text-accent-foreground">Recent Snippets</p>
+        <p className="text-xs text-muted-foreground flex gap-2 items-center"> <SquareDashedBottomCode size={18} />Recent Snippets</p>
         <div className="mt-3 columns-1 sm:columns-2 gap-4">
           {snippets.map((item) => (
             <ContextMenu key={item._id}>

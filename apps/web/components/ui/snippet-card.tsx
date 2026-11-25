@@ -34,14 +34,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CodeEditor from "@/components/ui/editor";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SnippetMenu, Snippets } from "@/types/snippet";
-import { Copy, MoreVertical } from "lucide-react";
+import { Copy, Folder, FolderOpen, MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FaDiscord,
   FaFacebook,
@@ -65,6 +73,11 @@ export default function SnippetCard({
   const router = useRouter();
   const [snippetId, setSnippetId] = useState<string | null>(null);
   const [openShareDialog, setOpenShareDialog] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | undefined>();
+  const [folderList, setFolderList] = useState<
+    { name: string; description: string; color: string; _id: string }[]
+  >([]);
+  const [openMoveFolderDialog, setOpenMoveFolderDialog] = useState(false);
   const getSnippetUrl = useCallback((id: string) => {
     if (typeof window === "undefined") return "";
     return `${window.location.origin}/snippet/${id}`;
@@ -135,6 +148,49 @@ export default function SnippetCard({
     }
   };
 
+  const fetchFolder = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-folders`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      toast.add({
+        title: "Error Fething Folders, Try Again.",
+        type: "error",
+      });
+      throw new Error("Error Fetching Folders");
+    }
+    const data = await res.json();
+    setFolderList(data.data ?? []);
+  };
+  const moveFolder = async () => {
+    console.log("Snippet Id: ", snippetId, "Selected Folder", selectedFolderId);
+    if (!snippetId || !selectedFolderId) return;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/move-snippet/${snippetId}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        folderId: selectedFolderId,
+      }),
+    });
+    if (!res.ok) {
+      setOpenMoveFolderDialog(false);
+      toast.add({
+        title: "Error Moving Snippet",
+        type: "error",
+      });
+    } else {
+      setOpenMoveFolderDialog(false);
+      toast.add({
+        title: "Snippet Moved",
+        description: "Your Snippet Moved Successfully",
+        type: "success",
+      });
+    }
+  };
   const handleSnippetAction = async (action: string, snippet: Snippets) => {
     switch (action) {
       case "edit":
@@ -163,6 +219,10 @@ export default function SnippetCard({
           });
         }
         break;
+      case "move":
+        setSnippetId(snippet._id);
+        setOpenMoveFolderDialog(true);
+        break;
       case "copy-content":
         try {
           await navigator.clipboard.writeText(snippet.code);
@@ -190,6 +250,10 @@ export default function SnippetCard({
         break;
     }
   };
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchFolder();
+  }, []);
 
   return (
     <>
@@ -212,9 +276,9 @@ export default function SnippetCard({
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
-                    <div className="cursor-pointer hover:bg-accent active:bg-accent rounded-full min-w-10 min-h-10 grid place-items-center">
+                    <Button variant={"ghost"}>
                       <MoreVertical size={20} />
-                    </div>
+                    </Button>
                   }
                 />
                 <DropdownMenuContent className="w-52">
@@ -374,6 +438,41 @@ export default function SnippetCard({
               Other
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={openMoveFolderDialog} onOpenChange={setOpenMoveFolderDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-lg font-bold">
+            <DialogTitle>Move Snippet</DialogTitle>
+            <DialogDescription>Move snippet to another folder.</DialogDescription>
+          </DialogHeader>
+          <Field>
+            <FieldLabel>
+              <FolderOpen size={18} />
+              Select Folder
+            </FieldLabel>
+            <Select
+              value={selectedFolderId}
+              onValueChange={(e) => setSelectedFolderId(e as string)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a folder">
+                  {folderList.find((item) => item._id === selectedFolderId)?.name}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {folderList.map((item, index) => {
+                  return (
+                    <SelectItem key={index} value={item._id}>
+                      <Folder size={18} color={item.color} />
+                      {item.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </Field>
+          <Button onClick={() => moveFolder()}>Move Snippet</Button>
         </DialogContent>
       </Dialog>
     </>

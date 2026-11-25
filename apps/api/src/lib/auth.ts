@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { connectMongooseDB } from "../config/db.js";
 import { env } from "../config/env.js";
+import { oneTap } from "better-auth/plugins";
 const db = await connectMongooseDB();
 export const auth = betterAuth({
   database: mongodbAdapter(db),
@@ -17,4 +18,9 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  plugins:[
+    oneTap({
+      clientId: env.GOOGLE_CLIENT_ID!
+    })
+  ]
 });

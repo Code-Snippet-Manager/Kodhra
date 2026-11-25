@@ -3,9 +3,11 @@ import { authMiddleware } from "../middlewares/authentication.js";
 import {
   deleteSnippetController,
   duplicateSnippetController,
+  filterSnippetController,
   getAllSnippetsController,
   getSnippetsController,
   getSnippetVersionsController,
+  moveSnippetController,
   saveSnippetController,
   searchSnippetController,
   updateSnippetController,
@@ -20,5 +22,6 @@ snippetRouter.post("/duplicate-snippet/:id", duplicateSnippetController);
 snippetRouter.post("/delete-snippet/:id", deleteSnippetController);
 snippetRouter.get("/search-snippet", searchSnippetController);
 snippetRouter.get("/get-snippet-versions/:id", getSnippetVersionsController);
-
+snippetRouter.post("/filter-snippets", filterSnippetController);
+snippetRouter.post("/move-snippet/:id", moveSnippetController);
 export { snippetRouter };

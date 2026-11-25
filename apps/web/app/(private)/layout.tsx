@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     redirect("/login");
   }
   return (
-    <div className={`${inter.className} w-full h-full flex justify-start max-w-345 mx-auto`}>
+    <div className={`${inter.className} w-full h-full flex justify-start max-w-360 mx-auto`}>
       <Sidebar />
       <main className="flex-1 h-screen overflow-x-auto scrollbar-thin scroll-bar-thumb-gray-300">
         <AppHeader />

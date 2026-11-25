@@ -1,4 +1,4 @@
-import { ClipboardCopy, Copy, Edit, Flag, Share, StickyNote, Trash, X } from "lucide-react";
+import { ClipboardCopy, Copy, Edit, Flag, Move, Share, StickyNote, Trash, X } from "lucide-react";
 
  export const snippetMenu = [
     {
@@ -8,6 +8,7 @@ import { ClipboardCopy, Copy, Edit, Flag, Share, StickyNote, Trash, X } from "lu
         { label: "Share", value: "share", icon: Share },
         { label: "Duplicate", value: "duplicate", icon: StickyNote },
         { label: "Copy Link", value: "copy-link", icon: Copy },
+        { label: "Move", value: "move", icon: Move },
         {
           label: "Copy Content",
           value: "copy-content",

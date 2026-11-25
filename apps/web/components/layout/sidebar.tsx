@@ -36,7 +36,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 export const SIDEBAR_ITEMS = [
   {
     category: "Main Pages",
@@ -44,7 +44,7 @@ export const SIDEBAR_ITEMS = [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, shortcut: "alt+d" },
       { label: "Snippets", href: "/card", icon: Code2, shortcut: "alt+s" },
       { label: "Folders", href: "/folder", icon: Folder, shortcut: "alt+f" },
-      { label: "Notebooks", href: "/notebook/get", icon: BookOpen, shortcut: "alt+n" },
+      { label: "Notebooks", href: "/notebook", icon: BookOpen, shortcut: "alt+n" },
       { label: "Draft", href: "/draft", icon: FileText, shortcut: "alt+r" },
       { label: "Recycle Bin", href: "/recyclebin", icon: Recycle, shortcut: "alt+b" },
     ],
@@ -63,7 +63,7 @@ export const SIDEBAR_ITEMS = [
     items: [
       { label: "New Snippet", href: "/card/create", icon: SquareCode, shortcut: "alt+n" },
       { label: "New Folder", action: "create-folder", icon: FolderPlus, shortcut: "shift+f" },
-      { label: "Create Notebook", href: "/notebook", icon: BookOpenCheck, shortcut: "alt+n" },
+      { label: "Create Notebook", href: "/notebook/create", icon: BookOpenCheck, shortcut: "alt+n" },
     ],
   },
   {
@@ -107,18 +107,6 @@ const colors = [
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [color, setColor] = useState<string | null>();
-  useEffect(() => {
-    console.log("Sidebar mounted");
-    const handleOpenModal = () => {
-      console.log("Event received!");
-      setIsOpen(true);
-    };
-    window.addEventListener("open-modal", handleOpenModal);
-    return () => {
-      console.log("Sidebar unmounted");
-      window.removeEventListener("open-modal", handleOpenModal);
-    };
-  }, []);
   const path = usePathname();
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");

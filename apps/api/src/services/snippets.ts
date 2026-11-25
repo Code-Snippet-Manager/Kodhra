@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Snippet } from "../model/snippet.js";
 import { SnippetVersion } from "../model/snippet-version.js";
 import userSchema from "../model/user.js";
+import { Folder } from "../model/folder.js";
 type CreateSnippetInput = {
   title: string;
   description: string;
@@ -223,4 +224,125 @@ export const getSnippetVersionsService = async (id: string, userId: string) => {
     isDeleted: false,
   });
   return versions;
+};
+export type FilterSnippetType = {
+  language: string | "all";
+  searchText: string;
+  tags: string;
+  folder: string | "all";
+  isFavorite: string | "all";
+  isPinned: string | "all";
+  isPublic: string | "all";
+  isDeleted: string | "all";
+  version: string;
+};
+export const filterSnippetService = async (
+  userId: string,
+  filter: FilterSnippetType,
+  page: number,
+  limit: number,
+) => {
+  const __page = Math.max(1, Number(page) || 1);
+  const __limit = Math.min(100, Math.max(1, Number(limit) || 10));
+  const offset = (__page - 1) * __limit;
+  const matchQuery: Record<string, any> = {
+    author: new mongoose.Types.ObjectId(userId),
+  };
+  if (filter.searchText?.trim()) {
+    const searchText = filter.searchText.trim();
+    const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    matchQuery.$or = [
+      { title: { $regex: escapedText, $options: "i" } },
+      { code: { $regex: escapedText, $options: "i" } },
+      { description: { $regex: escapedText, $options: "i" } },
+    ];
+  }
+  if (filter.language && filter.language !== "all") {
+    matchQuery.language = filter.language;
+  }
+  if (filter.tags?.trim()) {
+    const tags = filter.tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+    if (tags.length > 0) {
+      matchQuery.tags = { $in: tags };
+    }
+  }
+  if (filter.folder && filter.folder !== "all") {
+    if (filter.folder === "none") {
+      matchQuery.$and = [
+        ...(matchQuery.$and ?? []),
+        {
+          $or: [{ folder: null }, { folder: { $exists: false } }],
+        },
+      ];
+    } else {
+      if (!mongoose.Types.ObjectId.isValid(filter.folder)) {
+        throw new Error("Invalid folder ID");
+      }
+      matchQuery.folder = new mongoose.Types.ObjectId(filter.folder);
+    }
+  }
+  const booleanFields = ["isFavorite", "isPinned", "isPublic", "isDeleted"] as const;
+  for (const field of booleanFields) {
+    const value = filter[field];
+    if (value === "true" || value === "false") {
+      matchQuery[field] = value === "true";
+    }
+  }
+  if (filter.version?.trim()) {
+    const version = Number(filter.version);
+    if (!Number.isInteger(version) || version < 1) {
+      throw new Error("Invalid version");
+    }
+    matchQuery.version = version;
+  }
+  const snippets = await Snippet.aggregate([
+    {
+      $match: matchQuery,
+    },
+    {
+      $sort: {
+        updatedAt: -1,
+        _id: -1,
+      },
+    },
+    {
+      $lookup: {
+        from: "user",
+        localField: "author",
+        foreignField: "_id",
+        as: "author",
+      },
+    },
+    {
+      $unwind: {
+        path: "$author",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $skip: offset,
+    },
+    {
+      $limit: __limit,
+    },
+  ]);
+  return snippets;
+};
+
+export const moveSnippetService = async (userId: string, snippetId: string, folderId: string) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  const result = await Snippet.updateOne(
+    { _id: snippetId, author: userId },
+    { $set: { folder: folderId } },
+  ).session(session);
+  await Folder.updateOne({ userId, _id: folderId }, { $addToSet: { cards: snippetId } }).session(
+    session,
+  );
+  await session.commitTransaction();
+  await session.endSession();
+  return result;
 };

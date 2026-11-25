@@ -4,9 +4,11 @@ import { apiResponse } from "../lib/api-response.js";
 import {
   deleteSnippetService,
   duplicateSnippetService,
+  filterSnippetService,
   getAllSnippetsService,
   getSnippetService,
   getSnippetVersionsService,
+  moveSnippetService,
   saveSnippetService,
   searchSnippetService,
   updateSnippetService,
@@ -121,7 +123,6 @@ export const searchSnippetController = async (req: Request, res: Response) => {
     res.json("sometuhg");
   }
 };
-
 export const getSnippetVersionsController = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id;
@@ -131,5 +132,67 @@ export const getSnippetVersionsController = async (req: Request, res: Response) 
   } catch (error) {
     apiResponse(res, "Internal Server Error", 500, "error");
     logger.error(`Internal Server Error ${error}`);
+  }
+};
+export const filterSnippetController = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.user.id;
+    const { ...filter } = req.body;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const snippets = await filterSnippetService(userId, filter, page, limit);
+    apiResponse(res, "Snippets Fetched Successfully", 200, "success", snippets);
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(error.message);
+    }
+    apiResponse(res, "Internal Server Error", 500, "error");
+  }
+};
+export const moveSnippetController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const userId = res.locals.user.id;
+    const snippetId = req.params.id;
+    const folderId = req.body.folderId;
+    // Validate required fields
+    if (!snippetId || !mongoose.isValidObjectId(snippetId)) {
+      return apiResponse(res, "Invalid snippet ID", 400, "error");
+    }
+    if (!folderId || !mongoose.isValidObjectId(folderId)) {
+      return apiResponse(res, "Invalid folder ID", 400, "error");
+    }
+    const movedSnippet = await moveSnippetService(
+      userId,
+      snippetId as string,
+      folderId,
+    );
+    if (!movedSnippet) {
+      return apiResponse(
+        res,
+        "Snippet or folder not found",
+        404,
+        "error",
+      );
+    }
+    return apiResponse(
+      res,
+      "Snippet moved successfully",
+      200,
+      "success",
+      movedSnippet,
+    );
+  } catch (error) {
+    logger.error(
+      error instanceof Error ? error.message : String(error),
+    );
+    return apiResponse(
+      res,
+      "Internal Server Error",
+      500,
+      "error",
+    );
   }
 };

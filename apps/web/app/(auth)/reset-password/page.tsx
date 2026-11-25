@@ -59,10 +59,10 @@ export default function ResetPassword() {
     }
   };
   return (
-    <main className="min-h-screen flex items-center justify-center bg-zinc-50 px-4 py-10">
+    <main className="min-h-screen flex items-center justify-center  px-4 py-10">
       <div className="w-full max-w-md">
    
-        <Card className="rounded-lg border-zinc-200 shadow-sm">
+        <Card className="rounded-lg  shadow-sm">
           <CardContent className="pt-8 pb-8">
             {!isSubmitted ? (
               <>
@@ -101,7 +101,7 @@ export default function ResetPassword() {
                     </div>
                   </div>
                   {/* Password Requirements */}
-                  <div className="rounded-lg border bg-zinc-50 p-4 space-y-3">
+                  <div className="rounded-lg border bg-card p-4 space-y-3">
                     <p className="text-sm font-medium">Password requirements</p>
                     <div className="space-y-2">
                       {requirements.map((item) => (

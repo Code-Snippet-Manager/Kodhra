@@ -21,7 +21,7 @@ export default function AuthHeader() {
       )}
       {/* logo */}
       <div className="flex items-center gap-1">
-        <Image src="/icons/kodhra.webp" alt="logo" width={30} height={30} />
+        <Image src="/icons/kodhra.webp" alt="logo" width={30} height={30} className="dark:invert-100"/>
         <div className="flex flex-col leading-none">
           <span className="font-bold">Kodhra</span>
           <span className="text-xs">Code Snippet Manager</span>

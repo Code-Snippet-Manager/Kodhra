@@ -10,12 +10,13 @@ import { notFoundMiddleware } from "./middlewares/not-found.js";
 import { snippetRouter } from "./routes/snippet.js";
 import { folderRouter } from "./routes/folder.js";
 import { reportRouter } from "./routes/reports.js";
+import { notebookRouter } from "./routes/notebook.js";
+import { restoreRouter } from "./routes/restore.js";
 export const app = express();
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(cors({ origin: [env.CORS_ORIGIN, "http://localhost:3000"], credentials: true }));
-app.use(express.json({ limit: "1mb" }));
-connectMongooseDB();
+await connectMongooseDB();
 app.get("/", (_req, res) => {
   res.json({
     name: "CWAD Fullstack API",
@@ -24,12 +25,13 @@ app.get("/", (_req, res) => {
   });
 });
 app.all("/api/auth/{*path}", toNodeHandler(auth));
+app.use(express.json({ limit: "1mb" }));
 
-// bussiness routes
+// business routes
 app.use("/api", snippetRouter);
 app.use("/api", folderRouter);
 app.use("/api", reportRouter);
-
-
+app.use("/api", notebookRouter);
+app.use("/api", restoreRouter);
 app.use(notFoundMiddleware);
 app.use(errorHandler);
