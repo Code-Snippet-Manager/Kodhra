@@ -45,7 +45,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { SnippetMenu, Snippets } from "@/types/snippet";
 import { Copy, Folder, FolderOpen, MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -73,7 +77,9 @@ export default function SnippetCard({
   const router = useRouter();
   const [snippetId, setSnippetId] = useState<string | null>(null);
   const [openShareDialog, setOpenShareDialog] = useState(false);
-  const [selectedFolderId, setSelectedFolderId] = useState<string | undefined>();
+  const [selectedFolderId, setSelectedFolderId] = useState<
+    string | undefined
+  >();
   const [folderList, setFolderList] = useState<
     { name: string; description: string; color: string; _id: string }[]
   >([]);
@@ -149,10 +155,13 @@ export default function SnippetCard({
   };
 
   const fetchFolder = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-folders`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/get-folders`,
+      {
+        method: "GET",
+        credentials: "include",
+      },
+    );
     if (!res.ok) {
       toast.add({
         title: "Error Fething Folders, Try Again.",
@@ -166,16 +175,19 @@ export default function SnippetCard({
   const moveFolder = async () => {
     console.log("Snippet Id: ", snippetId, "Selected Folder", selectedFolderId);
     if (!snippetId || !selectedFolderId) return;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/move-snippet/${snippetId}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/move-snippet/${snippetId}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          folderId: selectedFolderId,
+        }),
       },
-      body: JSON.stringify({
-        folderId: selectedFolderId,
-      }),
-    });
+    );
     if (!res.ok) {
       setOpenMoveFolderDialog(false);
       toast.add({
@@ -254,20 +266,26 @@ export default function SnippetCard({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchFolder();
   }, []);
-
   return (
     <>
       <ContextMenu key={item._id}>
         <ContextMenuTrigger>
-          <Card className="mb-3 break-inside-avoid">
+          <Card
+            className="mb-3 break-inside-avoid"
+            onClick={() => router.push(`/card/${item._id}`)}
+          >
             <CardHeader className="flex justify-between items-center">
               <div className="flex items-center gap-2 min-w-0">
                 <Avatar>
                   <AvatarImage src={item.author?.image} />
-                  <AvatarFallback>{item.author?.name?.split(" ")[0]?.[0] ?? "U"}</AvatarFallback>
+                  <AvatarFallback>
+                    {item.author?.name?.split(" ")[0]?.[0] ?? "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <CardTitle className="capitalize truncate">{item.title}</CardTitle>
+                  <CardTitle className="capitalize truncate">
+                    {item.title}
+                  </CardTitle>
                   <CardDescription className="text-xs">
                     Author: {item.author?.name} | Language: {item.language}
                   </CardDescription>
@@ -290,7 +308,9 @@ export default function SnippetCard({
                         return (
                           <DropdownMenuItem
                             key={menu.value}
-                            onClick={() => handleSnippetAction(menu.value, item)}
+                            onClick={() =>
+                              handleSnippetAction(menu.value, item)
+                            }
                           >
                             <Icon className="mr-2 h-4 w-4" />
                             {menu.label}
@@ -335,7 +355,9 @@ export default function SnippetCard({
                 return (
                   <ContextMenuItem
                     key={menu.value}
-                    variant={menu.value === "delete" ? "destructive" : "default"}
+                    variant={
+                      menu.value === "delete" ? "destructive" : "default"
+                    }
                     onClick={() => handleSnippetAction(menu.value, item)}
                   >
                     <Icon className="mr-2 h-4 w-4" />
@@ -360,7 +382,11 @@ export default function SnippetCard({
               <Label htmlFor="snippet-link" className="sr-only">
                 Link
               </Label>
-              <Input id="snippet-link" value={snippetId ? getSnippetUrl(snippetId) : ""} readOnly />
+              <Input
+                id="snippet-link"
+                value={snippetId ? getSnippetUrl(snippetId) : ""}
+                readOnly
+              />
             </div>
             <Button
               variant="outline"
@@ -387,32 +413,39 @@ export default function SnippetCard({
             </Button>
           </div>
           <div className="flex flex-wrap items-center">
-            {[FaInstagram, FaTwitter, FaLinkedin, FaGithub, FaDiscord, FaFacebook].map(
-              (Icon, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger>
-                    <Button
-                      variant="outline"
-                      className="mr-2"
-                      onClick={async () => {
-                        if (!snippetId) return;
-                        await navigator.clipboard.writeText(getSnippetUrl(snippetId));
-                        toast.add({
-                          title: "Link copied",
-                          description: "You can now share your snippet.",
-                          type: "success",
-                        });
-                      }}
-                    >
-                      <Icon />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{Icon.name.replace("Fa", "")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ),
-            )}
+            {[
+              FaInstagram,
+              FaTwitter,
+              FaLinkedin,
+              FaGithub,
+              FaDiscord,
+              FaFacebook,
+            ].map((Icon, index) => (
+              <Tooltip key={index}>
+                <TooltipTrigger>
+                  <Button
+                    variant="outline"
+                    className="mr-2"
+                    onClick={async () => {
+                      if (!snippetId) return;
+                      await navigator.clipboard.writeText(
+                        getSnippetUrl(snippetId),
+                      );
+                      toast.add({
+                        title: "Link copied",
+                        description: "You can now share your snippet.",
+                        type: "success",
+                      });
+                    }}
+                  >
+                    <Icon />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{Icon.name.replace("Fa", "")}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
             <Button
               variant="outline"
               onClick={async () => {
@@ -425,7 +458,9 @@ export default function SnippetCard({
                       url: getSnippetUrl(snippetId),
                     });
                   } else {
-                    await navigator.clipboard.writeText(getSnippetUrl(snippetId));
+                    await navigator.clipboard.writeText(
+                      getSnippetUrl(snippetId),
+                    );
                   }
                 } catch (error) {
                   if (error instanceof Error && error.name === "AbortError") {
@@ -440,11 +475,16 @@ export default function SnippetCard({
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={openMoveFolderDialog} onOpenChange={setOpenMoveFolderDialog}>
+      <Dialog
+        open={openMoveFolderDialog}
+        onOpenChange={setOpenMoveFolderDialog}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-lg font-bold">
             <DialogTitle>Move Snippet</DialogTitle>
-            <DialogDescription>Move snippet to another folder.</DialogDescription>
+            <DialogDescription>
+              Move snippet to another folder.
+            </DialogDescription>
           </DialogHeader>
           <Field>
             <FieldLabel>
@@ -457,7 +497,10 @@ export default function SnippetCard({
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a folder">
-                  {folderList.find((item) => item._id === selectedFolderId)?.name}
+                  {
+                    folderList.find((item) => item._id === selectedFolderId)
+                      ?.name
+                  }
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>

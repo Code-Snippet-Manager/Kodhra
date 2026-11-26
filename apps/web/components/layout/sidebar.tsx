@@ -52,8 +52,8 @@ export const SIDEBAR_ITEMS = [
   {
     category: "Filters & Views",
     items: [
-      { label: "Tags", href: "/tags", icon: Tags, shortcut: "alt+t" },
-      { label: "Language", href: "/language", icon: FileCode2, shortcut: "alt+l" },
+      // { label: "Tags", href: "/tags", icon: Tags, shortcut: "alt+t" },
+      // { label: "Language", href: "/language", icon: FileCode2, shortcut: "alt+l" },
       { label: "Pinned", href: "/pin", icon: Pin, shortcut: "alt+p" },
       { label: "Favorites", href: "/fav", icon: Star, shortcut: "alt+v" },
     ],

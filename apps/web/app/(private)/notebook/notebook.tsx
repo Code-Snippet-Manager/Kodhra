@@ -38,6 +38,7 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 interface NotebookType {
   _id: string;
@@ -226,6 +227,7 @@ function EmptyState({
   );
 }
 export default function Notebook() {
+  const router = useRouter();
   const [notebooks, setNotebooks] = useState<NotebookType[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -469,10 +471,15 @@ export default function Notebook() {
                     >
                       <ContextMenu>
                         <ContextMenuTrigger>
-                          <Card className="group flex h-full cursor-default flex-col overflow-hidden border-border/70 transition-colors duration-200 hover:border-primary/30 hover:shadow-md">
+                          <Card
+                            className="group flex h-full cursor-default flex-col overflow-hidden border-border/70 transition-colors duration-200 hover:border-primary/30 hover:shadow-md"
+                            onClick={() =>
+                              router.push(`/notebook/${notebook._id}`)
+                            }
+                          >
                             {/* Card Header */}
                             <CardHeader className="space-y-4">
-                              <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start justify-between gap-3 max-w-[80%]">
                                 <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/15">
                                   <FileText className="size-5 text-primary" />
                                 </div>
@@ -497,7 +504,7 @@ export default function Notebook() {
                                   )}
                                 </div>
                               </div>
-                              <div className="space-y-2">
+                              <div className="space-y-2 max-w-[80%]">
                                 <CardTitle className="truncate text-base">
                                   {notebook.title || "Untitled Notebook"}
                                 </CardTitle>

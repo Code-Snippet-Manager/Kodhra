@@ -5,6 +5,7 @@ import { FolderSchemaType } from "../model/folder.js";
 import {
   createFolderService,
   deleteFolderService,
+  getFolderChildrenFoldersService,
   getFoldersService,
   updateFolderService,
 } from "../services/folders.js";
@@ -71,17 +72,30 @@ export const updateFolderController = async (req: Request, res: Response) => {
   }
 };
 
-
-export const deleteFolderController = async (req:Request, res:Response)=>{
+export const deleteFolderController = async (req: Request, res: Response) => {
   try {
     const userId = res.locals.user.id;
     const folderId = req.params.id;
     const deletedFolder = await deleteFolderService(folderId as string, userId);
     apiResponse(res, "Folder deleted successfully", 200, "success", deletedFolder);
   } catch (error) {
-    if(error instanceof Error){
-      logger.error(error.message)
+    if (error instanceof Error) {
+      logger.error(error.message);
     }
     apiResponse(res, "Internal Server Error", 500, "error");
   }
-}
+};
+
+export const getFolderChildrenFoldersController = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.user.id;
+    const folderId = req.params.id;
+    const folders = await getFolderChildrenFoldersService(userId, folderId as string);
+    apiResponse(res, "Folders fetched successfully", 200, "success", folders);
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error(error.message);
+    }
+    apiResponse(res, "Internal Server Error", 500, "error");
+  }
+};

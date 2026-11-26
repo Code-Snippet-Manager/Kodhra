@@ -1,6 +1,9 @@
 import { snippetMenu } from "@/lib/snippet/snippet-menu";
 
 export type Snippets = {
+  version: ReactNode;
+  updatedAt(updatedAt: any): string;
+  version: any;
   _id: string;
   title: string;
   description: string;

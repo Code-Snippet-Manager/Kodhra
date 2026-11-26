@@ -113,6 +113,7 @@ export default function Recyclebin() {
                 throw new Error("Unable to fetch deleted data.");
             }
             const response = await res.json();
+            console.log(response);
             if (response.status !== "success") {
                 throw new Error(response.message || "Something went wrong.");
             }
@@ -181,12 +182,24 @@ export default function Recyclebin() {
         id: string,
         type: "notebook" | "snippet" | "folder",
     ) => {
-        toast.add({
-            title: "Restore API not connected",
-            description: `Connect your ${type} restore endpoint here.`,
-            type: "error",
-        });
-        console.log("Restore:", { id, type });
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/restore-data/${id}?type=${type}`,
+            {
+                method: "get",
+                credentials: "include",
+            },
+        );
+        if (!res.ok) {
+            throw new Error("Error restoring item.");
+        } else {
+            setIsRefreshing(true);
+            getData();
+            toast.add({
+                title: "Restored",
+                description: "Item restored successfully.",
+                type: "success",
+            });
+        }
     };
     // Permanent delete
     // Connect this handler to your permanent delete API endpoint.
@@ -194,11 +207,27 @@ export default function Recyclebin() {
         if (!deleteTarget) return;
         try {
             setIsDeleting(true);
-            // Replace with your permanent-delete API request.
-            console.log("Permanently delete:", deleteTarget);
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/delete-permanently/${deleteTarget.id}?type=${deleteTarget.type}`,
+                {
+                    method: "get",
+                    credentials: "include",
+                },
+            );
+            if (!res.ok) {
+                throw new Error("Error deleting item.");
+            } else {
+                handleRefresh();
+                toast.add({
+                    title: "Deleted",
+                    description: "Item deleted permanently.",
+                    type: "success",
+                });
+            }
+        } catch (err) {
             toast.add({
-                title: "Delete API not connected",
-                description: "Connect your permanent delete endpoint.",
+                title: "Error",
+                description: "Error deleting item.",
                 type: "error",
             });
         } finally {
@@ -300,7 +329,10 @@ export default function Recyclebin() {
                                     <MoreVertical className="size-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className={'min-w-fit'}>
+                            <DropdownMenuContent
+                                align="end"
+                                className={"min-w-fit"}
+                            >
                                 <DropdownMenuItem
                                     onClick={() =>
                                         handleRestore(item._id, type)

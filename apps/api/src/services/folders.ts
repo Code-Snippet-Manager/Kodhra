@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Folder, FolderSchemaType } from "../model/folder.js";
+import { Snippet } from "../model/snippet.js";
 export const createFolderService = async (
   userId: mongoose.Types.ObjectId,
   props: FolderSchemaType,
@@ -19,13 +20,11 @@ export const getFoldersService = async (userId: string) => {
     throw error;
   }
 };
-
 type UpdateFolderProps = {
   name?: string;
   color?: string;
   parentFolderId?: string;
 };
-
 export const updateFolderService = async (
   folderId: string,
   userId: string,
@@ -45,13 +44,28 @@ export const updateFolderService = async (
     throw error;
   }
 };
-
-
-export const deleteFolderService = async (folderId:string, userId:string)=>{
-  const deletedFolder = await Folder.updateOne({userId,folderId}, {
-    $set: {
-      isDeleted: true,
+export const deleteFolderService = async (folderId: string, userId: string) => {
+  const deletedFolder = await Folder.updateOne(
+    { userId, _id: folderId },
+    {
+      $set: {
+        isDeleted: true,
+      },
     },
-  });
+  );
   return deletedFolder;
-}
+};
+
+export const getFolderChildrenFoldersService = async (userId: string, folderId: string) => {
+  try {
+    const getFolders = await Folder.find({
+      userId,
+      parentFolderId: folderId,
+      isDeleted: false,
+    }).sort({ createdAt: -1 });
+    const getSnippets = await Snippet.find({ folder: folderId, author: userId, isDeleted: false });
+    return { folders: getFolders, snippets: getSnippets };
+  } catch (error) {
+    throw error;
+  }
+};

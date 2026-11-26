@@ -25,7 +25,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -56,6 +60,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 type FolderType = {
@@ -191,10 +196,13 @@ export default function FolderPage() {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-folders`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/get-folders`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
       if (!response.ok) {
         throw new Error("Unable to fetch folders");
       }
@@ -218,12 +226,19 @@ export default function FolderPage() {
   }, [fetchFolders]);
   const createFolder = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-folder`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: folderName, description: folderDescription, color }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/create-folder`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: folderName,
+            description: folderDescription,
+            color,
+          }),
+          credentials: "include",
+        },
+      );
       if (!res.ok) {
         toast.add({
           title: "Error",
@@ -262,7 +277,10 @@ export default function FolderPage() {
   const pinnedFolders = filteredFolders.filter((folder) => folder.isPinned);
   const regularFolders = filteredFolders.filter((folder) => !folder.isPinned);
   return (
-    <motion.main layout className="mx-auto w-full max-w-7xl space-y-7 p-4 md:p-6">
+    <motion.main
+      layout
+      className="mx-auto w-full max-w-7xl space-y-7 p-4 md:p-6"
+    >
       {/* Page Header */}
       <motion.div
         layout
@@ -270,7 +288,9 @@ export default function FolderPage() {
       >
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Folders</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Manage your snippet collections.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Manage your snippet collections.
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <motion.button
@@ -317,7 +337,8 @@ export default function FolderPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-xs text-muted-foreground"
           >
-            {filteredFolders.length} {filteredFolders.length === 1 ? "folder" : "folders"}
+            {filteredFolders.length}{" "}
+            {filteredFolders.length === 1 ? "folder" : "folders"}
           </motion.p>
           <div className="flex items-center rounded-md border p-1">
             <motion.button
@@ -431,7 +452,10 @@ export default function FolderPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      <Dialog open={openNewFolderDialogBox} onOpenChange={setOpenNewFolderDialogBox}>
+      <Dialog
+        open={openNewFolderDialogBox}
+        onOpenChange={setOpenNewFolderDialogBox}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create a new folder</DialogTitle>
@@ -456,7 +480,10 @@ export default function FolderPage() {
             </FieldGroup>
             <FieldGroup className="gap-2">
               <FieldLabel htmlFor="description" className="gap-x-1">
-                Description <span className="text-xs font-normal text-gray-500">(optional)</span>
+                Description{" "}
+                <span className="text-xs font-normal text-gray-500">
+                  (optional)
+                </span>
               </FieldLabel>
               <Textarea
                 id="description"
@@ -519,7 +546,8 @@ function FolderSection({
   const [newFolderColor, setNewFolderColor] = useState("#6366f1");
   const [targetFolderId, setTargetFolderId] = useState("");
   const [openRenameFolderDialog, setOpenRenameFolderDialog] = useState(false);
-  const [openChangeFolderColorDialog, setOpenChangeFolderColorDialog] = useState(false);
+  const [openChangeFolderColorDialog, setOpenChangeFolderColorDialog] =
+    useState(false);
   const [openMoveFolderDialog, setOpenMoveFolderDialog] = useState(false);
   const [openFolderDeleteDialog, setOpenFolderDeleteDialog] = useState(false);
   const [openShareFolderDialog, setOpenShareFolderDialog] = useState(false);
@@ -586,22 +614,27 @@ function FolderSection({
   const renameFolder = async () => {
     if (!selectedFolder._id || !newFolderName.trim()) return;
     try {
-      const response = await fetch(`${API_URL}/api/update-folder/${selectedFolder._id}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${API_URL}/api/update-folder/${selectedFolder._id}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newFolderName.trim(),
+          }),
         },
-        body: JSON.stringify({
-          name: newFolderName.trim(),
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("Rename failed");
       }
       setFolderList((previous) =>
         previous.map((folder) =>
-          folder._id === selectedFolder._id ? { ...folder, name: newFolderName.trim() } : folder,
+          folder._id === selectedFolder._id
+            ? { ...folder, name: newFolderName.trim() }
+            : folder,
         ),
       );
       setSelectedFolder((previous) => ({
@@ -647,7 +680,9 @@ function FolderSection({
       }
       setFolderList((previous) =>
         previous.map((folder) =>
-          folder._id === selectedFolder._id ? { ...folder, color: newFolderColor } : folder,
+          folder._id === selectedFolder._id
+            ? { ...folder, color: newFolderColor }
+            : folder,
         ),
       );
       setSelectedFolder((previous) => ({
@@ -674,16 +709,19 @@ function FolderSection({
   const moveFolder = async () => {
     if (!selectedFolder._id || !targetFolderId) return;
     try {
-      const response = await fetch(`${API_URL}/api/update-folder/${selectedFolder._id}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${API_URL}/api/update-folder/${selectedFolder._id}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            parentFolderId: targetFolderId,
+          }),
         },
-        body: JSON.stringify({
-          parentFolderId: targetFolderId,
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("Move failed");
       }
@@ -708,14 +746,19 @@ function FolderSection({
   const deleteFolder = async () => {
     if (!selectedFolder._id) return;
     try {
-      const response = await fetch(`${API_URL}/api/delete-folder/${selectedFolder._id}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${API_URL}/api/delete-folder/${selectedFolder._id}`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
       if (!response.ok) {
         throw new Error("Delete failed");
       }
-      setFolderList((previous) => previous.filter((folder) => folder._id !== selectedFolder._id));
+      setFolderList((previous) =>
+        previous.filter((folder) => folder._id !== selectedFolder._id),
+      );
       toast.add({
         title: "Folder deleted",
         description: "Folder deleted successfully.",
@@ -805,23 +848,33 @@ function FolderSection({
                 <ContextMenuContent className="w-52">
                   <ContextMenuGroup>
                     <ContextMenuLabel>Actions</ContextMenuLabel>
-                    <ContextMenuItem onClick={() => handleFolderAction("rename", folder)}>
+                    <ContextMenuItem
+                      onClick={() => handleFolderAction("rename", folder)}
+                    >
                       <Edit className="mr-2 h-4 w-4" />
                       Rename Folder
                     </ContextMenuItem>
-                    <ContextMenuItem onClick={() => handleFolderAction("change-color", folder)}>
+                    <ContextMenuItem
+                      onClick={() => handleFolderAction("change-color", folder)}
+                    >
                       <PaintBucket className="mr-2 h-4 w-4" />
                       Change Color
                     </ContextMenuItem>
-                    <ContextMenuItem onClick={() => handleFolderAction("move", folder)}>
+                    <ContextMenuItem
+                      onClick={() => handleFolderAction("move", folder)}
+                    >
                       <FolderInput className="mr-2 h-4 w-4" />
                       Move Folder
                     </ContextMenuItem>
-                    <ContextMenuItem onClick={() => handleFolderAction("share", folder)}>
+                    <ContextMenuItem
+                      onClick={() => handleFolderAction("share", folder)}
+                    >
                       <Share2 className="mr-2 h-4 w-4" />
                       Share Folder
                     </ContextMenuItem>
-                    <ContextMenuItem onClick={() => handleFolderAction("copy-link", folder)}>
+                    <ContextMenuItem
+                      onClick={() => handleFolderAction("copy-link", folder)}
+                    >
                       <Link2 className="mr-2 h-4 w-4" />
                       Copy Folder Link
                     </ContextMenuItem>
@@ -861,11 +914,16 @@ function FolderSection({
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <Dialog open={openRenameFolderDialog} onOpenChange={setOpenRenameFolderDialog}>
+      <Dialog
+        open={openRenameFolderDialog}
+        onOpenChange={setOpenRenameFolderDialog}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Rename Folder</DialogTitle>
-            <DialogDescription>Enter a new name for your folder.</DialogDescription>
+            <DialogDescription>
+              Enter a new name for your folder.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <Label htmlFor="folder-name">Folder Name</Label>
@@ -878,7 +936,10 @@ function FolderSection({
             />
             <Button
               className="w-full"
-              disabled={!newFolderName.trim() || newFolderName.trim() === selectedFolder.name}
+              disabled={
+                !newFolderName.trim() ||
+                newFolderName.trim() === selectedFolder.name
+              }
               onClick={() => {
                 renameFolder();
                 alert("asasasas");
@@ -890,11 +951,16 @@ function FolderSection({
         </DialogContent>
       </Dialog>
       {}
-      <Dialog open={openChangeFolderColorDialog} onOpenChange={setOpenChangeFolderColorDialog}>
+      <Dialog
+        open={openChangeFolderColorDialog}
+        onOpenChange={setOpenChangeFolderColorDialog}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Change Folder Color</DialogTitle>
-            <DialogDescription>Choose a color for {selectedFolder.name}.</DialogDescription>
+            <DialogDescription>
+              Choose a color for {selectedFolder.name}.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <Label htmlFor="folder-color">Select Color</Label>
@@ -923,7 +989,10 @@ function FolderSection({
         </DialogContent>
       </Dialog>
       {}
-      <Dialog open={openMoveFolderDialog} onOpenChange={setOpenMoveFolderDialog}>
+      <Dialog
+        open={openMoveFolderDialog}
+        onOpenChange={setOpenMoveFolderDialog}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Move Folder</DialogTitle>
@@ -934,7 +1003,10 @@ function FolderSection({
           <div className="space-y-4">
             <Field>
               <Label>Destination Folder</Label>
-              <Select value={targetFolderId} onValueChange={(e) => setTargetFolderId(e as string)}>
+              <Select
+                value={targetFolderId}
+                onValueChange={(e) => setTargetFolderId(e as string)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select destination folder" />
                 </SelectTrigger>
@@ -950,7 +1022,11 @@ function FolderSection({
                 </SelectContent>
               </Select>
             </Field>
-            <Button className="w-full" disabled={!targetFolderId} onClick={moveFolder}>
+            <Button
+              className="w-full"
+              disabled={!targetFolderId}
+              onClick={moveFolder}
+            >
               <FolderInput className="mr-2 h-4 w-4" />
               Move Folder
             </Button>
@@ -958,17 +1034,23 @@ function FolderSection({
         </DialogContent>
       </Dialog>
       {}
-      <Dialog open={openFolderDeleteDialog} onOpenChange={setOpenFolderDeleteDialog}>
+      <Dialog
+        open={openFolderDeleteDialog}
+        onOpenChange={setOpenFolderDeleteDialog}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Folder?</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{selectedFolder.name}&quot;? This action cannot
-              be undone.
+              Are you sure you want to delete &quot;{selectedFolder.name}&quot;?
+              This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpenFolderDeleteDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setOpenFolderDeleteDialog(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={deleteFolder}>
@@ -978,12 +1060,16 @@ function FolderSection({
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={openShareFolderDialog} onOpenChange={setOpenShareFolderDialog}>
+      <Dialog
+        open={openShareFolderDialog}
+        onOpenChange={setOpenShareFolderDialog}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Share Folder</DialogTitle>
             <DialogDescription>
-              Anyone with this link can access the folder, depending on its sharing permissions.
+              Anyone with this link can access the folder, depending on its
+              sharing permissions.
             </DialogDescription>
           </DialogHeader>
           <div className="flex gap-2">
@@ -993,7 +1079,9 @@ function FolderSection({
               size="icon"
               onClick={async () => {
                 try {
-                  await navigator.clipboard.writeText(getFolderUrl(selectedFolder._id));
+                  await navigator.clipboard.writeText(
+                    getFolderUrl(selectedFolder._id),
+                  );
                   toast.add({
                     title: "Link copied",
                     description: "Folder link copied successfully.",
@@ -1033,8 +1121,10 @@ function FolderItem({
   handleFolderAction: (action: string, folder: FolderType) => void;
 }) {
   const color = folder.color || "#64748b";
+  const router = useRouter();
   return (
     <motion.div
+      onClick={() => router.push(`/folder/${folder._id}`)}
       layout
       variants={itemVariants}
       initial="hidden"
@@ -1070,9 +1160,12 @@ function FolderItem({
               <Folder className="size-5" />
             </div>
             <div className="flex items-center gap-1">
-              {folder.isPinned && <Pin className="size-3.5 text-muted-foreground" />}
+              {folder.isPinned && (
+                <Pin className="size-3.5 text-muted-foreground" />
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger
+                  onClick={(e) => e.stopPropagation()}
                   render={
                     <button
                       type="button"
@@ -1084,7 +1177,10 @@ function FolderItem({
                   }
                 />
 
-                <DropdownMenuContent className={"min-w-fit w-52"}>
+                <DropdownMenuContent
+                  className={"min-w-fit w-52"}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {folderMenus.map((menu, index) => {
                     return (
                       <DropdownMenuGroup key={index}>
@@ -1092,9 +1188,15 @@ function FolderItem({
                         {menu.items.map((item, index) => {
                           return (
                             <DropdownMenuItem
-                              variant={item.label.includes("Delete") ? "destructive" : "default"}
+                              variant={
+                                item.label.includes("Delete")
+                                  ? "destructive"
+                                  : "default"
+                              }
                               key={index}
-                              onClick={() => handleFolderAction(item.value, folder)}
+                              onClick={() =>
+                                handleFolderAction(item.value, folder)
+                              }
                               className="cursor-pointer"
                             >
                               <item.icon className="mr-2 h-4 w-4" />
@@ -1138,7 +1240,9 @@ function FolderItem({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h3 className="truncate text-sm font-medium">{folder.name}</h3>
-              {folder.isPinned && <Pin className="size-3 shrink-0 text-muted-foreground" />}
+              {folder.isPinned && (
+                <Pin className="size-3 shrink-0 text-muted-foreground" />
+              )}
             </div>
             <p className="mt-0.5 truncate text-xs text-muted-foreground">
               {folder.description || "No description"}
